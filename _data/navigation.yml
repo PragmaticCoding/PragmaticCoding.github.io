@@ -10,3 +10,24 @@ main:
   #   url: /collection-archive/
   # - title: "Sitemap"
   #   url: /sitemap/
+
+master:
+  - title: JavaFX
+    children:
+      - title: Introduction
+        url: /javafx/javaFX
+      - title: Elements of JavaFX
+        url: /javafx/elements
+
+  - title: MultiValue Databases
+    url: /pages/multivalue
+
+  - title: About
+    children:
+      - title: Pragmatic Coding
+        url: /pages/about
+      - title: About Me
+        url: /pages/about_me
+
+  - title: Services
+    url: /pages/services
