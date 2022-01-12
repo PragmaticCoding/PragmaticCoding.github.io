@@ -2,7 +2,8 @@
 title:  "MineSweeper in JavaFX"
 date:   2021-05-03 12:00:00 -0500
 categories: javafx
-logo: /assets/logos/JavaFXLogo.png
+header:
+  og_image: /assets/logos/JavaFXLogo.png
 excerpt: MineSweeper!  Everyone's favourite time-waster Windows game.  Implemented in JavaFX showing how the reactive nature of JavaFX can be used with MVC to create a game.
 ---
 
