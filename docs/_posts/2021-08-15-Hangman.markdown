@@ -1,11 +1,16 @@
 ---
 title:  "Hangman in JavaFX"
 date:   2021-08-15 12:00:00 -0500
-tags: javafx
+categories: javafx
 logo: /assets/logos/JavaFXLogo.png
+permalink: /javafx/hangman
 excerpt: How much code does it take to build a complete Hangman game in JavaFX?<br>It turns out ... Not much!
-hangman: ../assets/images/Hangman.png
-hangedman: ../assets/images/HangedMan.png
+hangman: /docs/assets/images/Hangman.png
+hangedman: /docs/assets/images/HangedMan.png
+header:
+  actions:
+    - label: "Go to the Project"
+      url: "https://github.com/PragmaticCoding/HangMan"
 ---
 
 I decided to try writing a Hangman game that would look up words from the internet, just too see how much code it would actually take.  The simplicity of the result surprised even me and it points out just how powerful reactive programming can be.

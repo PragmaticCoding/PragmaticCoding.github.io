@@ -2,9 +2,15 @@
 title:  "MineSweeper in JavaFX"
 date:   2021-05-03 12:00:00 -0500
 categories: javafx
+permalink: /javafx/minesweeper
 header:
   og_image: /assets/logos/JavaFXLogo.png
 excerpt: MineSweeper!  Everyone's favourite time-waster Windows game.  Implemented in JavaFX showing how the reactive nature of JavaFX can be used with MVC to create a game.
+gameplay: /docs/assets/images/MineSweeper1.png
+header:
+  actions:
+    - label: "Go to the Project"
+      url: "https://github.com/PragmaticCoding/MineSweeper"
 ---
 
 Model - View - Controller is a design pattern that has become the defacto standard for building web sites and business applications worldwide.  It can be used effectively with JavaFX, but how to do so properly is not very well understood or very well documented.  MineSweeper is a simple game that can be used to illustrate how to implement MVC in JavaFX, and also to show how a lot of functionality can be packed into very simple code with JavaFX.
@@ -23,6 +29,8 @@ Everybody probably already knows MineSweeper - it's a game with a grid of grey s
 - A Mine - Boom!  You lose
 
 The goal is to click on all of the squares that don't contain a mine, leaving only the squares with mines in them unclicked.
+
+![MineSweeper Game Play]({{page.gameplay}})
 
 Another important idea about the game-play is that it shouldn't ever be left to chance alone at the beginning.  So the first square you click cannot be a mine.  Nor can it have any adjacent mines, as you wouldn't yet have enough information to make a non-random choice about which square to click second.  The main impact this has on designing the game is that the contents of the squares cannot be determined until the user clicks on the first square.  
 

@@ -29,5 +29,8 @@ master:
       - title: About Me
         url: /pages/about_me
 
+  - title: Projects
+    url: /pages/projects
+
   - title: Services
     url: /pages/services
