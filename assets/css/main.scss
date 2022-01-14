@@ -30,3 +30,21 @@ em {
 body {
     padding: 80px 0 0;  // padding-top equal to masthead height or greater
 }
+
+p > code, li > code, dd > code {
+    color: $inline-code-color;
+    font-family: $global-font-family;
+    font-size: $type-size-5;
+}
+
+blockquote {
+  color: $muted-text-color;
+  // margin-left: 1.2em;
+    margin: 0em 2em 2em 1.2em;
+}
+
+.page__content {
+  dd {
+    font-size: $type-size-5;
+  }
+}
