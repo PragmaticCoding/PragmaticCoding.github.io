@@ -4,7 +4,7 @@ date:   2021-12-17 12:00:00 -0500
 categories: agile
 logo: /assets/logos/Agile.png
 excerpt: Stand-ups, Retrospectives, Sprints, Scrum Masters.  Is it just bureaucratic nonsense that gets in the way of good programmers doing their thing?  It shouldn't be.
-waterfall: ../../assets/images/waterfall.png
+waterfall: /assets/posts/waterfall.png
 ---
 
 There's a lot of programmers out there attending daily "Stand-Ups", Sprint Planning meetings and Retrospectives, watching "Burn Down" charts, and worrying about "Velocity". All the time thinking, "What a lot bureaucratic nonsense, just let me program!"

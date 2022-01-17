@@ -36,8 +36,8 @@ On one hand, it's highly functional and works smoothly.  If someone just types "
 
 The rest of the actions, however, are a little counter-intuitive and would require explanation or some exploration on the part of the user.  That's probably not the best design, especially if it's deployed in an application with a lot of single-time users.
 
-Any UI design that requires explanation or training to use is probably not awesome.
-{: .notice--warning}
+{% include notice type="warning" content = "Any UI design that requires explanation or training to use is probably not awesome." %}
+
 
 All that aside, it is a good example to explore how you can use `TextFormatter` to create a much more sophisticated input control out of a simple TextField.
 
@@ -80,8 +80,7 @@ The Filter is an implementation of `UnaryOperator<TextFormatter.Change>`, which 
 
 You can think of `TextFormatter.Change` as clean way to capture each key presses and mouse actions in the TextField, with JavaFX itself handling all of the troublesome details about capturing and applying the keystrokes.  
 
-Using TextFormatter.Change means you don't need to fuss about capturing KeyEvents.
-{: .notice--info}
+{% include notice type = "info" content = "Using TextFormatter.Change means you don't need to fuss about capturing KeyEvents." %}
 
 The `Filter` is a step between capturing the user action and applying it, and that allows us to write logic that can not just filter out actions, but change them and the way that they impact the `TextField`.
 
@@ -106,8 +105,8 @@ The `Filter` is a step between capturing the user action and applying it, and th
 
 There is one caveat when manipulating the change:
 
-The value returned by getControlNewText() is updated immediately when the change has been modified.  
-{: .notice--warning}
+{% include notice type="warning" content="The value returned by getControlNewText() is updated immediately when the change has been modified." %}  
+
 
 So if you need to reference the impact of the original change after you've modified it, you'll need to make a copy before you start.
 

@@ -5,10 +5,10 @@ categories: javafx
 logo: /assets/logos/JavaFXLogo.png
 permalink: /javafx/nofxml
 excerpt: I've always advised that Scene Builder and FXML are a waste of time, and that you should just write your screens in Java code.<br>  It's easier to build, it's easier to customize, easier to maintain, and much, much easier to do really sophisticated things.  But how do you start?
-screenshot1: /docs/assets/images/NoFXML1.png
-screenshot2: /docs/assets/images/NoFXML2.png
-screenshot3: /docs/assets/images/NoFXML3.png
-screenshot4: /docs/assets/images/NoFXML4.png
+screenshot1: /assets/posts/NoFXML1.png
+screenshot2: /assets/posts/NoFXML2.png
+screenshot3: /assets/posts/NoFXML3.png
+screenshot4: /assets/posts/NoFXML4.png
 ---
 
 Way, way back in 2014 when I started learning JavaFX, I tried using Scene Builder and FXML and found it to be an amazing waste of time and effort.  One of the best decisions I ever made was to abandon it early on, and just code screens by hand. I advise everyone else to do the same.

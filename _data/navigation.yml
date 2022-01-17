@@ -18,6 +18,9 @@ master:
         url: /javafx/javaFX
       - title: Elements of JavaFX
         url: /javafx/elements
+        children:
+        - title: Nodes
+          url: /javafx/elements/nodes
 
   - title: MultiValue Databases
     url: /pages/multivalue
@@ -34,3 +37,11 @@ master:
 
   - title: Services
     url: /pages/services
+
+beginners:
+  - title: Getting Started
+    children:
+      - title: "Part 1 - A Quick Start"
+        url: /beginners/part1
+      - title: "Part 2 - Configuring Layouts"
+        url: /beginners/part2
