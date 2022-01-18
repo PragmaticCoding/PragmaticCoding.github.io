@@ -40,6 +40,7 @@ master:
 
 beginners:
   - title: Getting Started
+    url: /beginners/intro
     children:
       - title: "Part 1 - A Quick Start"
         url: /beginners/part1
