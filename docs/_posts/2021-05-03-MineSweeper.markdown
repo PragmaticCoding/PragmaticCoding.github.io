@@ -3,10 +3,9 @@ title:  "MineSweeper in JavaFX"
 date:   2021-05-03 12:00:00 -0500
 categories: javafx
 permalink: /javafx/minesweeper
-header:
-  og_image: /assets/logos/JavaFXLogo.png
+logo: /assets/logos/JavaFXLogo.png
 excerpt: MineSweeper!  Everyone's favourite time-waster Windows game.  Implemented in JavaFX showing how the reactive nature of JavaFX can be used with MVC to create a game.
-gameplay: /docs/assets/images/MineSweeper1.png
+gameplay: /assets/posts/MineSweeper1.png
 header:
   actions:
     - label: "Go to the Project"
@@ -87,13 +86,13 @@ class CellModel {
 }
 ```
 
-We need to know if the Cell contains a mine, if it's been clicked, what number to display when it's clicked (assuming it's not a mine), and whether we should show the flag to indicate that it's been right clicked.  That's all.
+We need to know if the `Cell` contains a mine, if it's been clicked, what number to display when it's clicked (assuming it's not a mine), and whether we should show the flag to indicate that it's been right clicked.  That's all.
 
 I chose not to use delegate getters or setters for these properties because it wouldn't add any extra control or make anything easier to understand given how simple the Controller is.
 
 #### The CellView
 
-The CellView needs to display some of 4 possible things:
+The `CellView` needs to display some of 4 possible things:
 -  A gray or white rectangle as a background.
 -  And one of the following:
     - A Flag
@@ -101,9 +100,9 @@ The CellView needs to display some of 4 possible things:
     - A Number
 
 
-The best layout for the Cell is a StackPane, with the everything loaded up in it at the beginning, and the visibility of the components bound to the properties in the CellModel.  The Rectangle needs to go at the bottom, but the other three components can go in any order as only one of them will be visible at a time:
+The best layout for the `Cell` is a `StackPane`, with the everything loaded up in it at the beginning, and the visibility of the components bound to the properties in the `CellModel`.  The `Rectangle` needs to go at the bottom, but the other three components can go in any order as only one of them will be visible at a time:
 
-{% highlight java %}
+``` java
 class CellView extends StackPane {
     private static final Image mineImage = new Image("/images/MineSmall.png");
     private static final Image flagImage = new Image("/images/Flag.png");
@@ -130,16 +129,16 @@ class CellView extends StackPane {
         return rectangle;
     }
 }
-{% endhighlight %}
-The mine and the flag are just images.  I wasn't able to quickly find a small enough flag image, so I scaled it in the code when it was loaded into its ImageView.  StackPane's centre everything in them by default, so there's no need to fuss about with alignment either.
+```
+The mine and the flag are just images.  I wasn't able to quickly find a small enough flag image, so I scaled it in the code when it was loaded into its `ImageView`.  `StackPane's` centre everything in them by default, so there's no need to fuss about with alignment either.
 
 The Rectangle starts out gray, and then flips to white when the cell has been clicked, so the binding for that converts the boolean property into a Color via the `Bindings` library `createObjectBinding()`.  For the other bindings, I've just used the Fluent Binding API since they are direct bindings of the  model properties joined with `and()` and possibly modified with `not()`.
 
 #### The Cell Controller
 
-The Controller for each Cell is just the Cell object itself.  It instantiates the CellModel as a field, and then passes it to the constructor of the CellView:
+The Controller for each Cell is just the Cell object itself.  It instantiates the `CellModel` as a field, and then passes it to the constructor of the `CellView`:
 
-{% highlight java %}
+``` java
 public class Cell {
 
     private static final Random RANDOM = new Random();
@@ -202,13 +201,13 @@ public class Cell {
         model.isMineProperty().set(RANDOM.nextInt(10) <= 1);
     }
 }
-{% endhighlight %}
+```
 
-One thing you'll notice right away is the the "x" and "y" location of the cell aren't part of the model!  That's because they have nothing to do with the CellView at all and they act more like domain objects in a business application.  So they don't belong in the View Model for the Cell.
+One thing you'll notice right away is the the "x" and "y" location of the cell aren't part of the model!  That's because they have nothing to do with the `CellView` at all and they act more like domain objects in a business application.  So they don't belong in the View Model for the Cell.
 
 The other thing to notice is the `viewClickConsumer` which is passed to the CellView.  It would seem to be easier to just directly attach an EventHandler to the CellView with `view.setOnMouseClicked()`, so why not do that?  This would violate the idea that the View is a black box by assuming that the design of the CellView makes it clickable itself.  While the MineSweeper game generally assumes that mouse clicks are going to be the user interaction, it's not cast in stone, and the implementation doesn't have to make the whole CellView clickable.  It's possible it could be implemented with a pair of ToggleButtons, one for "flag" and one for "reveal".  We break that dependency by creating a Consumer, and passing it to the CellView via its constructor.
 
-The `viewClickConsumer` still assumes that `MouseButton` is going to be sent back, but any implementation of CellView that doesn't use mouse clicks can still convert its functionality to pass either `MouseButton.PRIMARY` or  `MouseButton.SECONDARY`.  This is maybe a bit of a kludge, and if I was making a large business application I'd probably create an Enum called CellAction and pass that back instead.  
+The `viewClickConsumer` still assumes that `MouseButton` is going to be sent back, but any implementation of `CellView` that doesn't use mouse clicks can still convert its functionality to pass either `MouseButton.PRIMARY` or  `MouseButton.SECONDARY`.  This is maybe a bit of a kludge, and if I was making a large business application I'd probably create an `Enum` called `CellAction` and pass that back instead.  
 
 There's surprisingly little logic inside the Cell.  It really has only the following functions that aren't getters or setters:
 
@@ -226,10 +225,10 @@ This is essentially the entire window for the game.  There are three buttons to 
 
 The View Model for the game board is very simple, just 2 boolean properties:
 
-{% highlight java %}
+``` java
     private final BooleanProperty loseProperty = new SimpleBooleanProperty(false);
     private final BooleanProperty winProperty = new SimpleBooleanProperty(false);
-{% endhighlight %}
+```
 
 Rather than create a separate Model class for this, these have been left as fields in the Controller.  This was really just to make a point; they still comprise the Model but they don't *have * to be put into a separate class if it doesn't make sense.  In this case, they can be passed to the View in its constructor without resulting in a ridiculously long parameter list.
 
@@ -240,7 +239,7 @@ The main screen View is a VBox with two compound elements.  The first is a Stack
 
 The second part of the VBox is an HBox with a set of Buttons which start new games at different board sizes.  The entirety of the action of these buttons is handled by the View Controller via the Consumer passed to the View in its constructor.  
 
-{% highlight java %}
+``` java
 class MineSweeperView extends VBox {
 
     private GridPane grid = new GridPane();
@@ -290,7 +289,7 @@ class MineSweeperView extends VBox {
         return button;
     }
 }
-{% endhighlight %}
+```
 
 Virtually all of the code in this View is involved with setting up the layout.  There are only two methods not related to this; one which clears the GridPane of all of its children, and one which adds a Node to the GridPane at specified row and column.  These are also the only two non-private methods in the View, aside from the constructor.  It is possible to avoid having these two public methods by expanding the Model to have enough information to populate or clear the GridPane, but it wouldn't result in a cleaner design.  
 
@@ -298,7 +297,7 @@ Virtually all of the code in this View is involved with setting up the layout.  
 
 The Game Controller has the code which launches everything, and the code which needs to look at more than one cell at a time, which as it turns out, isn't much:
 
-{% highlight java %}
+``` java
 class MineSweeperController {
 
     private final BooleanProperty loseProperty = new SimpleBooleanProperty(false);
@@ -383,7 +382,7 @@ class MineSweeperController {
         return cells.stream().filter(cell -> cell.isNeighbour(x, y)).collect(Collectors.toList());
     }
 }
-{% endhighlight %}
+```
 
 #### Setting Up the Board
 
@@ -410,10 +409,10 @@ Determining win or lose at any given time is simple; Stream a list of cells and 
 
 We're going to use the `Bindings` library to create this binding:
 
-{% highlight java %}
+``` java
 public static BooleanBinding createBooleanBinding(Callable<Boolean> func,
                                                   Observable... dependencies)
-{% endhighlight %}
+```
 
 That's straight from the JavaDocs for `Bindings`.  The first parameter is just a `Supplier`, which is a functional interface that doesn't take any parameters but returns a value of the type specified - in this case a Boolean.  We just need to write a supplier that determine if the player has won or lost at the time that it is called.  It's important to note that this `Supplier` isn't necessarily involved with properties and observables, it's just ordinary Java that calculates a boolean value somehow.
 
@@ -421,7 +420,7 @@ The second parameter is an array of Observable objects that will trigger a recal
 
 Let's see how this works:
 
-{% highlight java %}
+``` java
 private BooleanBinding createWinLoseBinding(Predicate<Cell> predicate, BinaryOperator<Boolean> reductionOperator) {
         List<BooleanProperty> clickProperties = cells.stream().filter(predicate).map(Cell::clickedProperty).collect(Collectors.toList());
         return Bindings.createBooleanBinding(() -> clickProperties.stream()
@@ -429,23 +428,23 @@ private BooleanBinding createWinLoseBinding(Predicate<Cell> predicate, BinaryOpe
                                                                   .reduce(clickProperties.get(0).get(), reductionOperator),
                                              clickProperties.toArray(new BooleanProperty[0]));
     }
-{% endhighlight %}
+```
 The first step is to create a `List<BooleanProperty>` by streaming the entire list of cells, filtering them based on `isMine()` or `notMine()` and then extracting the `clickedProperty()` in a map function.
 
 To determine the win/lose condition, the list of BooleanProperty will be Streamed, then the current value will be determined by calling the `get()` method of the property, and the Stream will be reduced to a single Boolean value by applying a Boolean operator between all of the elements.  For this, "Any" means that we need to use **OR** as the operator, and "All" means that we need to use **AND**.
 
 Even if you have trouble following exactly how it works, the calls to this method are pretty clear in their intent:
 
-{% highlight java %}
+``` java
 winProperty.bind(createWinLoseBinding(Cell::notMine, Boolean::logicalAnd));
 loseProperty.bind(createWinLoseBinding(Cell::isMine, Boolean::logicalOr));
-{% endhighlight %}
+```
 
 #### One Ugly Part
 
 The only problem with the win/lose logic is that it isn't relevant in the time between the reset of the grid for a new game and the first cell click of that game.  It needs to be disabled for that time span so we have the following code:
 
-{% highlight java %}
+``` java
     public void reset() {
         winProperty.unbind();
         winProperty.set(false);
@@ -454,14 +453,14 @@ The only problem with the win/lose logic is that it isn't relevant in the time b
         cells.clear();
         initialized = false;
     }
-{% endhighlight %}
+```
 This seems a bit clumsy, but the only alternative is to turn the `initialized` field into a BooleanProperty and then tie it into the BooleanBinding built for the `winProperty` and `loseProperty`.  But doing this wouldn't make anything clearer, and the bindings still need to be rebuilt and bound to those properties after the first click.
 
 ### The Main Class
 
 The Main class is only of interest here because has some code which resizes the window according to the size of the board the game is being played on:
 
-{% highlight java %}
+``` java
 public class MineSweeper extends Application {
 
     public static void main(String[] args) {
@@ -480,9 +479,9 @@ public class MineSweeper extends Application {
         primaryStage.show();
     }
 }
-{% endhighlight %}
+```
 
-You can see that the Main class passes a BiConsumer to the constructor of the Controller to allow it to change the size of the window.  In this way, the main screen Controller needs to have no knowledge of anything outside it's scope.  It has a dependency declared in its constructor that requires that any parent class instantiating the Controller has to provide some sort of screen size handling  
+You can see that the Main class passes a `BiConsumer` to the constructor of the Controller to allow it to change the size of the window.  In this way, the main screen Controller needs to have no knowledge of anything outside it's scope.  It has a dependency declared in its constructor that requires that any parent class instantiating the Controller has to provide some sort of screen size handling  
 
 ### The images
 
@@ -500,13 +499,13 @@ If you want to copy this code and run it yourself with changing things, you'll n
 ### Summary
 
 Once the game is underway, there's only really two lines of code that are directly executed when a cell is clicked:
-{% highlight java %}
+``` java
 if (evt.getButton().equals(MouseButton.SECONDARY)) {
   model.isFlagProperty().set(!model.isFlagProperty().get());
 } else {
   model.clickedProperty().set(true);
 }
-{% endhighlight %}
+```
 Everything else is either layout or setup, which largely consists of setting model values and creating bindings between the view and the model.  This the essence of programming with JavaFX: virtually all of the JavaFX code is setup - creating the layout, the bindings and the listeners - and it only amounts to a small proportion of the overall code.
 
 Look at where the bulk of the code in this application resides.  It's in the Controllers, after the `getView()` method.  Sure, a lot of it deals with observables and properties, but it deals with them as **data**, and the way that they are tied back to the GUI is not considered in that code at all.

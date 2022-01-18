@@ -31,7 +31,7 @@ A `Button` is the basic control to allow the user trigger an action in a screen.
 
 ## How Button Fits in the JavaFX Hierarchy
 
-Button inherits methods and properties from these important classes:
+`Button` inherits methods and properties from these important classes:
 
 Node
 : Everything in JavaFX inherits from `Node`, which gives most of its methods for styling, event handling and responding to mouse actions as well as location and transformation.

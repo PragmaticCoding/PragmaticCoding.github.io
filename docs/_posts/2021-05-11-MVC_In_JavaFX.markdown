@@ -23,7 +23,7 @@ The model is the storage space for all of the data shared throughout the the MVC
 
 In the world of Reactive Programming, the Model is the home for the elements generally referred to as "State".
 
-In JavaFX, the building blocks of data storage are "observable" entities such as Properties and ObservableLists.  The Model should be a POJO with the fields all instances of the various observable classes in JavaFX.  Each property type field should have a getter and a setter which delegate to the `get()` and `set()` methods of the property, and a `{Field Name}Property()` method which returns the property itself.  Essentially, this is the JavaFX version of a Bean.  Normally, an ObservableList type field would have a getter, and then a setter that delegates to the `setAll()` method of the list.  All of the fields should be final.
+In JavaFX, the building blocks of data storage are "observable" entities such as Properties and ObservableLists.  The Model should be a POJO with the fields all instances of the various observable classes in JavaFX.  Each property type field should have a getter and a setter which delegate to the `get()` and `set()` methods of the property, and a `{Field_Name}Property()` method which returns the property itself.  Essentially, this is the JavaFX version of a Bean.  Normally, an ObservableList type field would have a getter, and then a setter that delegates to the `setAll()` method of the list.  All of the fields should be final.
 
 ### The Controller
 
@@ -67,7 +67,7 @@ While the View has no code which reflects business logic, no other part of the s
 
 Here's a simple example to illustrate how this all goes together.  This is an MVCI set-up with screen that has a TextField and a button, and the button triggers an action that will modify the value in the TextField in some way - in this case it assumes it is a number and attempts to add 5 to it.
 
-{% highlight java %}
+``` java
 public class MvciSample extends Application {
 
     public static void main(String[] args) {
@@ -81,11 +81,11 @@ public class MvciSample extends Application {
         primaryStage.show();
     }
 }
-{% endhighlight %}
+```
 
 You can see here that the application instantiates the Controller, then fetches the View from it and installs it into the Scene.  Let's look at how the Controller works:
 
-{% highlight java %}
+``` java
 public class MvciController {
 
     private final Region view;
@@ -100,12 +100,12 @@ public class MvciController {
         return view;
     }
 }
-{% endhighlight %}
+```
 The Controller instantiates the Model, then passes it to the constructor of the Interactor and then the constructor of the View.  Additionally, the Controller passes a Runnable to the View to handle the action when View triggers it.
 
 Now let's look at the Model:
 
-{% highlight java %}
+``` java
 class MvciModel {
 
     private final StringProperty number = new SimpleStringProperty("0");
@@ -136,12 +136,12 @@ class MvciModel {
         this.moreAllowed.set(moreAllowed);
     }
 }
-{% endhighlight %}
+```
 There are just two fields, one is a StringProperty that holds a number, and the other is a BooleanProperty that will control whether the "Add 5" action is allowed at any time.  Both fields are explicitly declared final, but they're also effectively final since the "setter" for each actually delegates to the set method of the properties.  
 
 Now to look at the View:
 
-{% highlight java %}
+``` java
 class MvciView extends VBox {
 
     MvciView(MvciModel model, Runnable actionHandler) {
@@ -154,14 +154,14 @@ class MvciView extends VBox {
         getChildren().addAll(dataBox, button);
     }
 }
-{% endhighlight %}
+```
 The View is one of the simplest JavaFX container nodes, a VBox.  There are two elements in the VBox; an HBox containing a label and a TextField for data entry, and a button that performs an action.  The "text" property of the TextField is bound to the `number` field in the Model, and the "disable" property of the button is bound to the `moreAllowed` field in the Model.  The button has been set up so that it's `onAction()` event handler will invoke the `actionHandler` Runnable.  
 
 The only constraints on the structure of the View are defined by the dependencies in the constructor.  It must be able to function with the Model it's given, and potentially invoke the action supplied through the Runnable.  The TextField doesn't have to be a TextField, potentially it could be a Spinner (although it would have to handle conversions to String in the binding) or some other input method.  Presumably, if it was a ComboBox, the Model would have to be able to supply the possible value choices somehow.
 
 Now, the Interactor:
 
-{% highlight java %}
+``` java
 class MvciInteractor {
 
     MvciModel viewModel;
@@ -190,7 +190,7 @@ class MvciInteractor {
         }
     }
 }
-{% endhighlight %}
+```
 This interactor does two important things.  First, it provides the logic to perform the "Add 5" action by converting the string into an integer and adding 5.  If the integer conversion fails, then it resets the string to "5".
 
 Secondly, it binds the Model field "moreAllowed" to the "number" field through a supplier that invokes the `checkIfMoreAllowed()` method.  This method always returns true if the string in the "number" field is not a number, so that the `addFive()` method can reset it when invoked.
@@ -210,11 +210,11 @@ In order to ensure that the "set" and "get" methods of the Model are only callab
 
 One situation which is fairly common and appears to be difficult with this approach is when you have a "Save" button that you only want enabled when the user has changed something.  When using the value properties of the screen nodes to store the user data separate from the data model, in seems easier to be able to compare the original values (in the model) to the values on screen.  However, Thomas Nields has written an excellent library called [DirtyFX](https://github.com/thomasnield/DirtyFX) which handles this wonderfully.
 
-Normally, most models have ObjectProperty's which are instantiated using the SimpleObjectProperty implementation.  Thomas has created a set of implementations which also allow the initial state of the property - a baseline - to be set and then it maintains an internal boolean property which indicates whether or not the current value of the property is different from the baseline - if it's "dirty".
+Normally, most models have `ObjectProperty's` which are instantiated using the `SimpleObjectProperty` implementation.  Thomas has created a set of implementations which also allow the initial state of the property - a baseline - to be set and then it maintains an internal boolean property which indicates whether or not the current value of the property is different from the baseline - if it's "dirty".
 
 Implementing this in the example model is straight-forward:
 
-{% highlight java %}
+``` java
 public class MvciModel {
 
     private final DirtyStringProperty number = new DirtyStringProperty("0");
@@ -242,7 +242,7 @@ public class MvciModel {
         return number.isDirtyProperty();
     }
 }
-{% endhighlight %}
+```
 
 I've removed the setter for the `moreAllowed` field, since the property is bound in the constructor of the Interactor, and a bound property cannot be set.  I've also removed the getter, since the Interactor doesn't use it.  The `dataChanged()` method is only there to expose the `isDirty` property of "number" to the interactor, while keeping the return value of `numberProperty()` to be StringProperty - in other words, not exposing the DirtyStringProperty implementation of the field to the rest of the system.
 
@@ -250,7 +250,7 @@ Note that the setter for the "number" field now calls `rebaseline()`, which rese
 
 The constructor of the Interactor now looks like this:
 
-{% highlight java %}
+``` java
 public MvciInteractor(MvciModel viewModel) {
         this.viewModel = viewModel;
         viewModel.moreAllowedProperty()
@@ -258,7 +258,7 @@ public MvciInteractor(MvciModel viewModel) {
                                                      viewModel.numberProperty(),
                                                      viewModel.dataChanged()));
     }
-{% endhighlight %}
+```
 Now the "moreAllowed" property will only be true if the number in the field is less than 21 or not actually a number, and has been changed since the the last time the `addFive()` method was invoked.  DirtyFX also has a composite dirty property, which allows you to register other dirty properties with it, and will be true if any of the component properties are dirty.
 
 ## In Summary

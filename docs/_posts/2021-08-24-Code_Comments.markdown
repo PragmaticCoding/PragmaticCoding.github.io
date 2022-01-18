@@ -105,7 +105,7 @@ The Information Expert Principle is one of the patterns defined in [GRASP](https
 
 It's not unusual to see code like this:
 
-{% highlight java %}
+```
     int thresholdValue = 12;    
     .
     .
@@ -121,12 +121,13 @@ It's not unusual to see code like this:
        }
     }
 
-{% endhighlight %}
+```  
+
 Everything after the setting of the the thresholdValue uses information from `object`, and probably should be the responsibility of `object` to calculate.  It shouldn't be where ever it currently is sitting.
 
 Far better would be to create a method in whatever class `object` is and pass it the threshold as a parameter.  Something like this:
 
-{% highlight java %}
+```
 public double calculateSomething(int thresholdValue) {
     double answer = 0d;
     if (someValue > thresholdValue) {
@@ -140,16 +141,16 @@ public double calculateSomething(int thresholdValue) {
     }
    return answer
 }
-{% endhighlight %}
+```
 And then the original code would be refactored to:
 
-{% highlight java %}
+``` java
 int thresholdValue = 12;    
 .
 .
 .
 answer = object.calculateSomething(thresholdValue);
-{% endhighlight %}
+```
 
 There's also a good chance that three other things will come out of this refactoring:
 
@@ -173,38 +174,38 @@ Even if you have to create some relationship between elements in a JBOD, you sho
 
 Sometimes you'll come across something like this:
 
-{% highlight java %}
+``` java
 if (theList.get(listIndex).retrieveAValue(xyz) < someValue) {
 .
 .
 .
 }
-{% endhighlight %}
+```
 
 It might not be clear from the code what that value means in the context in which it's being used.  Worse even...
 
-{% highlight java %}
+``` java
 if ((theList.get(listIndex).retrieveAValue(xyz) * 0.754) < otherList.get(index2).retrieveSomething(abc)) {
 .
 .
 .
 }
-{% endhighlight %}
+```
 That's not just ugly, it's hard to understand, too.
 
 Last example:
 
-{% highlight java %}
+``` java
 if ((theList.get(listIndex).retrieveAValue(xyz) * 0.754) < otherList.get(index2).retrieveSomething(abc)) {
 .
    double something = theList.get(listIndex).retrieveAValue(xyz) / 2;
 .
 }
-{% endhighlight %}
+```
 Here we've used that retrieved value twice, which means that you have to check that code twice to make sure that it really **is** the same thing. What if the second use passed "xjz" to `retrieveAValue()`?  Would you catch it?
 
 Far better would be something like this:
-{% highlight java %}
+``` java
 double xyzValue = theList.get(listIndex).retrieveAValue(xyz);
 double somethingRatio = 0.754;
 double contextualThreshold = otherList.get(index2).retrieveSomething(abc);
@@ -214,14 +215,14 @@ if ((xyzValue * somethingRatio) < contextualThreshold) {
    double something = xyzValue / 2;
 .
 }
-{% endhighlight %}
+```
 This is a few more lines of code, but the result is way easier to understand, and it's now perfectly clear that `xyzValue` is used twice.  On top of that, the variable names should clearly state what all of those values are and what they mean in this context.  No comments are required now because the code has been designed to make it clear what's going on.
 
 ### Using Variables to Explain Conditions
 
 That last example still has one possible issue.  What's that `xyzValue * somethingRatio`? This can become really important when a condition has multiple clauses, especially cases where logical and's and or's are mixed together.  It's much clearer to break out the clauses as booleans and give them meaningful names.  Something like this:
 
-{% highlight java %}
+``` java
 boolean hasEnoughMojo = (someValue >= thresholdValue);
 boolean isThursday = dayOfWeek.equals(CalendarTools.getWeekDay(4));
 boolean isQualified = certificateList.contains(courseName);
@@ -231,7 +232,7 @@ if ((hasEnoughMojo || isThursday) && isQualified) {
     .
     .
 }
-{% endhighlight %}
+```
 This is helpful for two reasons.  First, the `if` statement is now super simple to read.  With the conditions broken out, it's easy to see how the conditions fit together.  Secondly, it's clear what the individual conditions mean - because they have names!
 
 There's an extra bonus value here, too.  Look at that variable `isQualified`.  That name speaks to *intent*.  It asks, "Is it qualified"?  What if, upstream, the API that supplied `certificateList` is changed to include current courses?  Would that lookup function now mean "qualified"?  Without that intent baked into the code, it's impossible to know whether or not there's an issue here.  The way it is, when you realize that `certificateList` now contains certificates in progress, you can go and ask the business whether or not that counts as "qualified".  
@@ -240,7 +241,7 @@ There's an extra bonus value here, too.  Look at that variable `isQualified`.  T
 
 Sometimes the opposite is required.  I see this all the time:
 
-{% highlight java %}
+``` java
 public void start(Stage primaryStage) throws Exception {
     primaryStage.setTitle("window name ");
     BorderPane layout = createLayout();
@@ -248,15 +249,15 @@ public void start(Stage primaryStage) throws Exception {
     primaryStage.setScene(scene);
     primaryStage.show();
 }
-{% endhighlight %}
+```
 This just takes up space on the screen.  The variables `scene` and `layout` add nothing.  This will work just as well:
-{% highlight java %}
+``` java
 public void start(Stage primaryStage) throws Exception {
     primaryStage.setTitle("window name ");
     primaryStage.setScene(new Scene(createLayout(), 300, 250));
     primaryStage.show();
 }
-{% endhighlight %}
+```
 Generally speaking, if something is boilerplate then you can assume that any programmer looking at it is going to understand what it does and you should feel free to compress it as much as possible without causing confusion.  I use Intellij's "inline variable" function all the time.
 
 It's a good rule of thumb that less code is going to be easier to understand than more code.  So, when in doubt, write less code.  Don't try to be clever about it - that has the opposite effect - but when something can be done clearly in one line of code, don't do it in two lines.

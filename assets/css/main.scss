@@ -7,10 +7,6 @@
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"; // skin
 @import "minimal-mistakes"; // main partials
 
-em {
-  color: $inline-code-color;
-  text-decoration: none;
-}
 
 .masthead {
     position: fixed;
@@ -35,6 +31,7 @@ p > code, li > code, dd > code {
     color: $inline-code-color;
     font-family: $global-font-family;
     font-size: $type-size-5;
+    font-style: italic;
 }
 
 blockquote {

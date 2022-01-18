@@ -6,15 +6,15 @@ logo: /assets/logos/JavaFXLogo.png
 excerpt: PropertyValueFactory is an obsolete convenience method designed to eliminate boilerplate.  We don't don't need it any more now that we have Lambda expressions.
 ---
 
-PropertyValueFactory is an obsolete convenience method designed to eliminate boilerplate.  We don't don't need it any more now that we have Lambda expressions.
+`PropertyValueFactory` is an obsolete convenience method designed to eliminate boilerplate.  We don't don't need it any more now that we have Lambda expressions.
 
-In JavaFX, the TableView class is largely customized by adding TableColumn's to an instance.  TableColumn is where you define both the TableCell's that will be used, and manner in which data will be extracted from each row model to populate each the TableCell.
+In JavaFX, the TableView class is largely customized by adding `TableColumns` to an instance.  `TableColumn` is where you define both the `TableCells` that will be used, and manner in which data will be extracted from each row model to populate each the `TableCell`.
 
 ### The Full Boilerplate Approach
 
-The JavaDoc's for TableColumn document the full boilerplate necessary to define how the data will be populated into the cells:
+The JavaDoc's for `TableColumn` document the full boilerplate necessary to define how the data will be populated into the cells:
 
-{% highlight java %}
+``` java
 ObservableList<Person> data = ...
 TableView<Person> tableView = new TableView<Person>(data);
 
@@ -24,7 +24,7 @@ firstNameCol.setCellValueFactory(new Callback<CellDataFeatures<Person, String>, 
          return p.getValue().firstNameProperty();
      }
 });
-{% endhighlight %}
+```
 
 Yikes!  That's a lot of "<>" to wrap your brain around.
 
@@ -42,13 +42,13 @@ Technically, it might be possible that you'd need some properties of the `TableV
 
 Even when you do understand what that boilerplate code is doing, it's still a lot of code to write for something that almost always boils down to one line very similar to this:
 
-{% highlight java %}
+``` java
 return p.getValue().firstNameProperty();
-{% endhighlight %}
+```
 
 Because that's what most CellValueFactories do, they extract a single `ObservableValue` from an object composed of a number of `ObservableValue`'s.  Furthermore, the best practice is to implement the fields in the model as JavaFX Property Beans, like this:
 
-{% highlight java %}
+``` java
 public class Model {
     private StringProperty firstName = new SimpleStringProperty("");
 
@@ -64,7 +64,7 @@ public class Model {
         return firstName;
     }
 }
-{% endhighlight %}
+```
 
 For each field in the Model, there's a `getter` and a `setter` which delegate to the field's `get()` and `set()` methods.  Then there's a method called `{Field Name}Property()`, which returns the property itself.  
 
@@ -78,9 +78,9 @@ Curiously, this hasn't been updated, even as of JavaFX 15 - which is a shame.
 
 This meant that you could replace the boilerplate described above with this:
 
-{% highlight java %}
-firstNameCol.setCellValueFactory(new PropertyValueFactory("firstName");
-{% endhighlight %}
+```  
+  firstNameCol.setCellValueFactory(new PropertyValueFactory("firstName");
+```
 
 Which is clearly a lot easier to both write and read than the full boilerplate.  In fact, most programmers learn this method without ever understanding the `Callback` code that lies behind it.
 
@@ -96,13 +96,13 @@ Since Java 8, there is a better way to reduce the boilerplate which avoids the u
 
 Remember that the `Callback` interface is a Functional Interface.  Which means that it can be the target of a lambda expression.  Also, lambda expressions can infer the class of the input parameters based on the context in which it is declared.  So the boilerplate listed above can be replaced with this:
 
-{% highlight java %}
+``` java
 ObservableList<Person> data = ...
 TableView<Person> tableView = new TableView<Person>(data);
 
 TableColumn<Person,String> firstNameCol = new TableColumn<Person,String>("First Name");
 firstNameCol.setCellValueFactory(p -> p.getValue().firstNameProperty());
-{% endhighlight %}
+```
 
 In this example `p` is the `CellDataFeatures<Person, String>` object generated from deep inside the `TableView` code, and the return value is an `ObservableValue<String>`.  But there's no need to declare these types in the lambda since they are all inferred from the context.  
 

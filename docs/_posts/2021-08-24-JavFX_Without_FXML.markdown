@@ -46,7 +46,7 @@ Now, most of that is boilerplate, and the only thing you really need to work out
 
 One thing that we'll get back to later is the stylesheet.  It's good practice to put your styling into a stylesheet and then use selectors to apply it to various nodes in your application.  I have a "default" stylesheet I use for a lot of projects, so I just went and added it to the `Scene` here.
 
-A general rule of thumb is that you should only extend classes that you are going to add new functionality to.  If you're just configuring them, then you should use a builder class - which is what we are doing here.  Personally, I like to use the `Builder` interface, because it's built-in, obvious and works well.  That's what the `ScreenBuilder` class is, it's an implementation of *Builder\<Region\>*.  
+A general rule of thumb is that you should only extend classes that you are going to add new functionality to.  If you're just configuring them, then you should use a builder class - which is what we are doing here.  Personally, I like to use the `Builder` interface, because it's built-in, obvious and works well.  That's what the `ScreenBuilder` class is, it's an implementation of `Builder<Region>`.  
 
 So let's get to that.
 

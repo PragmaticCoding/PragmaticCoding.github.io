@@ -50,7 +50,7 @@ Nickname: Shorty
 ```
 So you can see that, although it looks like you're referencing the field directly, you are actually calling the getter and the setter defined for the property.
 
-Perhaps even more importantly, though, is that you can access the getter and setter from Java through calls to *testClass.setNickName()* and *testClass.getNickName()*.  Kotlin automatically handles this for you.  By the same token, you can access getters and setters in Java classes from Kotlin using direct references to the fields.
+Perhaps even more importantly, though, is that you can access the getter and setter from Java through calls to `testClass.setNickName()` and `testClass.getNickName()`.  Kotlin automatically handles this for you.  By the same token, you can access getters and setters in Java classes from Kotlin using direct references to the fields.
 
 ## The Goal for JavaFX Properties in Kotlin
 
@@ -66,7 +66,7 @@ This makes perfect sense, but it means that we need to use a slightly roundabout
 
 ## An Approach That Works
 
-A good answer seems to be a fairly common design pattern in Kotlin, and that's to use a hidden backing property.  In this case, the hidden backing property is the actual JavaFX property type that we are going to use.  There's also a public property, which has the same type as the data contained in the JavaFX property, and which delegates it's getters and setters to the hidden properties, *get()* and *set()* methods.  
+A good answer seems to be a fairly common design pattern in Kotlin, and that's to use a hidden backing property.  In this case, the hidden backing property is the actual JavaFX property type that we are going to use.  There's also a public property, which has the same type as the data contained in the JavaFX property, and which delegates it's getters and setters to the hidden properties, `get()` and `set()` methods.  
 
 Finally, a method is added to the Model to return the JavaFX property itself, using the same naming convention that you would use in Java.
 
@@ -95,4 +95,4 @@ If you're using Intellij Idea, like I do, then you might find the following like
 
 Just give it a short name (I use "fxprop") and it'll make your life a lot easier.
 
-I've only implemented it as *ObjectProperty<{Type}>* because that works best.  *StringProperty* might be useful, but the `Number` based properties like *IntegerProperty* and *DoubleProperty* have type issues when you get into complicated stuff.  So they seem easier to use, but *ObjectProperty<Int>* is almost always a better choice than *IntegerProperty*`.
+I've only implemented it as `ObjectProperty<{Type}>` because that works best.  `StringProperty` might be useful, but the `Number` based properties like `IntegerProperty` and `DoubleProperty` have type issues when you get into complicated stuff.  So they seem easier to use, but `ObjectProperty<Int>` is almost always a better choice than `IntegerProperty``.

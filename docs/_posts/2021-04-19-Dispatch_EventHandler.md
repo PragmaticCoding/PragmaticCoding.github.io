@@ -67,14 +67,14 @@ public class LatinTranslator extends Application {
 
 I've seen this approach a lot.  I wrote code like this when I started out with JavaFX.
 
-This is probably copypasta from the early days of JavaFX 2, most likely starting with a tutorial on creating a menu.  The same type of structure was used, with the menu text being used to decide which action to take in the ButtonClickHandler code.  It's possible that this was a hold-over from [Swing](https://www.javatpoint.com/java-jmenuitem-and-jmenu), where this approach was standard for building JMenu's.
+This is probably copypasta from the early days of JavaFX 2, most likely starting with a tutorial on creating a menu.  The same type of structure was used, with the menu text being used to decide which action to take in the `ButtonClickHandler` code.  It's possible that this was a hold-over from [Swing](https://www.javatpoint.com/java-jmenuitem-and-jmenu), where this approach was standard for building JMenu's.
 
 Searching for examples today, I couldn't find any online tutorials for JavaFX menus that used this technique, which is good.  However, the fact that it would pop up in a recent StackOverflow question posted by someone who was probably new to JavaFX seems to indicate that there are examples out there for beginners to find.
 
 
 ### The Problem
 
-It's the ButtonClickHandler class that is the problem.  It's a "Dispatch EventHandler".  The idea is that you create a single event handler that will called by a number of controls, and it will somehow figure out which one called it, and what it should do for each one.  
+It's the `ButtonClickHandler` class that is the problem.  It's a "Dispatch EventHandler".  The idea is that you create a single `EventHandler` that will called by a number of controls, and it will somehow figure out which one called it, and what it should do for each one.  
 
 It's a very round-about way to program this.  It's worse than going around three sides of a square - more like going around seven sides of an octagon - and it introduces a level of complexity that simply doesn't serve any purpose at all.  The person writing the answer in this example didn't even bother to put in the actions for two out of the three buttons; probably because it was too much work and didn't contribute to the solution.
 
@@ -172,13 +172,13 @@ public class Translator extends Application {
 
 Philosophically, what's important here is that the key-value pairs are turned into independent Button controls work on their own.  These can then be placed anywhere on the scene without requiring any modification of anything else.  
 
-You can also see how the *createButton()* method does not need any modification to work as a translation routine to turn each key-value pair into a JavaFX Node.  
+You can also see how the `createButton()` method does not need any modification to work as a translation routine to turn each key-value pair into a JavaFX Node.  
 
 ### One Last Fix
 
-There's one dependency on the screen that is still hanging around, and that's the direct update of *myLabel.setText()*.  This is forcing the *myLabel* element to be a field in the class.  It also forces each Button to be aware of the presence of the *myLabel* screen element, which is more needless coupling at the GUI layout level.
+There's one dependency on the screen that is still hanging around, and that's the direct update of `myLabel.setText()`.  This is forcing the `myLabel` element to be a field in the class.  It also forces each Button to be aware of the presence of the `myLabel` screen element, which is more needless coupling at the GUI layout level.
 
-This can be fixed by creating a StringProperty to hold the translation, and then binding the Text property of *myLabel* to that StringProperty.  This may seem like nit-picking, but if you were building this screen with an MVC structure, then both the `Map` of words and translations and the translation for the word associated with a clicked button would be defined in the Model.  This would meant that the buttons and the translation label are coupled to the Model, as they should be, and not to each other:
+This can be fixed by creating a StringProperty to hold the translation, and then binding the Text property of `myLabel` to that StringProperty.  This may seem like nit-picking, but if you were building this screen with an MVC structure, then both the `Map` of words and translations and the translation for the word associated with a clicked button would be defined in the Model.  This would meant that the buttons and the translation label are coupled to the Model, as they should be, and not to each other:
 
 ``` java
 public class Translator extends Application {
@@ -221,4 +221,4 @@ public class Translator extends Application {
 }
 ```
 
-And that's all.  This has gone from something clumsy enough that the original author couldn't be bothered to complete the coding for all of the Buttons in the sample to something so simple that it was trivial to simulate how it would work integrated with a database.  Most importantly, by making the Buttons stand-alone controls, the layout of the screen is now completely decoupled from the actions of the screen.  Those Buttons don't even have to be Buttons anymore, and *myLabel* could change to some other kind of Node.
+And that's all.  This has gone from something clumsy enough that the original author couldn't be bothered to complete the coding for all of the Buttons in the sample to something so simple that it was trivial to simulate how it would work integrated with a database.  Most importantly, by making the Buttons stand-alone controls, the layout of the screen is now completely decoupled from the actions of the screen.  Those Buttons don't even have to be Buttons anymore, and `myLabel` could change to some other kind of Node.

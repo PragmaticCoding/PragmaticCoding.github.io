@@ -42,7 +42,7 @@ The implication here is that the sheer quantity of updates is somehow causing so
 
 Now that's something that we can simulate fairly easily:
 
-{% highlight java %}
+``` java
 public class LongUiTask extends Application {
 
     public static void main(String[] args) {
@@ -96,13 +96,13 @@ public class LongUiTask extends Application {
     }
 }
 
-{% endhighlight %}
+```
 
 ## What This Application Does
 
-This is a window with a single container in it; a FlowPane.  Inside the FlowPane are 100 Buttons.  The first 80 Buttons all launch background tasks that "count as fast as they can", which is the situation that the StackOverflow question specifically posed.  These background tasks are all written so that they update the label on their associated Button, converting the current count number to a String.  Essentially, once each of these buttons are clicked, their labels will change to a rapidly incrementing counter.
+This is a window with a single container in it; a `FlowPane`.  Inside the `FlowPane` are 100 Buttons.  The first 80 Buttons all launch background tasks that "count as fast as they can", which is the situation that the StackOverflow question specifically posed.  These background tasks are all written so that they update the label on their associated Button, converting the current count number to a String.  Essentially, once each of these buttons are clicked, their labels will change to a rapidly incrementing counter.
 
-The next 20 buttons each launch a JavaFX TimeLine, which will start a counter which will increment an IntegerProperty once each second.  The IntegerProperty is then bound to the Text property of the Button so that it will display the current value of the IntegerProperty as a String.  These "Timer" buttons are just that; timers which increment by one each second displaying how many seconds since they were clicked.
+The next 20 buttons each launch a JavaFX `TimeLine`, which will start a counter which will increment an `IntegerProperty` once each second.  The `IntegerProperty` is then bound to the Text property of the Button so that it will display the current value of the `IntegerProperty` as a String.  These "Timer" buttons are just that; timers which increment by one each second displaying how many seconds since they were clicked.
 
 Up and running, it looks like this (with the numbers in the Buttons whizzing away like crazy):
 
@@ -111,7 +111,7 @@ Up and running, it looks like this (with the numbers in the Buttons whizzing awa
 
 ## What Does This Prove?
 
-I chose FlowPane for the main container because it's seems to be a fairly complicated layout for the GUI.  All of the elements are arranged horizontally until the screen width is full, then it starts a new row below it and continues to place elements on that row until the screen width is full, and so on.  When the buttons start to change their labels, their size changes and the layout has to be recalculated.  Also, if you change the size of the Window, the layout will have to be re-evaluated as you drag the border in and out.
+I chose `FlowPane` for the main container because it's seems to be a fairly complicated layout for the GUI.  All of the elements are arranged horizontally until the screen width is full, then it starts a new row below it and continues to place elements on that row until the screen width is full, and so on.  When the buttons start to change their labels, their size changes and the layout has to be recalculated.  Also, if you change the size of the Window, the layout will have to be re-evaluated as you drag the border in and out.
 
 Is this as complicated as a dozen charts and graphs constantly updating?  Maybe not, but JavaFX is really efficient at handling the display so it's probably easy to overestimate the load that an updating chart actually puts on the FXAT.
 
@@ -139,22 +139,22 @@ I tried using a 1 millisecond sleep time, and it started to have trouble when ab
 
 ## But What About Charts and Graphs?
 
-I did some further testing.  I created a screen with a LineChart and one of those counter Buttons from my test program above.  
+I did some further testing.  I created a screen with a `LineChart` and one of those counter Buttons from my test program above.  
 
-Then I loaded up 30 XYChart.Series into the LineChart, and launched a background task for each one that would create an (x,y) pair for each chart with x incrementing by one each time, and the y randomized a bit, but trending up.  Each series started x =1 and y as a random number between 0 and 300.  The background task looped around a 200 millisecond sleep, and then added a new (x,y) pair to its series.    To keep the data series from becoming ridiculously huge, when x got to 1000, it reset it to 1 and any previous (x,y) with the same x was removed from the series.  The logic looked like this:
+Then I loaded up 30 `XYChart.Series` into the `LineChart`, and launched a background task for each one that would create an (x,y) pair for each chart with x incrementing by one each time, and the y randomized a bit, but trending up.  Each series started x =1 and y as a random number between 0 and 300.  The background task looped around a 200 millisecond sleep, and then added a new (x,y) pair to its series.    To keep the data series from becoming ridiculously huge, when x got to 1000, it reset it to 1 and any previous (x,y) with the same x was removed from the series.  The logic looked like this:
 
-{% highlight java %}
+``` java
 Optional<XYChart.Data<Number, Number>> dataToRemove =
          seriesData.stream().filter(data -> data.getXValue().equals(theCount)).findFirst();
 Platform.runLater(() -> {
     dataToRemove.ifPresent(seriesData::remove);
     seriesData.add(new XYChart.Data<>(theCount, theValue));
 });
-{% endhighlight %}
+```
 
 How did this run?
 
-Perfectly.  The LineChart used animation to restructure itself as the data sets grew to 1000 points, and then as the y values trended upwards.  There should have been about 5 data points added each second for each of the 30 data sets.  The counter Button was running and the numbers whizzed by faster than I could follow.  At no point did anything on the LineChart or the Button stutter or pause.
+Perfectly.  The `LineChart` used animation to restructure itself as the data sets grew to 1000 points, and then as the y values trended upwards.  There should have been about 5 data points added each second for each of the 30 data sets.  The counter Button was running and the numbers whizzed by faster than I could follow.  At no point did anything on the `LineChart` or the `Button` stutter or pause.
 
 # Yes, But Those GUI Tasks are Small
 
@@ -169,11 +169,11 @@ Of course, these kinds of layout changes aren't going to be happening 200 times 
 
 # Keep the Back End in the Background
 
-Look at the code snippet above for the XYChart.Data pruning.  Do you see how the `stream()` functionality is run in the background thread?  I assumed that streaming through 1000 items looking for a specific x value could be a little time intensive, so I put that part in the background and stored the result in the Optional.  Then the actual update to the ObservableList, to remove that item, was done on the FXAT.
+Look at the code snippet above for the `XYChart.Data` pruning.  Do you see how the `stream()` functionality is run in the background thread?  I assumed that streaming through 1000 items looking for a specific x value could be a little time intensive, so I put that part in the background and stored the result in the Optional.  Then the actual update to the ObservableList, to remove that item, was done on the FXAT.
 
 When I first wrote this test application, my `countFast()` method looked like this:
 
-{% highlight java %}
+``` java
 private void countFast(Button button) {
     Thread thread = new Thread(() -> {
         AtomicInteger counter = new AtomicInteger();
@@ -189,7 +189,7 @@ private void countFast(Button button) {
     thread.setDaemon(true);
     thread.start();
 }
-{% endhighlight %}
+```
 
 I used `AtomicInteger` as a container for the counter because with the `Platform.runLater()` parameter being a lambda expression, it needed to be "final or effectively final".  The problem is that the `counter.getAndIncrement()` call is happening on the FXAT.  It's a small thing here, but that background thread has one job only -  increment the counter every 2 milliseconds - and it was passing it off to the FXAT!
 
