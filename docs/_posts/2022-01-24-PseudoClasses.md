@@ -316,4 +316,8 @@ The `InvalidationListener` just turns off all of the custom `PseudoClasses` in t
 
 One good thing about the way that `PseudoClass` is introduced in the JavaDocs is that it reaffirms that the designers of JavaFX intended it to be used as a Reactive framework.  You can tell this because they take care to explain it in the context of a `BooleanProperty` embedded into a `Node`.
 
-However, in doing this they also made it very difficult to understand just how simple the concept of `PseudoClass` really is.  Hopefully this tutorial has cleared that up.
+To be perfectly fair, though, the second sentence in the JavaDocs introduction is a complete and concise summary of everything in this tutorial:
+
+>Introducing a pseudo-class into a JavaFX class only requires that the method Node.pseudoClassStateChanged(javafx.css.PseudoClass, boolean) be called when the pseudo-class state changes.
+
+However, everything else in the JavaDocs makes it very difficult to believe it could be that simple.  Hopefully this tutorial has cleared that up.
