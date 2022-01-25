@@ -147,12 +147,12 @@ PseudoClass instances aren't functionally unique
 ``` java
     PseudoClass xyzzy = PseudoClass.getPseudoClass("xyzzy");
     myButton.pseudoClassStateChanged(xyzzy, true);
-````
+```
 It's probably a bit inefficient if it's going to be called a lot, just because there's a fair bit of code running inside of `PseudoClass.getPseudoClass()`.  So it might be best to declare it as a static field inside of whatever class holds this code.
 
 ## Connecting PseudoClasses to Properties and Bindings
 
-So we've seen that `PseudoClasses` are just normal Java and are implemented through normal imperative programming techniques.  But if you want to build a reactive JavaFX application, then you need to control the `PseudoClasses` through `Properties` and `Bindings`.
+We've seen that `PseudoClasses` are just normal Java and are implemented through normal imperative programming techniques.  But if you want to build a reactive JavaFX application, then you need to control the `PseudoClasses` through `Properties` and `Bindings`.
 
 How do you do that?
 
