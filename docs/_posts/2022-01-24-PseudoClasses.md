@@ -84,7 +84,9 @@ And then they've included the following example code:
 
 Seriously, I don't think this is a great way to explain how it works.  They've even called it `magicProperty`, which might be an admission that they understood they weren't explaining it very well when they wrote it.
 
-Not to mention that `MyControl.this` is never defined anywhere.  Also, there's a typo (which I've fixed here) in the call to `pseudoClassStateChanged()`.  That doesn't help either.
+`MyControl.this` isn't defined anywhere, but it appears that this snippet of code is supposed to be embedded into a class which is an extension of `Node`.  The idea being that this class now exposes a `BooleanProperty` through `magicProperty()` that the layout can then bind to some other property to control the `PseudoClass`.
+
+Also, there's a typo (which I've fixed here) in the call to `pseudoClassStateChanged()`.  That doesn't help either.
 
 ## How Does it Really Work?
 
