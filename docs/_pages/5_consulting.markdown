@@ -12,7 +12,7 @@ header:
 
 sidebar:
     nav: "master"
-permalink: /pages/services/
+permalink: /services
 skip_link: false
 ---
 
