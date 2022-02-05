@@ -27,6 +27,14 @@ feature_row2:
     url: "/javafx/minesweeper"
     btn_label: "Read More"
     btn_class: "btn--primary"
+feature_row3:
+  - image_path: /assets/posts/WordleFX1.png
+    alt: "WordleFX"
+    title: "WordleFX"
+    excerpt: 'The popular game, "Wordle" implemented as a desktop application, written in Kotlin using Reactive JavaFX'
+    url: "/javafx/wordle"
+    btn_label: "Read More"
+    btn_class: "btn--primary"
 ---
 
 {% include feature_row id="intro" type="center" %}
@@ -34,3 +42,5 @@ feature_row2:
 {% include feature_row id="feature_row1" type="left" %}
 
 {% include feature_row id="feature_row2" type="left" %}
+
+{% include feature_row id="feature_row3" type="left" %}
