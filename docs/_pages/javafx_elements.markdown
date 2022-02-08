@@ -45,9 +45,11 @@ The interface `Property` contains only methods related to binding, and this is t
 
 All of the JavaFX `Node` descendants have a variety of properties that can be bound from (or to) properties in other `Nodes`, or custom properties created by the programmer.  This is the core of how a reactive application is built - `Properties` in the GUI are bound to `Properties` in the Data Model, and then application controls the GUI largely by manipulating the state of the Data Model.
 
-### ChangeListeners
+### Listeners
 
-`ChangeListeners` are way to manually monitor a `Property` for changes in its value, and then to trigger some code when a change happens.  Generally speaking, `Bindings` are much preferred over `ChangeListeners`, but there are times when only a `ChangeListener` will work.  The reason for this is that **Bindings link "State", while ChangeListeners transform changes in "State" to actions**.  Programming to State is always better, but events work better in some circumstances, such as when data from external API's need to be loaded on a State change.
+`ChangeListeners` are way to manually monitor a `Property` for changes in its value, and then to trigger some code when a change happens.  Generally speaking, `Bindings` are much preferred over listeners, but there are times when only a listener will work.  The reason for this is that **Bindings link "State", while ChangeListeners transform changes in "State" to actions**.  Programming to State is usually better, but events work better in some circumstances, such as when data from external API's need to be loaded on a State change.
+
+[Read More About Listeners](/javafx/listeners){: .btn .btn--info}
 
 ## Events and Actions
 
@@ -58,6 +60,10 @@ It's important to understand where actions and `Events` are more appropriate tha
 ## CSS
 
 All of the JavaFX `Nodes` can be styled with cascading style sheets.  These are largely compatible with web standards for CSS, but there are some differences to learn about.  How you implement CSS styling largely becomes a matter of taste.  You can override the standard styling for entire classes of `Nodes`, or you can create custom selectors and attach them to specific `Nodes` in your code.  Or you can do both.
+
+Pseudo-Classes are the best way to represent changes in the State of your application the styling of your GUI.  
+
+[Read About Pseudo-Classes Here](/javafx/pseudo_classes){: .btn .btn--info}
 
 ## Handling the GUI Thread
 
