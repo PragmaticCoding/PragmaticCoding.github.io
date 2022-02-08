@@ -186,7 +186,7 @@ This is about as simple as you can make an application that has a domain layer b
 
 I wouldn't.  It doesn't do anything for you.  However, if you must...
 
-Remember that the FXML Controller is **NOT** and MVC Controller.  You need to think of the FXML, FXML Loader and FXML Controller together as the "View" in MVC.  And for that matter, the FXML file isn't a Model either, even though it feels like data.
+Remember that the FXML Controller is **NOT** an MVC Controller.  You need to think of the FXML, FXML Loader and FXML Controller together as the "View" in MVC.  And for that matter, the FXML file isn't a Model either, even though it feels like data.
 
 What you'll need to do is to create an MVC Controller that instantiates the View by calling the FXML Loader and then passing your Model into the FXML Controller to create the Bindings that connect it to the Nodes in the GUI.  If you can do that, then the rest of your application structure should be just as described in this article.
 
