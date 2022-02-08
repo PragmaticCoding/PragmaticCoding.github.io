@@ -4,6 +4,8 @@ date:   2022-02-06 12:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
 permalink: /javafx/weather
+redirect_from:
+  - /javafx/useful_application
 ScreenSnap: /assets/posts/Weather.png
 Diagram: /assets/posts/MVCI.png
 excerpt: Maybe you've figured out how to build a working GUI that looks good.  Now, how do you connect it to the rest of the world and make it do something?   
