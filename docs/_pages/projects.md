@@ -54,4 +54,4 @@ feature_row_weather:
 
 {% include feature_row id="feature_row_wordle" type="left" %}
 
-{% include feature_row id="feature__minesweeper" type="left" %}
+{% include feature_row id="feature_row_minesweeper" type="left" %}
