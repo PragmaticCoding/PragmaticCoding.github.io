@@ -9,6 +9,10 @@ redirect_from:
 ScreenSnap: /assets/posts/Weather.png
 Diagram: /assets/posts/MVCI.png
 excerpt: Maybe you've figured out how to build a working GUI that looks good.  Now, how do you connect it to the rest of the world and make it do something?   
+header:
+  actions:
+    - label: "Go to the Project"
+      url: "https://github.com/PragmaticCoding/WeatherFX"
 ---
 
 # Introduction
