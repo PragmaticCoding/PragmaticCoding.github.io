@@ -161,6 +161,7 @@ include:
   - _pages
   - _elements
   - _beginners
+  - _linux
 exclude:
   - "*.sublime-project"
   - "*.sublime-workspace"
@@ -325,6 +326,28 @@ defaults:
       sidebar:
         title: "Beginners Guide to JavaFX"
         nav: "beginners"
+      header:
+        overlay_image: /assets/images/brain.jpg
+        overlay_filter: 0.4
+
+
+  - scope:
+      path: docs/_linux
+      type: pages
+    values:
+      layout: single
+      author_profile: false
+      read_time: true
+      comments: # true
+      share: true
+      related: true
+      toc: true
+      toc_label: "Contents"
+      toc_icon: "brain"
+      toc_sticky: true
+      sidebar:
+        title: "The Beginner's Guide to Linux"
+        nav: "linux"
       header:
         overlay_image: /assets/images/brain.jpg
         overlay_filter: 0.4

@@ -46,3 +46,19 @@ beginners:
         url: /beginners/part1
       - title: "Part 2 - Configuring Layouts"
         url: /beginners/part2
+
+
+linux:
+  - title: Getting Started
+    url: /linux/intro
+    children:
+      - title: "A Quick Start"
+        url: /linux/start
+      - title: "Directories and File Listings"
+        url: /linux/directories
+      - title: "The Basics of Bash"
+        url: /linux/bash
+      - title: "Processes and Resources"
+        url: /linux/resources
+      - title: "Users and Groups"
+        url: /linux/users
