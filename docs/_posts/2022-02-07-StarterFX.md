@@ -1,6 +1,6 @@
 ---
 title:  "StarterFX: A Gradle Based JavaFX Ignition Project"
-date:   2022-03-06 12:00:00 -0500
+date:   2022-03-30 12:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
 permalink: /javafx/starterfx
