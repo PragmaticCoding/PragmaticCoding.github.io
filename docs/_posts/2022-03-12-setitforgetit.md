@@ -1,6 +1,6 @@
 ---
 title:  'Building Views - The "Set It and Forget It" Approach'
-date:   2022-03-11 12:00:00 -0500
+date:   2022-03-30 12:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
 toc: true
