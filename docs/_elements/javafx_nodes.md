@@ -30,6 +30,15 @@ feature_row_textformatter:
     url: "/javafx/elements/textformatter"
     btn_label: "Read the Article"
     btn_class: "btn--primary"
+
+feature_row_imageview:
+  - image_path: /assets/elements/ImageViewDemo1.png
+    alt: "ImageView"
+    title: "All About Image and ImageView"
+    excerpt: "Image and ImageView are the two classes you'll need to know in order to be able to put images into your layouts."
+    url: "/javafx/elements/imageview"
+    btn_label: "Read the Article"
+    btn_class: "btn--primary"    
 ---
 
 # JavaFX nodes
@@ -47,3 +56,5 @@ All of these Nodes have a large number of methods and properties for controlling
 {% include feature_row id="feature_row_buttons" type="left" %}
 
 {% include feature_row id="feature_row_textformatter" type="left" %}
+
+{% include feature_row id="feature_row_imageview" type="left" %}
