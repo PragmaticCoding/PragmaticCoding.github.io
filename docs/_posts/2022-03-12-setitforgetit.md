@@ -83,7 +83,7 @@ Let's look at some examples to understand what this means.
 
 - **Data in State is identified by business meaning.** <br>As an example, let's imagine that some value needs to be shown in a different colour if it's in an error state, so you create a separate field in State to indicate this.  What kind of data should it be, and what do you call it?  Well, you don't make it type `Colour` and call it `XyzFieldColour`.  Something like a `Boolean` type called `AbcValueExceedsLimit`, would be much better.  Nor would you make it a `Boolean` called `XyzInRed`.  That wouldn't make any sense to the Business Logic module - and what would happen if the View was changed so that it in purple?  Let the View interpret the meaning and decide about the presentation.
 
-Notice a trend?  The View is designed to convey **meaning** to the data, the View is designed to handle **presentation** of the data.  Keep these two roles strictly separated.
+Notice a trend?  State is designed to convey **meaning** to the data, the View is designed to handle **presentation** of the data.  Keep these two roles strictly separated.
 {: .notice--primary }
 
 # How Do You Do This?
