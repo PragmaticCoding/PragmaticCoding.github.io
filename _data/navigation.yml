@@ -19,6 +19,8 @@ master:
       - title: Elements of JavaFX
         url: /javafx/elements
         children:
+        - title: Set It and Forget It
+          url: /javafx/elements/setitforgetit
         - title: Nodes
           url: /javafx/elements/nodes
 

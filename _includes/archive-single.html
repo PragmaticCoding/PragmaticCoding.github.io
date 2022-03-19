@@ -19,7 +19,7 @@
     {% endif %}
     <div>
       {%- if post.logo -%}
-        <img src="{{ post.logo }}" height="46" width="46" style="margin-right: 10px; margin-top: 6px; float:left;" />
+              <img src="{{ post.logo }}" height="46" width="46" style="margin-right: 10px; margin-top: 6px; float:left;" />
       {%- endif -%}
       <h2 class="archive__item-title no_toc" itemprop="headline">
         {% if post.link %}
@@ -30,6 +30,6 @@
       </h2>
     </div>
     {% include page__meta.html type=include.type %}
-    {% if post.excerpt %}<p class="archive__item-excerpt" itemprop="description">{{ post.excerpt | markdownify | strip_html | truncate: 160 }}</p>{% endif %}
+    {% if post.excerpt %}<p class="archive__item-excerpt" itemprop="description">{{ post.excerpt | markdownify | strip_html | truncate: 300 }}</p>{% endif %}
   </article>
 </div>
