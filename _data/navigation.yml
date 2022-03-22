@@ -23,6 +23,12 @@ master:
           url: /javafx/elements/setitforgetit
         - title: Nodes
           url: /javafx/elements/nodes
+        - title: Observables, Bindings and Listeners
+          url: /javafx/elements/observables
+        - title: Events
+          url: /javafx/elements/events
+        - title: PseudoClasses
+          url: /javafx/elements/pseudo_classes
 
   - title: MultiValue Databases
     url: /pages/multivalue

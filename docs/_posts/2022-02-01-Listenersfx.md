@@ -3,7 +3,7 @@ title:  "Observable Listeners in JavaFX"
 date:   2022-02-01 12:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
-permalink: /javafx/listeners
+permalink: /javafx/elements/listeners
 excerpt: ChangeListener or InvalidationListener, which is right kind of listener to use?    
 ---
 

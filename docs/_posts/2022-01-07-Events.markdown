@@ -13,13 +13,13 @@ excerpt: Everything you need to know about Events<br>
 ---
 
 
-## What is an Event?
+# What is an Event?
 
 An `Event` is a data object propagated by JavaFX in response to a trigger in the UI.  It's a signal that something of significance has happened, and gives the application a chance to react to that event.
 
 `Events` are useful because they offer an opportunity to create imperative code that responds to something in the UI.  As a Reactive framework, the functionality provided by `Bindings` and `ChangeListeners` provide the primary tools for connecting the `View` to the `State` in an application.  However, there are times when imperative code is appropriate, such as when connecting to an external API, and `Events` provide that mechanism in JavaFX.
 
-## How Events Fit in the JavaFX Hierarchy
+# How Events Fit in the JavaFX Hierarchy
 
 `Event` classes inherit methods and properties from these important classes:
 
@@ -35,13 +35,13 @@ InputEvent
 The version 16 JavaDocs for `Event` can be found [here](https://openjfx.io/javadoc/16/javafx.base/javafx/event/Event.html)
 
 
-## Fields
+# Fields
 
-### Source & Target
+## Source & Target
 
 `Source` is the `Node` that generated the `EventHandler` that's running.  `Target` is the `Node` that triggered the `Event`.  In virtually all real use cases, these will be the same `Node` since the `EventHandler` is usually attached to the `Node` that triggered the `Event`.
 
-### EventType
+## EventType
 
 This is a little more complicated.  
 
@@ -54,7 +54,7 @@ Finally, the actual possible values of `EventType` are stored as static fields i
 if (event.getEventType().equals(MouseEvent.MOUSE_CLICKED)) {}
 ```
 
-## Event Handlers
+# Event Handlers
 
 So, what do you do with an `Event`?
 
@@ -62,13 +62,13 @@ An `Event` indicates, as its name suggests, that something - some kind of event 
 
 An `EventHandler` is just a snippet of code which is designed to consume an `Event` of a specific type.  It's a functional interface that works very much like `Consumer`, it accepts a value and doesn't return anything.  Instead of having an `accept()` method, it has a `handle()` method, where it is passed the `Event`.
 
-### Submitted to the FXAT
+## Submitted to the FXAT
 
 The other really important aspect to remember is that all of the code inside, or called from an `EventHandler` is going to be executed on the FXAT.  Furthermore, it's going to be executed by submitting it to an "Event Queue", meaning that its execution may be delayed.  There is only one FXAT and the jobs are all executed in the order of submission, so there may be some delay before your `EventHandler` is executed, and significant code may run on the FXAT between the moment that the `Event` is fired, and the time that the `EventHandler` is executed.  If multiple `EventHandlers` are defined to respond to the same event, there are specific rules which govern which will be executed first.
 
 So how do you implement an `EventHandler`?  There are a few ways:
 
-### Create a Custom class
+## Create a Custom class
 
 `EventHandler` is just an Interface, so any class which implements it and has a `handle()` method can be used as an `EventHandler`.  Probably the most useful case for this would be if you had some kind of data that was persistent between invocations of `handle()` or that needed to be initialized via a constructor when the `EventHandler` was defined.
 
@@ -126,7 +126,7 @@ And when it runs, it looks like this:
 
 ![Using a Custom Class]({{page.CustomClass}})
 
-### Create an Anonymous Inner class
+## Create an Anonymous Inner class
 
 Prior to the introduction of `Lambdas`, this was the "normal" way to create an `EventHandler`.  It can get a bit bulky if you in-line the class definition inside the method assigning it to the Node.
 
@@ -181,7 +181,7 @@ private Node createCounterButton(IntegerProperty count, int increment) {
 }
 ```
 
-### Use a Lambda Expression
+## Use a Lambda Expression
 
 Since `EventHandler` is a Functional Interface, you can define it with a Lambda expression.  This can provide a really compact way to declare a handler, especially if you stick to the in-line form of lambda and just use it as a way to invoke code in a separate method.
 
@@ -248,30 +248,30 @@ public class LambdaExample1 extends Application {
 }
 ```
 
-## Types of Events
+# Types of Events
 
 In addition to the types listed below, there are a handful of very specific `Event` types, like `TreeTableView.EditEvent`, which are best examined in the context of an article about specific JavaFX `Node` classes.  The following are the common `Event` types that you might need to deal with:
 
-### The ActionEvent
+## The ActionEvent
 
 The `ActionEvent` is probably the mostly commonly encountered event, as it's the one that's triggered by `Buttons` and `CheckBoxes` and their ilk.  It's also the simplest kind of event, as it doesn't have any data beyond its `Source` property.  `ActionEvents` are installed on `Nodes` by calling their `setOnAction()` method.
 
 Look at the samples from the `EventHandlers` section above.  These all show how an `ActionEvent` triggers a handler that does work without any specific reference to the `Event` that triggered it.
 
 
-### The MouseEvent
+## The MouseEvent
 
 For `MouseEvent` and `KeyEvent`  handlers, you are probably going to need to look at the `Event` itself since there is information in the `Event` which is going to be required in order to handle the `Event`.  There are a number of different types of `MouseEvent`, and you can see the complete list in the [JavaDocs](https://openjfx.io/javadoc/16/javafx.graphics/javafx/scene/input/MouseEvent.html).
 
 "Drag and Drop" is a more complicated topic which requires its own article, so we'll leave it for now.
 
-#### Mouse Enter and Leave Events
+### Mouse Enter and Leave Events
 
 These are the `Events` that are generated when the cursor enters or leaves a `Node` on the screen.  There are two `EventTypes`, each with two flavours.  They are `MOUSE_ENTERED` or `MOUSE_ENTERED_TARGET` and `MOUSE_EXITED` or `MOUSE_EXITED_TARGET`.  The differences between the two flavours is only meaningful if you read and apply, "The Complicated Stuff", below.  Otherwise, you can use either flavour without seeing any differences in functionality.
 
 Like most mouse based `Events`, there's probably a better way in JavaFX to do whatever you are trying to do with `MOUSE_ENTERED` and `MOUSE_EXITED`.  The "hover" pseudo-class in CSS might do what you need, or maybe a ToolTip.
 
-#### Mouse Click and Button Events
+### Mouse Click and Button Events
 
 There are three types of `Events` in this category, `MouseClicked`, `MousePressed` and `MouseReleased`.  `MouseClick` is the `Event` generated by a complete press-release cycle on a mouse button.  The source is whatever `Node` the cursor was over when the `Event` happened.
 
@@ -285,7 +285,7 @@ getClickCount()
 
 There are also methods to tell if \<Ctrl\>, \<Alt\>, \<Shift\> and a few other modifying keys were pressed when the `Event` was generated.
 
-### The KeyEvent
+## The KeyEvent
 
 `KeyEvents` are used to capture keystrokes that occur in a `Node`.  Just like the mouse based `Events`, there are three kinds of events one for key pressed, one for key released and one for key typed - which is a press/release cycle on a key.  
 
@@ -293,28 +293,28 @@ And also just like with mouse based `Events` there are methods that will tell yo
 
 The main piece of information is the `KeyCode`, from the `getCode()` method in the `KeyEvent`.  It will return you a value that can be found in [this](https://openjfx.io/javadoc/16/javafx.graphics/javafx/scene/input/KeyCode.html) JavaDocs page.
 
-### The WorkerStateEvent
+## The WorkerStateEvent
 
 `WorkerStateEvents` are not called by `Nodes` but by `Tasks` and `Services` which are generally used to run code on a background thread.  For the most part, these `Events` are used to get your code running back on the FXAT once the `Task` has been completed.
 
 How to deal with `Tasks` and `WorkerStateEvents` will be covered in its own article.
 
-### The WindowEvent
+## The WindowEvent
 
 `WindowEvents` are triggered by `Window` subclasses, the most important of which is `Stage`.  There are three basic classes of `WindowEvent` types: Showing, Hiding and Closing.  "Showing" and "Hiding" each have a before and after `Event`, while "Closing" has a single type `WINDOW_CLOSE_REQUEST`.
 
 `WIDOW_CLOSE_REQUEST` is arguably the most useful as it is triggered whenever an external element (including the user) attempts to close the window.  If not consumed by an `EventHandler`, this event will cause the window to close.  The most common use of an `EventHandler` here is to perform operations like checking for unsaved data, showing an "Are you sure?" alert and possibly interrupting the window close.
 
 
-## Tips
+# Tips
 
-### View EventHandler as a Trigger
+## View EventHandler as a Trigger
 
 The presence of an `EventHandler` in your code seems to automatically make it more complex.  Get your code out of the `handle()` method as soon as possible.  If possible, treat the `EventHandler` as nothing more than a trigger to call some "regular" Java code outside of the `EventHandler`.
 
 There's rarely a reason for an `ActionEvent` handler to be anything other than an `Expression Lambda`.  If you need to do something more complicated, then call a method and pass it any parameters it might need.  Other types of `Events` may require a few lines of code to extract supplementary information from the `Event`, but any involved processing should happen in some other method.
 
-### Don't Write "Dispatch" Event Handlers
+## Don't Write "Dispatch" Event Handlers
 
 I don't know if there is something about FXML that makes this necessary, or if it's just copypasta from some early (bad) tutorial that's become ubiquitous.  There are also lots of articles and tutorials answering the question, "How do I know which button was clicked?".
 
@@ -406,7 +406,7 @@ public class NotDispatchHandlerExample extends Application {
 ```
 So the correct answer to, "How do I know which button triggered an EventHandler?", is "Because each button has its own, unique, EventHandler"
 
-### Don't Pass EventHandlers Between Classes
+## Don't Pass EventHandlers Between Classes
 
 This is an easy trap to fall into, especially if you're trying to add structure to your application and implement MVC or some other framework that separates processing from the UI.  
 
@@ -418,7 +418,7 @@ An `EventHandler` is a UI element which provides an interface to facilitate proc
 
 
 
-## The Complicated Stuff
+# The Complicated Stuff
 
 This part is at the bottom because you shouldn't even read it if any of the information above confused you.  99% of the time you don't need to know anything below this line, and you can happily build JavaFX applications without even being aware of it.
 
@@ -426,7 +426,7 @@ Generally speaking, the source of an `Event` is usually the `Node` at which the 
 
 But it doesn't have to be done that way!
 
-### The Event Chain
+## The Event Chain
 
 In virtually any case where you are going to encounter `Events`, the source of each `Event` is going to be contained inside of something else.  And that something else might be contained in another Node, and so on, with everything eventually contained inside of a `Scene` which is in turn, contained inside a `Stage`.
 
@@ -436,7 +436,7 @@ It's even possible that one of those `Nodes` can swallow up the `Event` so that 
 
 The documentation makes a big deal about "Target Selection Phase", but you can probably just assume that the "target" is going to be the source `Node`.  It's a fair bet.
 
-### Event Capturing Phase
+## Event Capturing Phase
 
 The `Event` is actually passed to the containing `Stage` first, then to the `Scene` and then to the root `Node` of the `Scene`.  After that it is passed to through the levels of containers until it reaches the target `Node`.  Each one of those `Nodes` might have an `EventHandler` that would respond to the `Event`.
 
@@ -444,13 +444,13 @@ For the "Event Capturing Phase", the `EventHandlers` are installed on the `Nodes
 
 To make matters more complicated, the handlers for `EventFilters` use the same interface, `EventHandler`.  You'll see how this is confusing in the next section...
 
-### Event Bubbling Phase
+## Event Bubbling Phase
 
 If you image the "Event Capturing Phase" as travelling down the containing `Nodes` from the top, the "Event Bubbling Phase" is the reverse (I guess it "bubbles up", back to the `Stage`).  Starting with the target `Node`, it's `EventHandler` will be executed (if there is one), and then the `Event` is passed to the `Node` containing the target, and so on, right back up to the `Stage`.
 
 For the "Event Bubbling Phase", `EventHandlers` are installed on `Nodes` using the `addEventHandler()` and `setEventHandler()`, as well methods like `setOnAction()`.  If the target `Node` has both an `EventFilter` and an `EventHandler`, the `EventFilter` will be executed first.
 
-#### An Example
+### An Example
 
 ``` java
 public class ChainedEvents extends Application {
@@ -530,7 +530,7 @@ You should notice:
 * The mouse based `Events` all have a target of `LabeledText`.  This is because I clicked right on the middle of the `Button`, on the words "Click Me!".  `Button` is just a `Region` and it contains `Nodes` inside it to hold the contents.  The mouse clicks targeted these inner `Nodes` of `Button`.
 * Look at the `MOUSE_ENTERED Events`.  The mouse enters all of the Nodes from `Scene` to `Button` in one movement, and it seems to handle each of those separately, without passing through a successively longer chain for each source, which makes sense.
 
-### Event Consumption
+## Event Consumption
 
 The last twist is that any one of those `EventFilters` or `EventHandlers` on any of those `Nodes` can invoke the `consume()` method on the `Event` and swallow it up.  This prevents any other `Nodes` further along the "Capture" and "Bubbling" phases from seeing the `Event`.
 
@@ -556,6 +556,6 @@ The output now looks like this:
 
 Which is what you would expect.  All of the `Events` propagate through all of the `Nodes` except the `ActionEvent` from the `Button` which is seen by just the `Stage`, and then the `Scene`, which consumes it.
 
-### Conclusion
+## Conclusion
 
 There are some practical applications of this technique.  But if you are building a standard desktop business application and your design depends on deep understanding of "Event Capturing and Bubbling Up" you're probably deep in the weeds and heading in the wrong direction.  Chances are you don't know about some feature of JavaFX that you should be using instead.  You should look for alternatives.

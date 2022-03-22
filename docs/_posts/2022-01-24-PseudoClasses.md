@@ -3,7 +3,7 @@ title:  "Demystifying PseudoClasses in JavaFX"
 date:   2022-01-24 12:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
-permalink: /javafx/pseudo_classes
+permalink: /javafx/elements/pseudo_classes
 excerpt: Pseudo Classes are the best way to handle on/off state changes in a Node in JavaFX.  But it's very badly explained in the JavaDocs and hard to understand.  This article should clear that up.
 image1: /assets/elements/PseudoClass1.png
 image2: /assets/elements/PseudoClass2.png

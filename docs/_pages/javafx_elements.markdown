@@ -49,7 +49,7 @@ All of the JavaFX `Node` descendants have a variety of properties that can be bo
 
 `ChangeListeners` are way to manually monitor a `Property` for changes in its value, and then to trigger some code when a change happens.  Generally speaking, `Bindings` are much preferred over listeners, but there are times when only a listener will work.  The reason for this is that **Bindings link "State", while ChangeListeners transform changes in "State" to actions**.  Programming to State is usually better, but events work better in some circumstances, such as when data from external API's need to be loaded on a State change.
 
-[Read More About Listeners](/javafx/listeners){: .btn .btn--info}
+[Read More About Listeners](/javafx/elements/listeners){: .btn .btn--info}
 
 ## Events and Actions
 
@@ -63,7 +63,7 @@ All of the JavaFX `Nodes` can be styled with cascading style sheets.  These are 
 
 Pseudo-Classes are the best way to represent changes in the State of your application the styling of your GUI.  
 
-[Read About Pseudo-Classes Here](/javafx/pseudo_classes){: .btn .btn--info}
+[Read About Pseudo-Classes Here](/javafx/elements/pseudo_classes){: .btn .btn--info}
 
 ## Handling the GUI Thread
 
