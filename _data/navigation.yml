@@ -39,6 +39,8 @@ master:
         url: /pages/about
       - title: About Me
         url: /pages/about_me
+      - title: Useful Links
+        url: /pages/links  
 
   - title: Projects
     url: /pages/projects
