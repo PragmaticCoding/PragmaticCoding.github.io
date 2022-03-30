@@ -23,7 +23,7 @@ name                     : "PragmaticCoding"
 description              : >- # this means to ignore newlines until "baseurl:"
   PragmaticCoding is all about ... pragmatic coding!  Writing code that
   gets the job done and is easy to read, understand, maintain and enhance.
-url                      : "https://pragmaticcoding.ca" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
+url                      : "https://www.pragmaticcoding.ca" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : # the subpath of your site, e.g. "/blog"
 repository               : # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
