@@ -43,6 +43,8 @@ Just like the Nodes, there are a large number of classes and interfaces that ext
 
 The interface `Property` contains only methods related to binding, and this is the key characteristic of any `Observable` class.  Binding is how a `Property` is connected to one or more other properties.  So that a change in one of those `Properties` will trigger a change in the bound `Property`.  `Binding` is also an interface - which extends `Observable`, and `ObservableValue` - so you can connect any number of `Properties` together into a single value which is contained inside of an `Observable` wrapper, which means it can be used just like a read-only `Property`.
 
+[Read About Bindings Here](/javafx/elements/observables){: .btn .btn--info}
+
 All of the JavaFX `Node` descendants have a variety of properties that can be bound from (or to) properties in other `Nodes`, or custom properties created by the programmer.  This is the core of how a reactive application is built - `Properties` in the GUI are bound to `Properties` in the Data Model, and then application controls the GUI largely by manipulating the state of the Data Model.
 
 ### Listeners
@@ -74,3 +76,5 @@ Like virtually every GUI library available, it's really, really bad to do long o
 The biggest implication of this is that you cannot program linearly.  Try as hard as you like, but there's no way that you can run anything that looks like a "Function" (ie. input some data and wait for an answer) triggered from the FXAT that uses a background thread.  When your application behaves weirdly and seems laggy or hangs, come back to this paragraph and read it carefully because this is what you're probably trying to do.
 
 JavaFX provides a handy class called "Task", which supplies a runnable which you can pass to a Thread.  When the code in the Task has been completed, it triggers a "Success" Event.  You can supply an Event Handler which be invoked when the "Success" event is triggered.  Just like any Event Handler, it will be run on the FXAT and can therefore update the GUI.  
+
+[Read About The FXAT and Task Here](/javafx/elements/fxat){: .btn .btn--info}
