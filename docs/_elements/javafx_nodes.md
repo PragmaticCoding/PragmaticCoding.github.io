@@ -36,8 +36,8 @@ feature_row_imageview:
     alt: "ImageView"
     title: "All About Image and ImageView"
     excerpt: "Image and ImageView are the two classes you'll need to know in order to be able to put images into your layouts."
-    url: "/javafx/elements/imageview"
-    btn_label: "Read the Article"
+    url: "/javafx/elements/images"
+    btn_label: "Read the Articles"
     btn_class: "btn--primary"    
 ---
 
