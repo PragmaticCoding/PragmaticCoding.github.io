@@ -39,8 +39,10 @@ master:
         url: /pages/about
       - title: About Me
         url: /pages/about_me
+      - title: About The Tutorials
+        url: /pages/about_tutorials
       - title: Useful Links
-        url: /pages/links  
+        url: /pages/links
 
   - title: Projects
     url: /pages/projects
