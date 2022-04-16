@@ -39,7 +39,7 @@ feature_row_sprites:
 
 Mastering `ImageView` is fairly simple and allows you to add a lot of extra flair to your layouts.  From putting images on `Buttons`, to adding logos and image backgrounds, `ImageView` is the essential class to know.
 
-# The Nodes:
+# The Articles:
 
 {% include feature_row id="feature_row_imageview" type="left" %}
 
