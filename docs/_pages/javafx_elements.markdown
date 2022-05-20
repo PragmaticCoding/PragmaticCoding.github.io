@@ -63,6 +63,10 @@ It's important to understand where actions and `Events` are more appropriate tha
 
 All of the JavaFX `Nodes` can be styled with cascading style sheets.  These are largely compatible with web standards for CSS, but there are some differences to learn about.  How you implement CSS styling largely becomes a matter of taste.  You can override the standard styling for entire classes of `Nodes`, or you can create custom selectors and attach them to specific `Nodes` in your code.  Or you can do both.
 
+Getting started with stylesheets is pretty easy.  There are, as usual, some things you need to know before you get going but they've all been gathered together in this article:
+
+[Read About How to Get Started with Stylesheets Here](/javafx/elements/stylesheets){: .btn .btn--info}
+
 Pseudo-Classes are the best way to represent changes in the State of your application the styling of your GUI.  
 
 [Read About Pseudo-Classes Here](/javafx/elements/pseudo_classes){: .btn .btn--info}
