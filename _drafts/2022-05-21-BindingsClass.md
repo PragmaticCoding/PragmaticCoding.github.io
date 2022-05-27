@@ -216,20 +216,26 @@ Personally, I find that the Fluent API is great as long as the relationships and
 
 # The "Operation" Methods
 
-This set of methods is aimed pretty squarely at the functionality provided through the Fluent API.  We have the following groups of operations:
+This set of methods is aimed pretty squarely at the functionality provided through the Fluent API.  Basically, these methods allow you to manipulate and combine both Observable and concrete values into a Binding of some type.  You'll find that these methods often overloaded, so that you can generally just pass them the parameters that you have and you'll automatically invoke the right method and get an appropriate Binding type back.
+
+We have the following groups of operations:
 
 ## The "Manipulation" Methods
 
-  1. Concat
-  1. Format (for formatting Strings)
-  1. Size (for Observable Lists)
-  1. When
+  1. Concat<br>
+     You pass this method a vararg of Strings and Observable String types and it will create an StringExpresson, which implements ObservableStringValue.
+  1. Format<br>
+     This method takes a format string and a vararg of Strings and Observables and it will create a StringExpression.
+  1. Size<br>
+     This method will create an IntegerBinding from some kind of Observable Collection, binding to the size of the Collection.
+  1. When<br>
+     This method takes a ObservableBooleanValue and turns it into an instance of When.  This is a whole subject in itself that is best discussed in the context of the Fluent API.
 
 
 
 ## The "Boolean" Methods
 
-There's a set of methods that return a `BooleanBinding`:
+There's a set of methods that return a `BooleanBinding`.  For each of these you can supply a mixture of Observable and concrete data types and the method will create a BooleanBinding:
 
   1. LessThan and GreaterThan (including ...OrEqual versions)
   1. IsEmpty and IsNotEmpty
@@ -238,7 +244,7 @@ There's a set of methods that return a `BooleanBinding`:
 
 ## The "Mathematical" Methods
 
-There are a set of methods that return `DoubleBinding` or `NumberBinding` and perform mathematical operations on numbers and numeric ObservableValues:
+There are a set of methods that return `DoubleBinding` or `NumberBinding` and perform mathematical operations on concrete number types and numeric ObservableValues:
 
   1. Max and Min
   1. Multiply and Divide
