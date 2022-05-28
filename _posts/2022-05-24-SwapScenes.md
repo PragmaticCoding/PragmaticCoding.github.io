@@ -55,7 +55,7 @@ So just don't do it.
 
 The other problem is that your layout code needs to know about whatever is going to replace it in the `Stage`.  So now we have yet another dependency.  This one is because `Scene` 1's layout code needs to have a reference to another `Scene`, in order to put it into the `Stage`.  Same thing holds with that other `Scene` if you want to go back.  Almost by definition, these two `Scenes` have no actual functional relationship to each other since they can't co-exist on the `Stage`.  Yet they now are dependent on each other because of the `Scene` swapping.
 
-That means that this dependency is just dead weight.  It's just coupling that has no real value but you have to cope with it in your code.
+{% include notice type="primary" content="That means that this dependency is just dead weight.  It's just coupling that has no real value but you have to cope with it in your code." %}
 
 So just don't do it.
 
@@ -309,9 +309,11 @@ What does that tell us?  It tells us that the coupling between the two layouts a
 
 Look at what we just did.  We started out with one approach and then changed it up radically.  And then we changed it up radically again.  And again...
 
-**At no time did we have to go back to the actual content - the layouts - and change them to accommodate a radical redesign of our application's mechanics.  Not once.**
+{% include notice type="primary" content="At no time did we have to go back to the actual content - the layouts - and change them to accommodate a radical redesign of our application's mechanics.<br><br>Not once." %}
 
-Think about what that does for your applications.  How many times have you needed to change something - maybe something not so radical - and those changes have rippled through your entire application leading to massive testing and all kinds of new bugs and issues to figure out?  That's what coupling does to you.
+Think about what this means for your applications.  
+
+How many times have you needed to change something - maybe something not so radical - and those changes have rippled through your entire application leading to massive testing and all kinds of new bugs and issues to figure out?  That's what coupling does to you.
 
 But here we've avoided all that, simply because we've isolated the content from the mechanics and the logic of the application by limiting coupling.
 
