@@ -325,7 +325,7 @@ I could be wrong about this.  I try hard to know as little about FXML as possibl
 
 # Conclusion
 
-We've looked at how to swap `Scenes` in a `Stage` without having to look up from the layout code into the `Stage` to mess with its workings.  Then we looked at a number of alternate approaches to dynamically changing the content on the screen without swapping `Stages`.
+We've looked at how to swap `Scenes` in a `Stage` without having to look up from the layout code into the `Stage` to mess with its workings.  Then we looked at a number of alternate approaches to dynamically changing the content on the screen without swapping 'Scenes'.
 
 In the course of doing this, we saw how to use Dependency Inversion and Constructor Dependency Injection to split the mechanics of content swapping away from the layout code and dramatically reduce the coupling in the application.  
 
