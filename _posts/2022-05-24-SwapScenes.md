@@ -25,7 +25,26 @@ Why is this hard?
 
 It's hard because `Stage` is passed to the `start()` method in your `Application` class.  If you're making even a half-hearted attempt to organize your application properly, then all of the code that initiates the `Scene` swap is going to be somewhere else.  This means that you somehow have to find a way to have a reference to your `Stage` somewhere in your layout code.
 
-The most obvious way to do this is to call `Node.getScene().getWindow()` which will give you a `Window` which is the direct ancestor to `Stage` and which has the `setScene()` method.  This will work, but it breaks the first of the two cardinal rules of JavaFX design:
+The most obvious (but horribly bad) way to do this is something like this:
+
+``` java
+public class Layout1Builder implements Builder<Region> {
+
+    @Override
+    public Region build() {
+        Button button = new Button("Change to Scene 2");
+        button.setOnAction(evt -> {
+          Scene newScene = new Scene(new Layout2Builder.build());
+          button.getScene().getWindow().setScene(newScene));
+        });
+        VBox results = new VBox(20, new Label("Welcome to Scene 1"), button);
+        results.setPadding(new Insets(50));
+        return results;
+    }
+}
+```
+
+Here we call `button.getScene().getWindow()` which will give you a `Window` which is the direct ancestor to `Stage` and which has the `setScene()` method.  This will work, but it breaks the first of the two cardinal rules of JavaFX design:
 
 1. Don't reach up into a parent.
 1. Don't peak inside a child.
@@ -151,6 +170,8 @@ Neither layout, and neither layout builder, has any knowledge of the existence o
 I'm not a fan of swapping `Scenes`.  The only place I've ever really seen a need for it is when you have a Login screen.  In that particular case, the initial `Scene` is really just a stop along the way to getting the application up and running and you might as well throw it away when you're done with it.
 
 Generally speaking though, you're better off swapping out the root of a `Scene`, or even better yet, swapping out some element of your layout.  This is especially true when your application's screen has some kind of a framework with a global menu, or other things along that line.  You can keep those global elements and then swap out selected content.  Let's look at some approaches.
+
+For myself, I tend to look at both `Stage` and `Scene` as application framework and not an active part of the content.  
 
 ## Swapping Out the Scene Root
 
