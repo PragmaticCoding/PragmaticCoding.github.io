@@ -55,7 +55,7 @@ So just don't do it.
 
 The other problem is that your layout code needs to know about whatever is going to replace it in the `Stage`.  So now we have yet another dependency.  This one is because `Scene` 1's layout code needs to have a reference to another `Scene`, in order to put it into the `Stage`.  Same thing holds with that other `Scene` if you want to go back.  Almost by definition, these two `Scenes` have no actual functional relationship to each other since they can't co-exist on the `Stage`.  Yet they now are dependent on each other because of the `Scene` swapping.
 
-{% include notice type="primary" content="That means that this dependency is just dead weight.  It's just coupling that has no real value but you have to cope with it in your code." %}
+{% include notice type="primary" content="This dependency is just dead weight.  It's coupling with no real value that you have to cope with in your code forever." %}
 
 So just don't do it.
 
@@ -309,7 +309,7 @@ What does that tell us?  It tells us that the coupling between the two layouts a
 
 Look at what we just did.  We started out with one approach and then changed it up radically.  And then we changed it up radically again.  And again...
 
-{% include notice type="primary" content="At no time did we have to go back to the actual content - the layouts - and change them to accommodate a radical redesign of our application's mechanics.<br><br>Not once." %}
+{% include notice type="primary" content="At no time did we have to go back to the layouts and change them due to a radical redesign of our application." %}
 
 Think about what this means for your applications.  
 
@@ -331,4 +331,6 @@ We've looked at how to swap `Scenes` in a `Stage` without having to look up from
 
 In the course of doing this, we saw how to use Dependency Inversion and Constructor Dependency Injection to split the mechanics of content swapping away from the layout code and dramatically reduce the coupling in the application.  
 
-Essentially, what we did was develop screen layouts that are decoupled from the context in which they are going to be used.  This gives us immense freedom to use those layouts in a variety of situations without needing to do any customization to the layouts to accommodate the context in which they are used.  
+{% include notice type="primary" content="We created screen layouts that are decoupled from the context in which they are going to be used." %}
+
+This gives us immense freedom to use those layouts in a variety of situations without needing to do any customization to the layouts to accommodate the context in which they are used.  
