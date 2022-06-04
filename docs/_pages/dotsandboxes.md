@@ -315,3 +315,121 @@ So no logic outside of GameBox needs to access the field `sides`.  So you don't 
 You can follow the same reasoning with GameLine.  You should find that you do need column and row as fields, because that's how we locate them in the cache, but you don't need `getters` or `setters` for them.  You'll need a `getter` and `setter` for `activated`.
 
 See what you can do with that.
+
+# Update June 4th
+
+Most of your issues are small.  
+
+Intellij is reporting a ton of package issues.  You're not using any framework like Gradle, which would provide project structure but let's not go into that.  Just make sure that everything is in the same package, then life is a lot easier.
+
+Ditch the `LineType` inner class in `GameLine`.  Just use an external `Enum` for it.  Once again, this just makes life easier as inner `Enum`'s are a pain to deal with:
+
+``` java
+public enum LineType {
+        HORZ, VERT
+}
+```
+
+I'm gonna give you the code for `GameBox` and `GameLogic`, because going over it item by item and describing how to resolve it is going to be really tough.  I strongly suggest that you look at your code and the new code side-by-side and understand what the differences do.  
+
+I didn't want to, but some of the `forEach()` stuff was just easier using `Streams`.  I don't know if you're ready for `Streams`, but if they are beyond you, we can write more conventional `for()` loops to do the same thing.  
+
+Here's `GameBox`:
+
+``` java
+public class GameBox {
+
+    int column;
+    int row;
+
+    private final List<GameLine> sides = new ArrayList<>();
+
+    BoxOwner boxOwner;
+
+    private enum BoxOwner {
+        PLAYER1, PLAYER2, NONE
+    }
+
+    public boolean isAtLocation(int column, int row) {
+        return ((this.column == column) && (this.row == row));
+    }
+
+    GameBox(GameLine line1, GameLine line2, GameLine line3, GameLine line4) {
+        sides.addAll(List.of(line1, line2, line3, line4));
+        this.boxOwner = BoxOwner.NONE;
+        this.completed = false;
+    }
+
+    public boolean isBoxComplete() {
+        return sides.stream().allMatch(gameLine -> gameLine.activated);
+    }
+
+}
+```
+
+You don't need the individual `Lines` any more, since you have `sides`.  You need to move the `BoxOwner` `Enum` out of this class, so you can use it more easily in `GameLogic`.
+
+I've also ditched the `completed` field, as it's just as easy to check to see if all of the sides are activated.  Once you take the `Enum` definition out of here, you can see that this class is almost trivial.  
+
+Now GameLogic:
+
+``` java
+public class GameLogic {
+
+    private List<GameBox> boxs = new ArrayList<>();
+    private final List<GameLine> gameLines = new ArrayList<>();
+    private final List<GameLine> gameBoxs = new ArrayList<>();
+
+    void runGame() {
+
+    }
+
+    GameLine findOrCreateGameLine(LineType type, int column, int row) {
+        return gameLines.stream()
+                .filter((GameLine gameLine) -> ((gameLine.type.equals(type)) && (gameLine.column == column) && (gameLine.row == row)))
+                .findAny()
+                .orElseGet(() -> {
+                    GameLine gameLine = new GameLine(column, row, type);
+                    gameLines.add(gameLine);
+                    return gameLine;
+                  });
+    }
+
+    void populateBoard(int maxColumns, int maxRows) {
+        for (int column = 0; column < maxColumns; column++) {
+            for (int row = 0; row < maxRows; row++) {
+                GameLine topLine = findOrCreateGameLine(LineType.HORZ, column, row);
+                GameLine bottomLine = findOrCreateGameLine(LineType.HORZ, column, row + 1);
+                GameLine leftLine = findOrCreateGameLine(LineType.VERT, column, row);
+                GameLine rightLine = findOrCreateGameLine(LineType.VERT, column + 1, row);
+                boxs.add(new GameBox(topLine, bottomLine, leftLine, rightLine));
+            }
+        }
+    }
+
+    void activateLine(LineType type, int column, int row) {
+        long startingCompleted = countCompletedBoxes();
+        GameLine gameLine = findOrCreateGameLine(type, column, row);
+        gameLine.activated = true;
+        if (countCompletedBoxes() == startingCompleted) {
+            flipCurrentPlayer();
+        }
+    }
+
+    private long countCompletedBoxes() {
+       return boxs.stream().filter(GameBox::isBoxComplete).count();
+    }
+
+    private void flipCurrentPlayer() {
+    }
+}
+```
+Like I said, the `Stream` in `findOrCreateGameLine()` might be a bit advanced.  We can change it.  Basically, it does exactly what the method name says.  
+
+You had a lot of `activated` stuff in your method definitions, you didn't need any of it.  Watch out for "==" vs `.equals()`.
+
+Once again, for your own sake don't just copy/paste this stuff into your project - try to understand how it works and make the changes manually.  You'll learn more.  
+
+I've left the game-play stuff beyond `activateLine()` empty.  You'll need to introduce an `activePlayer` field in `GameLogic` and make it of `BoxOwner` (which you need to move out of `GameBox`).
+
+I also noticed a ton of errors where you used `Box` instead of `GameBox`.  `Box` is a JavaFX `Node` type, which we're not using.  So if you type `Box` by mistake, it will take it, but it won't be correct.  You need to be careful about that.
