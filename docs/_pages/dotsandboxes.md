@@ -85,7 +85,16 @@ Now you're probably thinking,  "Ooooh, yuk!  That's so much less efficient than 
 Maybe so, but...
 
 I had a boss years ago that said this to me when I was scratching my head trying to make something more efficient for no reason: "What do you care if the computer has to work harder?  It's not going to get tired."
-
+    GameLine findOrCreateGameLine(LineType type, int column, int row) {
+        for (GameLine line : gameLines) {
+            if ((line.type.equals(type)) && (line.column == column) && (line.row == row)) {
+                return line;
+            }
+        }
+        GameLine newLine = new GameLine(column, row, type);
+        gameLines.add(newLine);
+        return newLine;
+    }
 That's so true.  Even if your game board was 1000x1000 dots, it's gonna take a loop about 0.000001s to find a line in an array.  It's totally inconsequential.  It's definitely going to be too fast for a user to detect a delay.  So forget about it.
 
 It's way more important to design your application so that it's easier to understand, and messing around with multi-dimensional arrays always gets more complicated that you need it to be.
@@ -371,7 +380,7 @@ You don't need the individual `Lines` any more, since you have `sides`.  You nee
 
 I've also ditched the `completed` field, as it's just as easy to check to see if all of the sides are activated.  Once you take the `Enum` definition out of here, you can see that this class is almost trivial.  
 
-Now GameLogic:
+Now `GameLogic`:
 
 ``` java
 public class GameLogic {
@@ -433,3 +442,176 @@ Once again, for your own sake don't just copy/paste this stuff into your project
 I've left the game-play stuff beyond `activateLine()` empty.  You'll need to introduce an `activePlayer` field in `GameLogic` and make it of `BoxOwner` (which you need to move out of `GameBox`).
 
 I also noticed a ton of errors where you used `Box` instead of `GameBox`.  `Box` is a JavaFX `Node` type, which we're not using.  So if you type `Box` by mistake, it will take it, but it won't be correct.  You need to be careful about that.
+
+
+# June 6th
+
+Here's how to do the find line routine without a stream:
+
+``` java
+GameLine findOrCreateGameLine(LineType type, int column, int row) {
+    for (GameLine line : gameLines) {
+        if ((line.type.equals(type)) && (line.column == column) && (line.row == row)) {
+            return line;
+        }
+    }
+    GameLine newLine = new GameLine(column, row, type);
+    gameLines.add(newLine);
+    return newLine;
+}
+```
+
+Watch out for "==" vs. equals()!
+
+``` java
+private void flipCurrentPlayer() {
+    if (this.activePlayer == BoxOwner.PLAYER1) {
+        activePlayer = BoxOwner.PLAYER2;
+    } else {
+        activePlayer = BoxOwner.PLAYER1;
+    }
+}
+```
+
+`List.containsAll()` takes a second list and tells you if everything in the second list is in the first list.  It doesn't apply a question (a Predicate) to all the members of the first list, like you wrote it.  But that *is* what `Stream.allMatch()` does.
+
+``` java
+public boolean isBoxComplete() {
+//        return sides.containsAll(gameLine.activated); - doesn't work
+    return sides.stream()
+            .allMatch(gameLine -> gameLine.activated);
+}
+```
+You can write it like so:
+
+``` java
+public boolean isBoxComplete() {
+   for(GameLine line: sides) {
+       if (!line.activated) {
+           return false;
+       }
+   }
+   return true;
+}
+```
+
+Your `flipPlayer` logic is absolutely correct.
+
+There's one step we've missed so far.  We need to assign the newly completed boxes to a `BoxOwner`.  Call this after the line is activated, but before the `flipPlayer` is called.
+
+``` java
+private void assignCompletedBoxes() {
+    for (GameBox gameBox : boxs) {
+        if (gameBox.isBoxComplete() && (gameBox.boxOwner.equals(BoxOwner.NONE))) {
+            gameBox.boxOwner = activePlayer;
+        }
+    }
+}
+```
+
+BTW: If you want to get rid of the Stream in the count routine, you'd do something like this.  Remove the second part of the if() condition and increment a counter that you return.
+
+Remove the `activated` parameter from `activateLine()`.  You don't need it.
+
+Now, take a look at this code from `GameLogic`:
+
+``` java
+void populateBoard(int maxColumns, int maxRows) {
+    for (int column = 0; column < maxColumns; column++) {
+        for (int row = 0; row < maxRows; row++) {
+            GameLine topLine = findOrCreateGameLine(LineType.HORZ, column, row);
+            GameLine bottomLine = findOrCreateGameLine(LineType.HORZ, column, row + 1);
+            GameLine leftLine = findOrCreateGameLine(LineType.VERT, column, row);
+            GameLine rightLine = findOrCreateGameLine(LineType.VERT, column + 1, row);
+            boxs.add(new GameBox(topLine, bottomLine, leftLine, rightLine));
+        }
+    }
+}
+```
+What do you notice about the columns of the Horizontal lines?
+What do you notice about the rows of the Vertical lines?
+
+The Horizontal lines are in the same column as the box.  The Vertical lines are in the same row!
+
+Now you can figure out what row and column a box is in by checking its lines!
+
+You'll need this in `GameBox`:
+
+``` java
+public int getColumn() {
+    for (GameLine line : sides) {
+        if (line.type.equals(LineType.HORZ)) {
+            return line.column;
+        }
+    }
+    return 0;
+}
+
+public int getRow() {
+    for (GameLine line : sides) {
+        if (line.type.equals(LineType.VERT)) {
+            return line.row;
+        }
+    }
+    return 0;
+}
+```
+
+Believe it or not, the game is ready to run!  I added this to `GameLogic`:
+
+``` java
+void runGame() {
+        populateBoard(2, 2);
+        activePlayer = BoxOwner.PLAYER1;
+        playLine(LineType.VERT, 0, 0);
+        playLine(LineType.HORZ, 0, 0);
+        playLine(LineType.VERT, 1, 1);
+        playLine(LineType.HORZ, 0, 2);
+        playLine(LineType.VERT, 2, 0);
+        playLine(LineType.HORZ, 1, 1);
+        playLine(LineType.HORZ, 1, 2);
+        playLine(LineType.VERT, 2, 1);
+        playLine(LineType.HORZ, 1, 0);
+        playLine(LineType.VERT, 1, 0);
+        playLine(LineType.HORZ, 0, 1);
+        playLine(LineType.VERT, 0, 1);
+        for (GameBox gameBox : boxs) {
+            System.out.println("Column: " + gameBox.getColumn() + " Row: " + gameBox.getRow() + " Completed: " + gameBox.isBoxComplete() + " Owner: " + gameBox.boxOwner);
+        }
+
+    }
+
+    private void playLine(LineType lineType, int column, int row) {
+        System.out.print(activePlayer + " Type: " + lineType + " Column: " + column + " Row: " + row);
+        activateLine(lineType, column, row);
+        System.out.println(" Boxes Completed: " + countCompletedBoxes());
+    }
+
+```
+That runs the game illustrated under "Testing It".  Note that there is an error in the second image, the red line at (0,2) shouldn't be there.  So ignore it.
+
+And I got this output:
+
+```
+PLAYER1 Type: VERT Column: 0 Row: 0 Boxes Completed: 0
+PLAYER2 Type: HORZ Column: 0 Row: 0 Boxes Completed: 0
+PLAYER1 Type: VERT Column: 1 Row: 1 Boxes Completed: 0
+PLAYER2 Type: HORZ Column: 0 Row: 2 Boxes Completed: 0
+PLAYER1 Type: VERT Column: 2 Row: 0 Boxes Completed: 0
+PLAYER2 Type: HORZ Column: 1 Row: 1 Boxes Completed: 0
+PLAYER1 Type: HORZ Column: 1 Row: 2 Boxes Completed: 0
+PLAYER2 Type: VERT Column: 2 Row: 1 Boxes Completed: 1
+PLAYER2 Type: HORZ Column: 1 Row: 0 Boxes Completed: 1
+PLAYER1 Type: VERT Column: 1 Row: 0 Boxes Completed: 2
+PLAYER1 Type: HORZ Column: 0 Row: 1 Boxes Completed: 3
+PLAYER1 Type: VERT Column: 0 Row: 1 Boxes Completed: 4
+Column: 0 Row: 0 Completed: true Owner: PLAYER1
+Column: 0 Row: 1 Completed: true Owner: PLAYER1
+Column: 1 Row: 0 Completed: true Owner: PLAYER1
+Column: 1 Row: 1 Completed: true Owner: PLAYER2
+
+```
+
+There you go.  If you can get that output, then you're ready to start thinking about the GUI.
+
+One last thing:  My count has about 200 lines of code for all of this, even counting about 30 lines of testing code.  That's a tiny amount of code, IMHO.  
