@@ -615,3 +615,105 @@ Column: 1 Row: 1 Completed: true Owner: PLAYER2
 There you go.  If you can get that output, then you're ready to start thinking about the GUI.
 
 One last thing:  My count has about 200 lines of code for all of this, even counting about 30 lines of testing code.  That's a tiny amount of code, IMHO.  
+
+# Getting Ready to Add a GUI 
+
+## Properties
+
+Things that are to represented on the GUI **dynamically** need to be represented in the data as `Properties`.  In this game we have the following data elements that need to be represented on the screen **dynamically**:
+
+Line Activation
+: So we can change the colour of a line dependent on whether or not it has been clicked on and activated.
+
+Box Owner
+: So we can show who owns a completed GameBox.
+
+Active Player
+: So that we can display the currently active player.
+
+
+A property is just a wrapper that goes around a value which makes it *observable*.  This means that we can put a listener on it that will run some code every time it changes, or that we can *bind* it to another property.  
+
+The first thing that we're going to do is to convert these 3 data elements to `Properties` and then update the rest of our code to work properly with them as properties.  
+
+### In GameLine
+
+We are going to convert `activated` in `GameLine` to a `BooleanProperty`.  The important thing to note is that the property itself is going to be final, but the contents can change.  Here we go:
+
+``` java
+  final BooleanProperty activated = new SimpleBooleanProperty(false);
+```
+
+`BooleanProperty` is an abstract class, but SimpleBooleanProperty is a concrete class that inherits from it.  So we instantiate `SimpleBooleanProperty` but treat it as a `BooleanProperty`.  Got it?
+
+Now, you'll have errors all over your project.  You have to change the way you access `activated`.
+
+In order to get the current value of `activated` you need to call its `get()` method.  So:
+
+``` java
+   if (gameline.activated) {
+     do something;
+   }
+```
+
+becomes:
+
+``` java
+  if (gameLine.activated.get()) {
+    do something;
+  }
+```
+
+You can't assign `activated` with the `=` operator any more.  No you need to use its `set()` method.  So:
+
+``` java
+  gameLine.activated = true;
+```
+
+becomes:
+
+``` java
+  gameLine.activated.set(true);
+```
+
+### In GameBox
+
+We are going to change BoxOwner to a property.  Here's the declaration:
+
+``` java
+  final ObjectProperty<BoxOwner> boxOwner = new SimpleObjectProperty<>(BoxOwner.NONE);
+```
+
+Now `boxOwner` is now a Property that wraps a `BoxOwner` value.  You need to apply the same `get()` and `set()` changes to the rest of your code.
+
+### In GameLogic
+
+Same deal with `activePlayer`.  It needs to change from `BoxOwner` to `ObjectProperty<BoxOwner>`.  
+
+## Testing it
+
+Now you're using JavaFX (the `Properties`), so you should be doing this on the FX Application Thread (FXAT).  So we'll modify the App class to run things in `start()` instead.
+
+``` java
+public class App extends Application {
+
+    @Override
+    public void start(Stage stage) throws IOException {
+        new GameLogic().runGame();
+        Region root = new VBox();
+        Scene scene = new Scene(root);
+        stage.setTitle("game fx");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+}
+```
+
+This will just be an empty box, but the game will play in the console and work.  
+
+At this point, we are ready to build a GUI.
