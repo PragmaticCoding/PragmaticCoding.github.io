@@ -13,6 +13,7 @@ header:
 sidebar:
     nav: "master"
 diagram: /assets/private/BoxesAndLines.png
+line_locations: /assets/private/LineLocations.png
 simulation: /assets/private/gameplay.gif
 ---
 
@@ -616,7 +617,7 @@ There you go.  If you can get that output, then you're ready to start thinking a
 
 One last thing:  My count has about 200 lines of code for all of this, even counting about 30 lines of testing code.  That's a tiny amount of code, IMHO.  
 
-# Getting Ready to Add a GUI 
+# Getting Ready to Add a GUI
 
 ## Properties
 
@@ -700,10 +701,8 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         new GameLogic().runGame();
-        Region root = new VBox();
-        Scene scene = new Scene(root);
         stage.setTitle("game fx");
-        stage.setScene(scene);
+        stage.setScene(new Scene(new VBox()));
         stage.show();
     }
 
@@ -717,3 +716,109 @@ public class App extends Application {
 This will just be an empty box, but the game will play in the console and work.  
 
 At this point, we are ready to build a GUI.
+
+# Drawing Lines
+
+This is what we are trying to achieve:
+
+![Line Locations]({{page.line_locations}})
+
+Just the grey lines, not the annotations in red, green and blue.
+
+This is done with a line length of 200px, and a gap of 20px.  Note here that we're not drawing the dot at all, since we really don't need them if the lines are visible all the time.  Later, if we really want to make the unactivated lines white (like the background), we can figure out how to draw the dots, which you would then need as a visual guide to where the lines are.
+
+But for now, we'll draw the lines in grey and then flip them to some other colour when they've been activated.
+
+Once again, we have to handle vertical lines a little differently from horizontal lines, but it's not that difficult.
+
+Before we begin, we are going to use the JavaFX Node, Line.  Line has 4 parameters in its constructor: `x1`, `y1`, `x2`, `y2`.
+
+[`x1`,`y1`] defines one end of the line, and [`x2`,`y2`] defines the other end.  So we need to know how to figure them out.
+
+Let's look at the first horizontal line.  It goes from [10,0] to [210, 0].  For a horzontal line the following is always true:
+
+1. `y2` = `y1`.
+2. `x2` = `x1` + `lineLength`
+
+So all we need to figure out the correct values for `x1` and `y1` based on the row and column of the `gameLine`.
+
+y1 is easier to deal with.  On row 0 it's 0.  On row 1 it's 220.  So we can figure:
+
+- `y1` = `row` * (`lineLength` + `gap`)
+
+Yah!  That's solved.  Now on to `x1`.
+
+In column 1 the value for `x1` is 10 (which is 1/2 the gap). In column 2, it's 230, and for column 3 it's 450.  So this is column times 220 + 10.  So the rule for x1 is:
+
+- `x1` = `column` * (`lineLength` + `gap`) + (`gap`/2)
+
+Vertical lines work exactly the same way, but reverse the rules for x and y:
+
+1. x2 = x1
+1. y2 = y1 + `lineLength`
+1. x1 = `column` * (`lineLength` + `gap`)
+1. y1 = `row` * (`lineLength` + `gap`) + (`gap`/2)
+
+Now we can determine `x1`, `y1`, `x2` and `y2` for any `gameLine` given its `LineType`, `column` and `row`.  Which means we can draw the grid.
+
+# Creating the GUI
+
+For now, we're going to ignore the rest of your FXML framework, and just concentrate on creating a panel that shows the grid.  And we'll hard-code it to 3x3.
+
+You need to do the following to your `App` class:
+
+``` java
+public void start(Stage stage) throws IOException {
+    GameLogic gameLogic = new GameLogic();
+    gameLogic.populateBoard(3, 3);
+    Builder<Region> boardBuilder = new GameBoardBuilder(gameLogic.gameLines);
+    scene = new Scene(boardBuilder.build());
+    stage.setTitle("game fx");
+    stage.setScene(scene);
+    stage.show();
+}
+```
+
+Here we create the `GameLogic` and then get it started by calling `populateBoard(3,3)`.  That's pretty straight-forward.
+
+So what's this `Builder` stuff?  `Builder` is a standard JavaFX `Interface`.  It just has one method called `build()` and we're going to use that to create some sort of layout that we will put in the `Scene`.  We're using `Region` because it's a generic JavaFX layout class that's way, way up the hierarchy.  So we can pass back an `HBox`, `VBox`, `BorderPane`, or anything else and it will still be `Region`, which is good enough to put into `Scene`.
+
+Let's look at GameBoardBuilder:
+
+``` java
+public class GameBoardBuilder2 implements Builder<Region> {
+
+    private final List<GameLine> lines;
+    private final double lineLength = 200;
+    private final double gap = 20;
+
+    GameBoardBuilder2(List<GameLine> lines) {
+        this.lines = lines;
+    }
+
+    @Override
+    public Region build() {
+        Pane pane = new Pane();
+        lines.forEach(gameLine -> {
+            Line line = createLine(gameLine);
+            pane.getChildren().add(line);
+        });
+        VBox results = new VBox(10, pane);
+        results.setPadding(new Insets(30));
+        return results;
+    }
+
+    private Node createLine(GameLine gameLine) {
+
+    }
+}
+
+```
+
+The constructor takes the `GameLines` from `GameLogic`, and saves it in a field.  The `lineLength` and `gap` are set up for you.  Note that all of this coordinate stuff is `double`.  I don't know how you can have 2.5 pixels, but that's just the way it is.
+
+The `build()` method will cycle through the `GameLines`, and create a `Line` (that's the JavaFX `line` `Node`) for each one.  Then it puts it into the `Pane`.  The `Pane` is stuffed inside a `VBox` just so we can set some padding around the `Pane` so that the `Lines` aren't right up against the edge of the window.  
+
+So what you need to do is to use the rules above to figure out `x1`, `y1`, `x2` and `y2` and create a `Line` in the `createLine()` method.
+
+You should also change the width of the `Lines` to something like 4 using `Line.setStrokeWidth()` and the colour to grey using `Line.setStroke()`  (use Color.GREY). Just about everything you write should be inside `createLine()`.  You should get something that looks **exactly** like the lines in my diagram above.

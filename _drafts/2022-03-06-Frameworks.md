@@ -73,7 +73,7 @@ As with any of these frameworks, the line between components can become blurred.
 
 ### Overview
 
-At first glance MVVM appears to be the best match for modern, reactive UI's as it specifically talks about "binding" to connect the View to the ViewModel.  
+At first glance MVVM appears to be the best match for modern, reactive UIs as it specifically talks about "binding" to connect the View to the ViewModel.  
 
 ### The ViewModel
 
@@ -89,13 +89,29 @@ The View in MVVM is much more active than in MVP.
 
 ## Model-View-Controller
 
+In the traditional, non-Reactive, implementation of MVC the View is generally seen as only a consumer of the Model's data, and the Controller is responsible for taking any updates from the User, performing business logic upon them and updating the Model.
+
 ### The Model
+
+The Model contains *all* of the data in the framework.  This includes the elements of State, plus any domain objects that are required for the business logic.  It also contains all of the logic to interface with external parts of the system such as databases or external API's.
 
 ### The View
 
+The View contains all of the elements of the UI.  It has a reference to the Model, so it is able to access the data in the Model that contain the components of the State of the UI.  There is no particular requirement that the State elements of the Model are bound to the View components in this framework.  Obviously, in a Reactive environment they would be.
+
 ### The Controller
 
-# A Slightly Better Framework: MVCI
+The Controller handles all of the active parts of the UI, and contains the business logic of the UI.
+
+# The Problem With All These Frameworks
+
+I feel that there's something wrong with all of these frameworks.  They break the "Single Responsibility Principle".
+
+In every one of these frameworks, some component is responsible for way more than one thing.  In MVC and MVP, it's the Model which contains not just the Presentation Data but all of the business logic and the domain objects as well.  In MVVM, it's the ViewModel which contains not just the Presentation Data but all of the code to convert domain objects into Presentation Data that can be bound to the View components.
+
+
+
+# A Better Framework for Reactive Systems: MVCI
 
 As I said earlier, I went for years misunderstanding the "correct" structure of MVC.  My understanding was the the "Model" was simply the "State" of framework.  This is also sometimes called the "Presentation Model".  
 
@@ -111,19 +127,21 @@ As I've already mentioned, the Model is really just a POJO.  The fields are, for
 
 Originally, I was pretty stringent about following the JavaFX "Bean" structure for getters and setters, and having a getter for both the Observable itself and it's contents.  I'm not sure about the need for that any more, and currently I lean towards just having a getter for the Observables themselves.  The cost for this is that code in the Interactor, which is the only place that getters and setters for the Observable contents is used, gets a little bigger as it needs to do a get() or set() on the Observables.  
 
+I really don't think that relationships between the data elements in the Model should be established in the Model itself.  These relationships generally reflect business rules of some sort, and that kind of logic belongs in the Interactor at all times.  My guide has always been, "If you are looking for business logic, it should always be in one place."  This means that if you are looking to understand how two data elements are related, you don't have to go hunting through the entire framework to find place where they are linked, it will be in the Interactor.
+
 ## The View
 
-The View handles every aspect of the User Interface and nothing else.  
+The View handles every aspect of the User Interface and nothing else.  Properties of the components of the View are bound to each other and to the Properties in the Model.  In this manner, the Model now becomes an accurate representation of the State of the UI.  
 
 ## The Controller
 
 The Controller is the "core" of the framework.  It is responsible for instantiating all of the other components and connecting them together.  The Controller connects the MVCI construct to the rest of the application as it contains the only method accessible by any object outside the MVCI construct.  Typically, it will have a method with a name like getView() which will return the View which can then be placed inside another layout or Scene.
 
-The Controller defines all of the action handlers that will be passed to the View.  
+The Controller is responsible for handling all of the "actions" in the UI.  This means that anything more active than simply updating the Model (through Bindings in the View) is processed through the Controller.  The Controller defines how these actions will be handled, and any threading that might be required.  In practice, this means that the Controller will be responding to EventHandlers trigger from the View, and will establish any Listeners on the Model.
 
 ## The Interactor
 
-The Interactor contains all of the business logic of the framework.  This is the class where both the Model and the domain objects co-exist.  
+The Interactor contains all of the business logic of the framework.  This is the class where both the Model and the domain objects co-exist:  
 
 Business Constraints and Connections Between Model Elements
 : Often there are connections between fields defined in the Model which are related to business rules.  For instance, you might have a BooleanProperty that indicates that some combination of other Properties in the Model are invalid.  This Boolean property would be bound by the Interactor to a Binding that it constructs.  This keeps the business logic inside the Interactor.
@@ -138,7 +156,27 @@ Connections to Shared Application Libraries
 : In any system with more than one screen, you are likely to have a fair amount of shared business logic or brokers that connect to APIs or persistence libraries.  These libraries are likely to return and accept application domain objects.
 
 Business Logic for Actions
-: This is probably the main function of an Interactor: To provide the methods that
+: This is probably the main function of an Interactor: To provide the methods that bring together State, domain data and business rules to make the framework actually do something.  
+
+## Why is this Better?
+
+In my opinion, it's better because each component does one job, and that job matches with its name:
+
+View
+: The View is solely and uniquely responsible for the UX.  Nothing more.
+
+Controller
+: The Controller is responsible for "controlling" everything.  It's sets it all up, and then acts as traffic controller for any actions that take place, defining how they will be handled and on what thread.
+
+Model
+: The Model is the sole repository of the "State" of the UI.  It's just data and has no logic.
+
+Interactor
+: The Interactor is business logic element and, as such, is solely and uniquely responsible for *interacting* with the outside world (other than the UX).
+
+This structure makes it simple to understand.  There's never any doubt about what code goes where.
+
+In a way this is very similar to the MVC with State split out into its own element and used Reactively.  Now the Model from MVC minus State becomes the Interactor, and the View directly interacts with State to keep the View & Model (State) synchronized at all times.  The Controller continues to handle actions from the View, but doesn't contain any business logic and delegates that to the Interactor.
 
 # A Simple MVCI Example
 
@@ -344,22 +382,25 @@ Now we have a concrete example, let's look at how this framework adds value to t
 
 It really just does one important thing: It reduces coupling.  
 
-How much coupling do we have?
+## How much coupling do we have?
 
-1. The View has no public methods other than those inherited from Region.<br>
-Public methods are a primary indication of coupling.  Here we have absolutely zero public methods specific to the View, so there's no coupling at all in this manner.   This means that there are no dependencies on the View!
+The View has no public methods other than those inherited from Region.
+: Public methods are a primary indication of coupling.  Here we have absolutely zero public methods specific to the View, so there's no coupling at all in this manner.   This means that there are no dependencies on the View!
 
-1. The View's only dependencies are declared in its constructor.<br>
-The View is dependant on the Model and the Consumer passed to it from the Controller. The View has no knowledge of the existence of either the Controller or Interactor.
+The View's only dependencies are declared in its constructor.
+: The View is dependant on the Model and the Consumer passed to it from the Controller. The View has no knowledge of the existence of either the Controller or Interactor.
 
-1. The Interactor's only dependency is on the Model.<br>
-The Interactor has no knowledge of the View or the Controller.  It has dependencies on the structure of the Model, but that's it.  
+The Interactor's only dependency is on the Model.
+: The Interactor has no knowledge of the View or the Controller.  It has dependencies on the structure of the Model, but that's it.  
 
-1. The Controller has dependencies on the Interactor.<br>
-Since the Interactor has two public methods that the Controller needs to call, there are dependencies there that the Interactor needs to satisfy.  
+The Controller has dependencies on the Interactor.
+: Since the Interactor has two public methods that the Controller needs to call, there are dependencies there that the Interactor needs to satisfy.  
 
-1. The Controller might have dependencies on the Model.<br>
-While this example doesn't have any Controller dependencies on the Model, it's possible that it could.  
+The Controller might have dependencies on the Model.
+: While this example doesn't have any Controller dependencies on the Model, it's possible that it could.  
+
+The View has no coupling on the data in the Model, Just its structure.
+: In this example, the List of cities is populated by the Interactor, and then loaded into the ComboBox in the View.  The View doesn't have any logic dependant on the contents of that list.  If we wanted to create such a dependency, we'd have to replace the List with something like an Enum, so that the possible values are now part of the *structure* of the data, not it's contents.
 
 Obviously, in any non-trivial system there has to be at least some level of coupling if the system is going to be functional.  In MVCI the Model is the key component of coupling, as all three of the other components of the framework are dependent on it.  
 
@@ -371,4 +412,4 @@ What if we replaced the View from a simple screen to a "Weather Experiencing Cha
 
 What would you need to change in the rest of the system to make it work?  Really, nothing.  The UX is completely divorced, decoupled if you like, from the mechanics of fetching the data.  You still need a list of cites, and you still need to update the Model with the selected city and trigger the action.  And you still need to respond to the changes in the Model that hold the weather information.
 
-Now, let's look at it the other way around.  What if we now have a "Weather Setting" system, instead of a "Weather Fetching" system.  Pick a city, set the temperature and click a button.  Now our system of weather controlling satellites changes the temperature in Paris.   
+Now, let's look at it the other way around.  What if we now have a "Weather Setting" system, instead of a "Weather Fetching" system.  Pick a city, set the temperature and click a button.  Now our system of weather controlling satellites changes the temperature in Paris.  In this case, we'll need to change the GUI so that the temperature is an input, not an output.  The Interactor can be changed with a new Interactor that has an interface to our satellite network that controls the weather.  The Model does not need to change, nor does the Controller.  The change to the GUI is minimal, and isn't particularly tied to the functionality contained in the Interactor.  
