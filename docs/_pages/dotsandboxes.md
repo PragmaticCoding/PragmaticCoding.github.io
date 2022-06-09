@@ -731,7 +731,7 @@ But for now, we'll draw the lines in grey and then flip them to some other colou
 
 Once again, we have to handle vertical lines a little differently from horizontal lines, but it's not that difficult.
 
-Before we begin, we are going to use the JavaFX Node, Line.  Line has 4 parameters in its constructor: `x1`, `y1`, `x2`, `y2`.
+Before we begin, we are going to use the JavaFX `Node`, `Line`.  `Line` has 4 parameters in its constructor: `x1`, `y1`, `x2`, `y2`.
 
 [`x1`,`y1`] defines one end of the line, and [`x2`,`y2`] defines the other end.  So we need to know how to figure them out.
 
