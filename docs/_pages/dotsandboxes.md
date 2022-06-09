@@ -786,7 +786,7 @@ So what's this `Builder` stuff?  `Builder` is a standard JavaFX `Interface`.  It
 Let's look at GameBoardBuilder:
 
 ``` java
-public class GameBoardBuilder2 implements Builder<Region> {
+public class GameBoardBuilder implements Builder<Region> {
 
     private final List<GameLine> lines;
     private final double lineLength = 200;
