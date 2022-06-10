@@ -1,6 +1,6 @@
 ---
 layout: single
-title: JavaFX
+title: Dots and Boxes - Step by Step
 toc: true
 toc_label: "Contents"
 toc_icon: "brain"
@@ -822,3 +822,87 @@ The `build()` method will cycle through the `GameLines`, and create a `Line` (th
 So what you need to do is to use the rules above to figure out `x1`, `y1`, `x2` and `y2` and create a `Line` in the `createLine()` method.
 
 You should also change the width of the `Lines` to something like 4 using `Line.setStrokeWidth()` and the colour to grey using `Line.setStroke()`  (use Color.GREY). Just about everything you write should be inside `createLine()`.  You should get something that looks **exactly** like the lines in my diagram above.
+
+# June 10th - Clicks on the Lines
+
+First off, you should notice a few things:
+
+No Cell[][] Structures
+: We've gotten all the way to almost done and there's no GameBox[][] structure or GameLine[][] anywhere in our code.  Everything is using the Java objects the way that they are supposed to be used.
+
+activateLine() is the Only GamePlay Method
+: Once we've got the board set up, the only method that we need to call is activateLine().  The playLine() method is only there so that we get debugging output.  **This is gonna be super important**
+
+The UI Populates from the Game Data
+:  You'll notice that we don't have nested for loops for rows and columns in the UI builder.  We build from the data stored in GameLogic.  
+
+## Clicking a Line (Adding an EventHandler)
+
+This is super simple.  You should notice that in GameBuilder.createLine() we have horizLine (or vertLine) and gameLine available at the same time.  Your code is getting gameLine.column and gameLine.row, right?  **What you need to do now is to create an event handler for both horizLine and vertLine that sets gameLine.activated to true.**
+
+I have an [article](http://localhost:4000/javafx/elements/events#the-mouseevent) that talks about this stuff.  You should read it, because it has everything that you need to know.  So I'm not going to tell you how to do it here (unless you get stuck), but I will tell you that you need to call horizLine.setOnMouseClick().  
+
+Hint:  You don't need Event.getSource() or any of that kind of stuff.  You have gameLine, use the Property.set() method to change activated to true.  If you use a lambda, it's 1 line!!! If you use an anonymous inner class, then it's 1 line in the handle() method!!!  
+
+Enough of that. If you get stuck.  Let me know.
+
+## Changing the Colour of a Line (Adding a Binding)
+
+Once a line is clicked, you need to change it's colour so that it looks activated.  
+
+Once again, I have an article about this, you can get to it from the "Bindings" section of this [page](https://www.pragmaticcoding.ca/javafx/elements/observables).  Read it, please.  It will tell you what to do.
+
+What you need to do is to bind the Stroke property of the Line to GameLine.activated.  Once again, you have both gameLine and horizLine/vertLine available to you in the same code.  So you can reference both of them.  
+
+First thing, get rid of the lines that call setStroke() and replace them with something like:
+
+``` java
+   horizLine.strokeProperty().bind(SOME_SORT_OF_BINDING);
+```
+
+You need to create SOME_SORT_OF_BINDING.  It needs to bind the GameLine.activated property, which is a BooleanProperty to return a Color value.  I'd suggest Color.GREY for false, and Color.BLUE for true.  
+
+Just to make this totally clear, the computeValue() method of your Binding needs to call GameLine.activated.get(), and based on whether it's true or false, return Color.BLUE or Color.GREY.  This should make sense if you've read the articles.
+
+If you get this far, you should be able to click on a line on the screen, and it should change from grey to blue.  **This is almost a completely working game!**
+
+## Linking Clicks Back to GameLogic (Adding a Listener)
+
+Let's look at what we have here now:  When you click on a line on the screen, it set's the corresponding GameLine.activated property to true, and then that turns the line on the screen to blue.  So, the screen is taken care of.  
+
+What about the GameLogic stuff?
+
+Previously, we handled a game move by calling GameLogic.activateLine().  Now, we are activating the GameLines with the OnClick event of the screen line.  So we don't need the gameLine.activated.set(true) in GameLogic.activateLine() any more.  
+
+But we do need the logic that completes the boxes and determines if the active player needs to flip.  
+
+Since GameLine.activated is an observable Property, we can put a Listener on it.  Once again, I've got an [article](https://www.pragmaticcoding.ca/javafx/elements/listeners) that explains this stuff.  So more reading, I'm sorry.
+
+We need to do a few things:
+
+1. Remove all of the testing code that calls GameLine.activateLine().
+1. Change the name of GameLine.activateLine() to something like GameLine.handleActivatedLine().
+1. Remove all of the parameters from the method declaration in GameLine.handleActivatedLine().
+1. Remove the code that calls GameLine.activated.set(true) from that method, as well as the findOrCreateGameLine() call.
+
+Now we need to put the Listener on GameLine.  You do this when the GameLine is created in findOrCreateGameLine():
+
+``` java
+  GameLine newLine = new GameLine(column, row, type);
+  newLine.activated.addListener(SOME_KIND_OF_LISTENER);
+```
+
+Once again, read the article I linked above.  My suggestion would be an InvalidationListener that does two things:
+
+1. Call newLine.activated.get().  This re-validates the Property (explained in the article).
+1. Call handleActivatedLine() (or whatever you changed the name to).
+
+## If You Get This Far
+
+You have a working game!!!!!
+
+OK, you can't see who owns the boxes yet, but if you put in some debugging code, you would see that the boxes are getting owned and the active player is getting flipped and everything is happening as it should.
+
+Yesterday, you didn't even have the lines painted.  Now you have a working game.  How cool is that.
+
+Next, we'll get the box owners displaying on the screen.
