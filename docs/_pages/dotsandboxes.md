@@ -982,3 +982,111 @@ The wrapper class for the application is a `BorderPane`.  I picked that because 
 You'll see that all of the `GameLogic/GameBoardBuilder` stuff has now been moved into the `OnAction` `EventHandler` for the `Button`.  So we create a new `GameLogic` and pass it our selected columns & rows stuff instead of the hard-coded 3 & 3, then we instantiate `GameBoardBuilder` and then call its `build()` method to create the `Node` that goes into `BorderPane.setCenter()`.
 
 The big thing to note is that the actual gameplay stuff is self-contained.  This wrapper class doesn't know about any of the inner workings of `GameLogic/GameBoardBuilder `and it never will.  This is all good stuff.
+
+# Detecting End of Game and Score Keeping
+
+End of game is fairly easy to detect:  Count up all of the `GameBoxes` with owner == NONE, and when it hits 0 the game is over.
+
+If it was me, I'd do it using Bindings, but that would involve turning `GameLogic.boxs` into an `ObservableList` and adding an `Extractor`.  Honestly, at this point that would make your head explode.  Not that it's difficult, but you've already learned a lot in a short space of time.
+
+So I recommend doing it as part of `GameLogic.handleActivatedLine()` and just manually updating the Properties.  You need to add a new field to `GameLogic` - a `BooleanProperty` called `gameOver`, initialize it to `false`.
+
+Then add a new method to `GameLogic` - call it `checkGameOver()`, have it return a `boolean` and call it from `handleActivatedLine()`, after the call to `assignCompletedBoxes()`. Something like this:
+
+``` java
+   assignCompletedBoxes();
+   gameOver.set(checkGameOver());
+```
+
+In `checkGameOver()`, you loop through `boxs` and if any of them have `bowOwner.get().equals(BoxOwner.NONE)`, then return `false`, otherwise return `true`.
+
+Now you have a `Property` in `GameLogic` that always matches whether the game is over or not.  
+
+That's step one.
+
+## Score Keeping
+
+This is the same kind of process as `GameOver`.  You need to create two `IntegerProperty` fields, one for each player initialized to zero.  So:
+
+``` java
+  IntegerProperty player1Score = new SimpleIntegerProperty(0);
+  IntegerProperty player2Score = new SimpleIntegerProperty(0);
+```
+
+Once again, these can only change when a line has been activated, so we need something in `handleActivatedLine()`.  Let's create a new method:
+
+``` java
+  private int countBoxes(BoxOwer typeToCount) {
+    int results = 0;
+    for (GameBox gameBox : boxs) {
+      if (gameBox.boxOwner.get().equals(typeToCount) {
+        results++;
+      })
+    }
+    return results;
+  }
+```
+
+so now, the code in `handleActivatedLine()` looks like this:
+
+``` java
+  assignCompletedBoxes();
+  gameOver.set(checkGameOver());
+  player1Score.set(countBoxes(BoxOwner.PLAYER1));  
+  player2Score.set(countBoxes(BoxOwner.PLAYER2));
+```
+
+Hmmmmmmmm.... Maybe this could be better?  
+
+This is called "Evolutionary Design".  What does `checkGameOver()` do?  Do we need it any more?  No we don't.  So delete it if you've already written it.  Now you can do this:
+
+``` java
+  assignCompletedBoxes();
+  gameOver.set(countBoxes(BoxOwner.NONE) == 0);
+  player1Score.set(countBoxes(BoxOwner.PLAYER1));  
+  player2Score.set(countBoxes(BoxOwner.PLAYER2));
+```
+
+With me so far?
+
+At this point, we're at a crossroads.  You have 6 dynamic properties in `GameLogic`:
+
+1. boxs
+1. gameLines
+1. activePlayer
+1. gameOver
+1. player1Score
+1. player2Score
+
+IMHO, this is getting a bit much.  All of those properties need to be passed to `GameBoardBuilder` in order to use them.  And if we add anything else, like player names, then it's almost silly.  
+
+The **right** way to do this is to take all of these properties and put them into their own class - call it `GameData`, then just instantiate that as a field in `GameLogic`, call it `gameData`.  
+
+Now you reference `boxs` (can we please fix the spelling of that to "boxes"!) as `gameData.boxs`, and so on.  Then you just pass `gameLogic.gameData` to `GameBoardBuilder` in its constructor.  You'll have to update all of the references in build() to go through `gameData`, too.
+
+This is nice because `GameData` actually represents the "State" of your UI, and it's really good to have it in one place of its own.  
+
+If you don't want to do that, it's not the end of the world.
+
+## End of Game Display
+
+This is tricky to describe, but I'll try:  
+
+You need to create a container for the end of game display.  I'd suggest a `VBox` with two `Labels` in it.  The first one needs to be bound to `player1Score` and `player2Score` through a custom binding that compares them and returns "Player 1", or "Player 2" depending on which is bigger.  The second Label just says "Wins".  You'll need to mess with the fonts to get it big enough.  Let's call this VBox, `gameOverBox`.  Create it in the `build()` method of `GameBoardBuilder`.
+
+Here's the tricky part:
+
+In `GameBoardBuilder`, in the `build()` method change the name of that `VBox` from `results` to `gameBoard`. Create a new `StackPane` called `results`.  Put the `gameOverBox` and `gameBoard` into results.
+
+`StackPane` puts things on top of each other, all centred.  Now you need to control the `Visible` properties of `gameOverBox` and `gameBoard` so that only one is visible at a time.  Like so:
+
+``` java
+  gameBoard.visibleProperty().bind(gameOver.not());
+  gameOverBox.visibleProperty().bind(gameOver);
+```
+
+You can see that the `Visible` properties of each container are mutually exclusive, so only one will be `Visible` at a time.
+
+That should work.  I'll let you figure out the custom binding for which player wins.  Here's a hint, you need to pass it both `player1Score`, and `player2Score` and send them both to `super.bind()`.
+
+Good Luck, and let me know if you get stuck.
