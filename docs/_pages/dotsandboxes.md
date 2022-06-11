@@ -906,3 +906,79 @@ OK, you can't see who owns the boxes yet, but if you put in some debugging code,
 Yesterday, you didn't even have the lines painted.  Now you have a working game.  How cool is that.
 
 Next, we'll get the box owners displaying on the screen.
+
+# June 11 - The Rest of the Application
+
+So now you have a working game, but you're just missing the stuff that let's the user pick the size of the board and start the game.  This is the part that you can do in FXML.  I'll give you the code without FXML, and then you can figure out how to turn it into FXML.
+
+## A Word About FXML
+
+As you probably know, I consider FXML and `SceneBuilder` to be a waste of time.  I don't use them, and I don't think anyone else should either.
+
+The only "benefit" (note the extreme sarcasm here) to FXML is that it let's you use `SceneBuilder`.  The cost for `SceneBuilder` is FXML and the ridiculous complexity that it adds to your application.  
+
+People that tell you that FXML helps you keep your logic separated from the UI are blowing smoke out their bums.  
+
+You just wrote a game that has 100% of its logic separated and independent from the UI.  I mean, the name of the class is called `GameLogic`!  And you know that it works without the UI because you had it running without a UI!  
+
+Applications have separation between components like the UI and the logic because the programmers engineered them that way.  Not because some framework "encouraged" separation.  And they are engineered that way because the developers understood the benefits of architecting the system with that separation.
+
+Your game was engineered that way because I knew it needed to be like that before we even wrote the first line of code.  So I tried to guide you down that path.  
+
+I can pretty much guarantee you that if your classmates are doing similar projects, there's going to be a whole mess of business logic buried away in their FXML controllers.  
+
+As to the value of `SceneBuilder`.  I don't see it.  Anything you can build in `SceneBuilder` I can write in pure code in 1/2 the time.  And if you have 200 lines of FXML and 100 lines of Controller, I'll have about just 50 lines of code that does the exactly the same thing.  
+
+Anyways.  End of rant. On with the coding:
+
+## A Wrapper Screen
+
+I'm giving you actual code, instead of telling you what to do, with the understanding that you're going to convert it into FXML using `SceneBuilder`.
+
+Here's an updated `App` class, with some wrapper stuff added:
+
+``` java
+public class App extends Application {
+
+    @Override
+    public void start(Stage stage) throws IOException {
+        Region root = stuffYouCouldDoInFXMLIfYouHateYourself();
+        Scene scene = new Scene(root);
+        stage.setTitle("game fx");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    private Region stuffYouCouldDoInFXMLIfYouHateYourself() {
+        BorderPane results = new BorderPane();
+        Spinner<Integer> columnSpinner = new Spinner<>(2,10,3);
+        Spinner<Integer> rowSpinner = new Spinner<>(2,10,3);
+        Button startButton = new Button("Start Game");
+        startButton.setOnAction(evt -> {
+            GameLogic gameLogic = new GameLogic();
+            gameLogic.populateBoard(columnSpinner.getValue(), rowSpinner.getValue());
+            Builder<Region> boardBuilder = new GameBoardBuilder(gameLogic.gameLines, gameLogic.boxs);
+            results.setCenter(boardBuilder.build());
+        });
+        HBox bottomBox = new HBox(6, new Label("# of Columns: "), columnSpinner, new Label("# of Rows:"), rowSpinner, startButton);
+        bottomBox.setPadding(new Insets(8));
+        bottomBox.setAlignment(Pos.CENTER_LEFT);
+        results.setBottom(bottomBox);
+        results.setMinHeight(600);
+        return results;
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+}
+```
+
+I've taken care to write the stuff in `start()` so that it's easy to translate it into FXML terms.  
+
+The wrapper class for the application is a `BorderPane`.  I picked that because it's easy to call `setCenter()` and replace the contents dynamically.  You don't have to worry about clearing out the old contents.  So it's simple.
+
+You'll see that all of the `GameLogic/GameBoardBuilder` stuff has now been moved into the `OnAction` `EventHandler` for the `Button`.  So we create a new `GameLogic` and pass it our selected columns & rows stuff instead of the hard-coded 3 & 3, then we instantiate `GameBoardBuilder` and then call its `build()` method to create the `Node` that goes into `BorderPane.setCenter()`.
+
+The big thing to note is that the actual gameplay stuff is self-contained.  This wrapper class doesn't know about any of the inner workings of `GameLogic/GameBoardBuilder `and it never will.  This is all good stuff.
