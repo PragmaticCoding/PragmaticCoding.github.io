@@ -1090,3 +1090,40 @@ You can see that the `Visible` properties of each container are mutually exclusi
 That should work.  I'll let you figure out the custom binding for which player wins.  Here's a hint, you need to pass it both `player1Score`, and `player2Score` and send them both to `super.bind()`.
 
 Good Luck, and let me know if you get stuck.
+
+## StackPane Visibility Example
+
+Try this:
+
+``` java
+public class HiddenStackPane extends Application {
+
+    @Override
+    public void start(Stage primaryStage) {
+        primaryStage.setTitle("StackPane Hiding");
+        primaryStage.setScene(new Scene(createContent()));
+        primaryStage.show();
+    }
+
+    private Region createContent() {
+        BooleanProperty fred = new SimpleBooleanProperty(false);
+        Button button = new Button("Click Me");
+        button.setOnAction(evt -> fred.set(!fred.get()));
+        HBox hBox1 = new HBox(new Label("TEXT For 1"));
+        hBox1.setAlignment(Pos.TOP_LEFT);
+        HBox hBox2 = new HBox(new Label("BLAH BLAH BLAH"));
+        hBox2.setAlignment(Pos.BOTTOM_RIGHT);
+        hBox1.visibleProperty().bind(fred);
+        hBox2.visibleProperty().bind(fred.not());
+        StackPane stackPane = new StackPane(hBox1, hBox2);
+        stackPane.setMinSize(300, 200);
+        return new VBox(10, stackPane, button);
+    }
+
+}
+```
+You can try commenting out the two binding statements.  Or just one of them.  
+
+So you should see how this works.
+
+The idea is that the layout is static, but the configuration of the elements is bound to the data Model, which in this case is just a single Property.  
