@@ -1127,3 +1127,38 @@ You can try commenting out the two binding statements.  Or just one of them.
 So you should see how this works.
 
 The idea is that the layout is static, but the configuration of the elements is bound to the data Model, which in this case is just a single Property.  
+
+
+## Binding the Winning Player
+
+You can't have side-effects in a custom binding (at least you shouldn't have)!  So you can't do stuff like Label.setText() in computeValue().  
+
+In computeValue() you use the bound values, plus whatever else you've set up via the constructor, to compute a value of the type defined by the type of your custom binding.  Whenever one of the bound values changes, it triggers computeValue() to run, and then uses that new value in whatever you've bound it to.
+
+In this case, you are going to bind to the TextProperty of a Label.  So the returned value needs to be a String.  This means that your custom Binding needs to extend StringBinding.  And computeValue() will return a ... String!  
+
+``` java
+static class GameOverBinding extends StringBinding {
+        IntegerProperty score1;
+        IntegerProperty score2;
+
+        public GameOverBinding(IntegerProperty score1, IntegerProperty score2) {
+            super.bind(score1, score2);
+            this.score1 = score1;
+            this.score2 = score2;
+        }
+
+        @Override
+        protected String computeValue() {
+            return "Calculated Value";
+        }
+    }
+```
+
+Here's the shell.
+
+Important point:  You should never pass around more than you need to.  Never.
+
+In this case you were passing GameData and expecting GameOverBinding to extract the values it needs from it.  GameOverBinding doesn't need all of GameData, so you should extract the two Properties you do need and pass them to the constructor of GameOverBinding.  
+
+Also, it's not really a "Game Over Binding", it's a "Winning Player Binding".  So you should probably change the name.
