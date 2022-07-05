@@ -1162,3 +1162,8 @@ Important point:  You should never pass around more than you need to.  Never.
 In this case you were passing GameData and expecting GameOverBinding to extract the values it needs from it.  GameOverBinding doesn't need all of GameData, so you should extract the two Properties you do need and pass them to the constructor of GameOverBinding.  
 
 Also, it's not really a "Game Over Binding", it's a "Winning Player Binding".  So you should probably change the name.
+
+
+# Some Final Thoughts
+
+[MasterChef Salmon](https://www.youtube.com/watch?v=Olye1M0AwV4)

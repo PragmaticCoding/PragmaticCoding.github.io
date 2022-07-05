@@ -3,11 +3,22 @@ title: Part 3 - User Interaction
 short_title: Part 1
 permalink: /beginners/part3
 screenshot_1: /assets/beginners/part3_1.png
+excerpt: GUI applications need a way for the user to interact with them.  In this lesson we'll show how to allow user input with TextField, and to launch an action with a Button.
 ---
 
 # What You'll Learn
 
+1. How to use the Button class.
+1. Some principles of good programming
+   - The Single Responsibility Principle
+   - Avoiding excess coupling
+   - How to organize your layout code to make it easy to understand
+1. Events
+
+
 # Adding User Interaction
+
+Two of the most common tools for user interaction and input are TextFields and Buttons.  We're going to add both of these two our application to make it actually do something.
 
 ## The Code So Far
 
@@ -80,11 +91,38 @@ And the output looks almost like this:
 
 I've put a green border around the outer `VBox` and the red border remains around the `HBox`.
 
-## There's a Lot Wrong with this code
+## Button Actions
+
+There's something new in this code:
+
+``` java
+Button actionButton = new Button("Hello");
+actionButton.setOnAction(evt -> outputLabel.setText("Hello " + inputTextField.getText()));
+```
+
+What's this all about?
+
+It's best to think of a `Button` as a nothing more than a trigger for an action.  You can do other things with them, but for now let's just stick to this simplest use.  
+
+Most of the JavaFX classes can trigger "Events".  `Events` are a way for these classes to signal that something significant has happened to them.  Maybe they've changed some kind of state, or received user input - these are things that cause `Events` to be fired.  For every `Event` that can be triggered, you can define an `EventHandler`, which is a piece of code that will be executed when that `Event` is fired.
+
+There are lots and lots of `Events` that are constantly fired in JavaFX and the vast majority of them have no associated `EventHandler` and won't cause anything to happen.
+
+When you thing of a `Button` as a trigger, then there is one type of `Event` that is supremely important, the "OnAction" `Event`.  `OnAction` is fired when the user clicks and releases the mouse over the `Button`, or when the user hits <Enter> when the `Button` is "default" or has focus.  In other words, when the `Button` is activated.  
+
+The way to set up an `EventHandler` for the `OnAction` event is to call `Button.setOnAction()`.  The single parameter for this method is an `EventHandler`.  
+
+`EventHandler` is a functional interface that has a single method called `handle(Event event)`.  Since it's a functional interface, we can define it using a lambda function, which is what we've done in our code so far.
+
+If you are treating a `Button` as nothing more than a trigger for an action, then you probably won't ever reference the `Event` that was fired in your `EventHandler`.  But we still need to pass it in, as `handle()` expects it.
+
+In this case, we're simply going to update the text in `outputLabel`, with a `String` that's build up of some static text and the name from our `TextField`.  
+
+# There's a Lot Wrong with this code
 
 Let's take a look at the problems with this code:
 
-### It's Getting Busy
+## It's Getting Busy
 
 This code no longer follows the "Single Responsibility Principle".  It does the following:
 
@@ -93,17 +131,21 @@ This code no longer follows the "Single Responsibility Principle".  It does the 
 - Creates the `Button`
 - Defines the code which updates the output `Label`
 
+It's often very easy to come up with a definition of your code that describes something that seems to be a "single responsibility", yet isn't really.  In this case we have `createContent()`, which does one thing - creates the content.  Except it actually does a lot of stuff, doesn't it?
 
+The trick is to break your code down into pieces which do one thing that can't be broken down any further.  Or where breaking down further would make the code less clear.  Then you're following the "Single Responsibility Principle".
 
-### There's Way Too Much Coupling
+## There's Way Too Much Coupling
 
-#### What's Coupling, and Why is it Bad?
+This is a big problem with our code, and something that we need to fix right away, before it get's out of hand.
+
+### What is Coupling, and Why is it Bad?
 
 Coupling is when components of your application rely on the implementations of other components of your application.  This results in a situation where two or more components are dependent on the structure of each other, making it difficult to modify one component without needing to modify another component.  And, if that second, dependent, component has other components that are dependent on it... You see where this goes.
 
 Coupling is the thing that you need to fight every step of the way when you're building an application because it sneaks in almost every time you stop looking for it.  So get into the habit of looking for coupling and avoiding it constantly.
 
-#### Where's the Coupling Here?
+### Where's the Coupling Here?
 
 `actionButton` calls `inputTextField.getText()`
 : This is a big problem.  These two elements are now totally coupled.  Let's say that `inputTextField` is changed to some other type of Node that doesn't have a `getText()` method.  Maybe the application is intended to be used in a situation where there are a limited number of users, and the name is picked using a `ComboBox`, which doesn't have a `getText()` method.  Then you'll need to update the `Button` as well.
@@ -115,7 +157,10 @@ Coupling is the thing that you need to fight every step of the way when you're b
 : These elements are coupled in the code.  Any attempt to move the instantiation of either of these two `Nodes` into another method is going to cause trouble with `actionButton`.
 
 The update of `outputLabel` happens inside the `EventHandler` definition.
-: The logic about updating the contents of the `Label` are now encapsulated inside the `EventHandler`
+: The logic about updating the contents of the `Label` are now encapsulated inside the `EventHandler`.  It's not the worst example of coupling, but it can be problematic.
+
+All of the code is in the same scope
+: This is a direct result of violating the Single Responsibility Principle.  Everything is in the same scope and references between elements of the screen are inter-related.
 
 ## Fixing the Coupling and Holding to the Single Responsibility Principle
 
@@ -178,13 +223,28 @@ Putting these two `Properties` into the class allows all of the other coupling t
 
 ### `createContents()` Now Just Sets Up the Main VBox
 
+At a glance, you can now see that createContents() is going to create a VBox with 3 things centred in it: a place for input, a place for output and a Button.  
+
+This method still "creates the contents" for the screen, but it **delegates** the creation of the components to builder methods.  You can see that the "Single Responsibility Principle" really refers to direct responsibility, and bringing together the results of several delegated responsibilities is, in fact, a single responsibility.
 
 ### All of the various `Nodes` Now Have Generic Names
 
 Since the layout of the screen has now been split into tiny, clearly named methods, there's no value in having meaningful variable names for the individual `Nodes`.  The scope of each of these variables is so small now that there's no added clarity in having complicated names for them, and simple names like `hBox` should indicate to any reader that these have a limited scope.
 
+### All of the Builder Methods Have Meaningful Names
+
+On the other hand, the builder methods now have names like `createInputBox()` and `createOutputLabel()`.  It's clear what they do, and makes it easy to find the method that you're interested in if you're reading, enhancing or modifying this code.
+
 ### All of the Builder Methods Return Node or Region
 
+This is a very important concept to understand.  If your builder method needs to return a very specific type of `Node`, then you're probably doing it wrong.  
 
+Let's take `createOutputLabel()` as an example.  As the code stands, you could return a `Label` instead of a `Node` and it would work.  But if you do that, then it's possible to something very `Label` specific, like set the font, inside of `createContents()`. That's a potential issue, and certainly a "code smell", because the configuration of the `Label` really belongs inside `createOutputLabel()`.
 
-### The EventHandler in the Button is Just a Trigger to call setGreeting()
+Now let's say that you wanted to do something to the return value of `createOutputLabel()`.  Perhaps you want to have the "Hello" in a different font from the name.  The best way to do that  might be to split the text between two `Labels`, and put them into an `HBox` and return the `HBox`.  
+
+Now you have a problem since `createContents()` is expecting a `Label` so that it can mess with its font.  But you want to return an `HBox` instead.  This means you have to refactor `createContents()` in order to change things that should just be the responsibility of `createOutputLabel()`.
+
+### The EventHandler in the Button is Just a Trigger to call `setGreeting()`
+
+Even though the code in `setGreeting()` is just one line, now the action in the `EventHandler` has a name, "Set Greeting" which makes it easier to read the intent of the `EventHandler` at a glance.

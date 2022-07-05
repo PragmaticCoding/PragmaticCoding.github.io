@@ -58,6 +58,30 @@ beginners:
         url: /beginners/part1
       - title: "Part 2 - Configuring Layouts"
         url: /beginners/part2
+      - title: "Part 3 - User Interaction"
+        url: /beginners/part3
+      - title: "Part 4 - Styling"
+        url: /beginners/part4
+
+  - title: Building a CRUD Application
+    url: /beginners/crud
+    children:
+      - title: "Part 5 - A Framework"
+        url: /beginners/part5
+      - title: "Part 6A - Create: GUI"
+        url: /beginners/part6a
+      - title: "Part 6B - Create: Persistence"
+        url: /beginners/part6b
+      - title: "Part 7 - What Next?"
+        url: /beginners/part7
+      - title: "Part 8 - Latency and Blocking"
+        url: /beginners/part8
+      - title: "Part 9 - GUI Validation"
+        url: /beginners/part9
+      - title: "Part 10 - Database Errors"
+        url: /beginners/part10
+      - title: 'Part 11 - A "Working" Application'
+        url: /beginners/part11
 
 
 linux:

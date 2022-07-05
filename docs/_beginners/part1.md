@@ -2,6 +2,7 @@
 title: Part 1 - A Quick Start
 short_title: Part 1
 permalink: /beginners/part1
+excerpt: The very first step.  What else?  "Hello World" in JavaFX.  
 
 hello: /assets/beginners/hello.png
 gradle: /assets/beginners/build.gradle
@@ -118,4 +119,4 @@ Two little pieces of explanation first, and then we'll conclude Part 1.
 
 You'll notice that I've split `createContents()` out from the rest of the code in `start()`, even though it's really simple.  Personally, I think `start()` should be all about `Scene` and `Stage` and getting the window on the screen.  The details about the contents of the `Stage` really don't belong in `start()`.  Keeping methods small and purposeful is just as important with JavaFX as it is with any other programming.
 
-You should also notice that `createContents()` returns `Label` as a `Region`.  Strangely enough, all of the `Control` classes in JavaFX, including `Label` extend from `Region`, even though they don't seem at first to be `Region` kind of objects.  In the specific case of `Label`, there's actually more going on to it's structure than you think, and it actually does make sense to think of it as a `Region`.  We'll look at that later.
+You should also notice that `createContents()` returns `Label` as a `Region`.  Strangely enough, all of the `Control` classes in JavaFX, including `Label` extend from `Region`, even though they don't seem at first to be `Region` kind of objects.  In the specific case of `Label`, there's actually more going on to its structure than you think, and it actually does make sense to think of it as a `Region`.  We'll look at that later.

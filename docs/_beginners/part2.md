@@ -6,6 +6,7 @@ hello1: /assets/beginners/hello.png
 hello: /assets/beginners/part2_hello.png
 input: /assets/beginners/part2_input.png
 input2: /assets/beginners/part2_input2.png
+excerpt: Some basics about building layouts and making your screens look the way you want.
 ---
 
 # What You'll Learn
