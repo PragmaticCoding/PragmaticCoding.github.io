@@ -29,6 +29,8 @@ master:
           url: /javafx/elements/events
         - title: PseudoClasses
           url: /javafx/elements/pseudo_classes
+      - title: Absolute Beginners Guide to JavaFX
+        url: /beginners/intro
 
   - title: MultiValue Databases
     url: /pages/multivalue
