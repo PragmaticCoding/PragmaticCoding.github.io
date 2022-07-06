@@ -108,7 +108,7 @@ Most of the JavaFX classes can trigger "Events".  `Events` are a way for these c
 
 There are lots and lots of `Events` that are constantly fired in JavaFX and the vast majority of them have no associated `EventHandler` and won't cause anything to happen.
 
-When you thing of a `Button` as a trigger, then there is one type of `Event` that is supremely important, the "OnAction" `Event`.  `OnAction` is fired when the user clicks and releases the mouse over the `Button`, or when the user hits <Enter> when the `Button` is "default" or has focus.  In other words, when the `Button` is activated.  
+When you think of a `Button` as a trigger, then there is one type of `Event` that is supremely important, the "OnAction" `Event`.  `OnAction` is fired when the user clicks and releases the mouse over the `Button`, or when the user hits the "Enter" key when the `Button` is "default" or has focus.  In other words, when the `Button` is activated.  
 
 The way to set up an `EventHandler` for the `OnAction` event is to call `Button.setOnAction()`.  The single parameter for this method is an `EventHandler`.  
 
@@ -116,11 +116,13 @@ The way to set up an `EventHandler` for the `OnAction` event is to call `Button.
 
 If you are treating a `Button` as nothing more than a trigger for an action, then you probably won't ever reference the `Event` that was fired in your `EventHandler`.  But we still need to pass it in, as `handle()` expects it.
 
-In this case, we're simply going to update the text in `outputLabel`, with a `String` that's build up of some static text and the name from our `TextField`.  
+In this case, we're simply going to update the text in `outputLabel`, with a `String` that's built up of some static text and the name from our `TextField`.  
 
 # There's a Lot Wrong with this code
 
-Let's take a look at the problems with this code:
+It's important that you learn how to write clean, clear layout code or your applications will become very difficult to understand and maintain.  Even with the smallest of applications, it's a good idea to get into the habit of making your layout code as clean as possible.  
+
+Let's take a look at the problems with the code we've written so far:
 
 ## It's Getting Busy
 
@@ -131,13 +133,15 @@ This code no longer follows the "Single Responsibility Principle".  It does the 
 - Creates the `Button`
 - Defines the code which updates the output `Label`
 
-It's often very easy to come up with a definition of your code that describes something that seems to be a "single responsibility", yet isn't really.  In this case we have `createContent()`, which does one thing - creates the content.  Except it actually does a lot of stuff, doesn't it?
+It's often very easy to come up with a definition of your code that describes something that seems to be a "single responsibility", yet isn't really.  In this case we have `createContent()`, which does one thing - creates the content.  Except it actually does a lot of stuff, doesn't it?  
 
-The trick is to break your code down into pieces which do one thing that can't be broken down any further.  Or where breaking down further would make the code less clear.  Then you're following the "Single Responsibility Principle".
+"Single Responsibility" really refers to a direct responsibility.  A method can "do" a lot of things by delegating them to other methods.  Then its single responsibility is to bring them all together.
+
+The trick is to break your code down into pieces which do one thing that can't be broken down any further, or where breaking down further would make the code less clear.  Then you're following the "Single Responsibility Principle".
 
 ## There's Way Too Much Coupling
 
-This is a big problem with our code, and something that we need to fix right away, before it get's out of hand.
+This is a big problem with our code, and something that we need to fix right away, before it gets out of hand.
 
 ### What is Coupling, and Why is it Bad?
 

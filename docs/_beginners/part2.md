@@ -99,7 +99,7 @@ public class Main extends Application {
 ```
 ## What's an HBox?
 
-`HBox` is an example of a "layout" class.  It's a `Region` type `Node` that holds other `Nodes` inside it.  There are a number of different layout classes, like `BorderPane`, `ScrollPane`, `GridPane`, `VBox` and `HBox`.  Each one has different characteristics and is suited for different kinds off organization of their contents.
+`HBox` is an example of a "layout" class.  It's a `Region` type `Node` that holds other `Nodes` inside it.  There are a number of different layout classes, like `BorderPane`, `ScrollPane`, `GridPane`, `VBox` and `HBox`.  Each one has different characteristics and is designed for different methods of organizing their contents.
 
 `HBox` presents its contents in a horizontal row, with the first item at the far left and each new item added to the right.  `VBox` is similar except that it shows it's contents arranged vertically, from the top down.  In this case, I've chosen to populate the contents of the `HBox` in its constructor.
 
@@ -160,4 +160,4 @@ When you run this, you'll see it looks **almost** like this:
 
 I've added an extra line to put a red border around the `HBox`.  It's not included in the code above because it uses concepts we haven't looked at yet.  But since `HBox` is usually invisible, it helps to have a border to understand how it works.  We'll get to the border later on.
 
-When you see the red border it becomes clear that the `HBox` is occupying all of the space available to it, not just the amount of space required to hold its contents.  This explains we everything was originally up in the top left corner, with the default `Pos.TOP_LEFT` alignment, and why it's now moved to the middle of the window.
+When you see the red border it becomes clear that the `HBox` is occupying all of the space available to it, not just the amount of space required to hold its contents.  This explains why everything was originally up in the top left corner, with the default `Pos.TOP_LEFT` alignment, and why it's now moved to the middle of the window.
