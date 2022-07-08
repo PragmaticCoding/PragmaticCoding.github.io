@@ -84,6 +84,8 @@ beginners:
         url: /beginners/part10
       - title: 'Part 11 - A "Working" Application'
         url: /beginners/part11
+      - title: 'Part 12 - Adding a New Field: eMail'
+        url: /beginners/part12
 
 
 linux:
