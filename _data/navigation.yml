@@ -86,6 +86,8 @@ beginners:
         url: /beginners/part11
       - title: 'Part 12 - Adding a New Field: eMail'
         url: /beginners/part12
+      - title: 'Part 13 - Feature Envy'
+        url: /beginners/part13
 
 
 linux:
