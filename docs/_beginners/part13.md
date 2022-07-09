@@ -3,16 +3,20 @@ title: "Part 13 - Feature Envy"
 short_title: Part 13
 permalink: /beginners/part13
 screenshot_1: /assets/beginners/part10_1.png
-excerpt: The last problem with our application is that it can save duplicate customer records, corrupting our database.  This means adding some rules to our database and telling our GUI when those rules have been broken.  We'll see how to handle exceptions from the back-end in our application.
+excerpt:  In this article we're going to look at how Feature Envy has crept into our View code.  We're going to look at why this happens, and how to deal with it.  Finally, we're going to see how clearing out Feature Envy makes our code much cleaner and easier to understand.
 ---
 
 # What You'll Learn
 
-1. How easy it is to expand the application by a single field
-1. Some more DRY
-1. How to keeping code clean as we expand functionality
+1. The idea of Custom Widgets as View building blocks
+1. What is Feature Envy
+1. The principle of "Put Stuff Where it Belongs"
+1. Building a Widgets library
+1. How much cleaner code is when Feature Envy is dealt with
 
-# Dealing With Our Ugly GUI and Our Ugly ViewBuilder Code
+# Introduction
+
+Even though we've been really careful to try to apply DRY and the Single Responsibility Principle, our ViewBuilder code has started to grow some weeds.  It's not as clean as it can be, and it now suffers from "Feature Envy".  Let's look at what's happened...
 
 # Custom Widgets
 
@@ -107,6 +111,11 @@ public class Widgets {
 ```
 
 It has all of the Feature Envy methods from our ViewBuilder class.  The name `rowBox()` has been changed to `promptedTextField()` because it needs to be more easily understood without any context.  Maybe `promptedInput()` would be better?  I don't know.  Naming things is hard!
+
+On the subject of naming things:  
+: For these kinds of methods I prefer names that describe the returned value, not an action type name.  The normal rules of naming would have use names like `createHeadingLabel()` or `makeStyledLabel()`, but these don't really add any clarity in the context of a Widget library.  Furthermore, they just make the names longer, which then makes them more cumbersome to use in constructors for container classes.<br><br>  
+
+: So I prefer to stick to names like `Widgets.headingLabel()` and to think of the value that it returns as `HeadingLabel` - even though it's not an actual class that is returned.  This makes sense to me, so it's the convention I follow.
 
 All of this stuff is now out of our layout code:
 

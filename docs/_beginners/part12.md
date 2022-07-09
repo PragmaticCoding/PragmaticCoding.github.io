@@ -3,7 +3,7 @@ title: "Part 12 - Adding a New Field: eMail"
 short_title: Part 12
 permalink: /beginners/part12
 screenshot_1: /assets/beginners/part10_1.png
-excerpt: The last problem with our application is that it can save duplicate customer records, corrupting our database.  This means adding some rules to our database and telling our GUI when those rules have been broken.  We'll see how to handle exceptions from the back-end in our application.
+excerpt: It's finally time to add a third field to our screen!  In this article we're going to add just a single new field, for email, to our screen.  We're going to see how the process goes from the View all the way down to the Broker.  Most importantly, we going to see how we need to be vigilant in ensuring that our code stays clean as we add more features.
 ---
 
 # What You'll Learn
