@@ -112,7 +112,7 @@ author:
   links:
     - label: "Email"
       icon: "fas fa-fw fa-envelope-square"
-      url: "mailto:pragmaticcoding8@email.com"
+      url: "mailto:pragmaticcoding8@gmail.com"
     - label: "Website"
       icon: "fas fa-fw fa-link"
       url: "https://www.PragmaticCoding.ca"
@@ -134,7 +134,7 @@ footer:
   links:
     - label: "Email"
       icon: "fas fa-fw fa-envelope-square"
-      url: "mailto:pragmaticcoding8@email.com"
+      url: "mailto:pragmaticcoding8@gmail.com"
     - label: "Twitter"
       icon: "fab fa-fw fa-twitter-square"
       url: "https://twitter.com/Polypragmatist"
