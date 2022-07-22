@@ -8,7 +8,7 @@ screenshot2: /assets/elements/SceneSwapShot2.png
 screenshot3: /assets/elements/SceneSwapShot3.png
 screenshot4: /assets/elements/SceneSwapShot4.png
 screenshot5: /assets/elements/SceneSwapShot5.png
-excerpt: Taking a look at the three most common design patterns for building systems with user interfaces.  How are they different?  Which one is best?  Is there anything better?
+excerpt: Introducing a "course" for programmers just starting out with JavaFX.  Everything you need to know to get from absolute zero knowledge to building real applications that do real work.
 ---
 
 # Why?
