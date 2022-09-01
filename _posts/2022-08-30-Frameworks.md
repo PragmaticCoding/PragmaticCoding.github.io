@@ -6,6 +6,7 @@ logo: /assets/logos/LittleBrain.jpg
 mvvm: /assets/posts/mvvm.png
 mvc-mvp: /assets/posts/mvc-mvp.png
 fowler: /assets/posts/fowler-mvc.gif
+mvci: /assets/posts/MVCI.png
 excerpt: Taking a look at the three most common design patterns for building systems with user interfaces.  How are they different?  Which one is best?  Is there anything better?
 ---
 
@@ -186,6 +187,8 @@ In this interpretation, the Model is simply a POJO with the fields composed of O
 However, with that interpretation, I always felt that there was something missing - the piece that connects it to the back-end of the application.  So I needed to add that on, and then build some rules about what goes where and who is responsible for what.  The result is something I call Model-View-Controller-Interactor (MVCI) and I've found it to be ideal for use in a JavaFX Reactive implementation.
 
 Now, when I go back and look at how those other frameworks are really supposed to work, I can see how they have problems and how my new framework relates to them.  And it's similar in many ways, but it's also something completely new and different.  And, IMHO, it's better.
+
+![MVCI]({{page.mvci}})
 
 Let's look at the components:
 
