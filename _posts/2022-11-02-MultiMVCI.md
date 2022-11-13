@@ -538,7 +538,7 @@ Now all of the post processing has been completed and the `Button` is re-enabled
 
 #### Reasons Not to Do This
 
-There are probably lots of genuinely good reason to use this approach, but it does add a layer of complexity to your MVCI frameworks.  
+There are probably lots of genuinely good reasons to use this approach, but it does add a layer of complexity to your MVCI frameworks.  
 
 The question is whether or not you should go this way.  
 
