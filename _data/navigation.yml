@@ -31,6 +31,8 @@ master:
           url: /javafx/elements/pseudo_classes
       - title: Absolute Beginners Guide to JavaFX
         url: /beginners/intro
+      - title: Model-View-Controller-Interactor
+        url: /javafx/mvci
 
   - title: MultiValue Databases
     url: /pages/multivalue
