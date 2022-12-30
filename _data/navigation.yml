@@ -33,6 +33,8 @@ master:
         url: /beginners/intro
       - title: Model-View-Controller-Interactor
         url: /javafx/mvci
+      - title: CyberTanks!
+        url: /coming_soon
 
   - title: MultiValue Databases
     url: /pages/multivalue
@@ -90,6 +92,54 @@ beginners:
         url: /beginners/part12
       - title: 'Part 13 - Feature Envy'
         url: /beginners/part13
+
+
+cybertanks:
+  - title: Introduction
+    url: /javafx/cybertanks/intro
+  - title: The Basics
+    url: /javafx/cybertanks/basics
+    children:
+      - title: Global Data
+        url: /javafx/cybertanks/global_data
+      - title: Tiles
+        url: /javafx/cybertanks/tiles
+      - title: Hex Map
+        url: /javafx/cybertanks/hexmap
+      - title: Counters
+        url: /javafx/cybertanks/counters
+      - title: Game Screen
+        url: /javafx/cybertanks/game_wrapper
+
+  - title: Setup Mode
+    url: /javafx/cybertanks/setup_intro
+    children:
+      - title: Setup SideBar
+        url: /javafx/cybertanks/setup_sidebar
+      - title: Light Tanks
+        url: /javafx/cybertanks/light_tanks
+      - title: Setup SideBar Continued
+        url: /javafx/cybertanks/setup_sidebar_again
+      - title: Drag and Drop
+        url: /javafx/cybertanks/dragNdrop
+      - title: Removing Units
+        url: /javafx/cybertanks/undeploy
+
+  - title: Game Mode - CyberTank Logic
+    url: /javafx/cybertanks/cybertank_intro
+    children:
+      - title: The Moose System
+        url: /javafx/cybertanks/moose
+      - title: "CyberTank Movement: Part 1"
+        url: /javafx/cybertanks/ct_move_1
+      - title: "CyberTank Movement: Part 2"
+        url: /javafx/cybertanks/ct_move_2
+      - title: "*** Intermission ***"
+        url: /javafx/cybertanks/intermission_1
+      - title: Blowing Things Up!
+        url: /javafx/cybertanks/ct_combat_1
+      - title: Blowing More Things Up!
+        url: /javafx/cybertanks/ct_combat_2
 
 
 linux:

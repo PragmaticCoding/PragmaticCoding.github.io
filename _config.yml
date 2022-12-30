@@ -162,6 +162,7 @@ include:
   - _elements
   - _beginners
   - _linux
+  - _cybertanks
 exclude:
   - "*.sublime-project"
   - "*.sublime-workspace"
@@ -329,6 +330,30 @@ defaults:
       header:
         overlay_image: /assets/images/brain.jpg
         overlay_filter: 0.4
+
+  - scope:
+      path: docs/_cybertanks
+      type: pages
+    values:
+      title: CyberTanks!
+      layout: single
+      author_profile: false
+      read_time: true
+      comments: # true
+      share: true
+      related: true
+      toc: true
+      toc_label: "Contents"
+      toc_icon: "brain"
+      toc_sticky: true
+      banner: /assets/cybertanks/banner.png
+      sidebar:
+        title: "CyberTanks!"
+        nav: "cybertanks"
+      header:
+        overlay_image: /assets/images/brain.jpg
+        overlay_filter: 0.4
+
 
 
   - scope:
