@@ -9,25 +9,27 @@ excerpt: Need to understand a Kotlin program, but you only know Java?  This arti
 
 # Introduction
 
-The first time I ever looked at a Kotlin program was when one of my developers found a cool JavaFX library called "DirtyFX".  We wanted to understand how some of it worked, and when we looked at the source code on GitHub we were stymied when we saw it was in Kotlin.  
+The first time I ever looked at a Kotlin program was when one of my developers found a cool JavaFX library called ["DirtyFX"](https://github.com/thomasnield/DirtyFX).  We wanted to understand it worked, but when we looked at the source code on GitHub we were stymied because it was in Kotlin.  
 
 It seemed impenetrable.
 
-Years later, I've gone back to Kotlin and learned it.  It's awesome and, if you're a competent Java programmer, you can learn enough to start using it with a 4 hour YouTube tutorial.  Then it takes about a week or so to get comfortable, and somewhat longer to get proficient at it.  
+Years later, I've gone back to Kotlin and learned it.  It's awesome.  And, if you're a competent Java programmer, you can learn enough to start using it with a 4 hour YouTube tutorial.  Then it takes about a week or so to get comfortable, and somewhat longer to get proficient at it.  
 
-This article isn't designed to replace a 4 or 5 your YouTube tutorial, it's intended to give a typical Java programmer enough information to understand a typical Kotlin program in a much shorted period of time.  
+This article isn't designed to replace a 4 or 5 hour YouTube tutorial.  It's intended to give a typical Java programmer enough information to understand a typical Kotlin program in a much shorter period of time.  It's also intended to give a typical Java programmer a feel for how Kotlin works, and a start to understanding why many Kotlin programmers think it's the way forward in the JVM world.
 
-One more thing.  If you study Kotlin for any length of time, you'll come across the term "idiomatic Kotlin".  This is the idea that while Kotlin shares the JVM, just writing code the way you would in Java but in Kotlin isn't going give you something that *feels* like Kotlin.  There's definitely a Kotlin approach to coding, and coding in that way gives you idiomatic Kotlin.  In order to *write* code this way, you do really have to have a solid grasp of a lot of Kotlin, but once you get used to some of the quirky things you'll see in Kotlin code you should be able to easily understand it.
+I've also provided links to the Kotlin official documentation as part of the text.  So if you want to look into some aspect of Kotlin a little more deeply, it should be easy for you to do so.  The Kotlin docs are really well written and easy to understand, too.
+
+One more thing:  If you study Kotlin for any length of time, you'll come across the term "idiomatic Kotlin".  This is the idea that while Kotlin shares the JVM, just writing code the way you would in Java but in Kotlin isn't going give you something that *feels* like Kotlin.  There's definitely a Kotlin approach to coding, and coding in that way gives you "Idiomatic Kotlin".  In order to *write* code this way, you do really have to have a solid grasp of a lot of Kotlin, but once you get used to some of the quirky things you'll see in Kotlin code you should be able to easily read and understand it.
 
 ## Why Kotlin
 
-When I learned Kotlin I realized that there was lots of stuff in Java that bugged me (or should have), that Kotlin just fixes in a seamless and natural way.  Null safety is a clear example of that.  Sure, in Java you can use `Optional`, but Kotlin's approach is nicely integrated into the language in such a way that Null safety is virtually mandatory in any code you write.
+When I learned Kotlin I realized that there was lots of stuff in Java that bugged me (or should have) that Kotlin just fixes in a seamless and natural way.  Null safety is a clear example of that.  Sure, in Java you can use `Optional`, but Kotlin's approach is nicely integrated into the language in such a way that Null safety is virtually mandatory in any code you write.  From what I've seen, just about every Java programmer who takes the time to learn enough Kotlin to become somewhat proficient in it wishes that they could switch over to Kotlin full time.  
 
-In general, Kotlin code is shorter and more intuitive than the equivalent in Java, and is therefore easier to read and understand.  
+In general, Kotlin code is shorter and more intuitive than the equivalent in Java, and is therefore easier to read and understand.  One example you'll see here is how Kotlin eliminates the need for writing getters and setters, while providing the same functionality and separating the public interface from the internal workings of your class.  Then Kotlin goes one step further by interpreting external references to member properties as calls to the getters and setters.  In the end, Kotlin allows you to write code exactly the way that you always wanted to, and does all the work, behind the scenes, of the boilerplate code you have to write in Java.
 
 # Class Structure
 
-Let's start at the top, class structure.  We'll use this sample code to talk about a fet topics:
+Let's start at the top, class structure.  We'll use this sample code to talk about a few topics:
 
 ``` kotlin
 class MyClass(val property1 : Int, private var property2 : Int = 0) : SomeInterface {
@@ -55,6 +57,8 @@ class MyClass(val property1 : Int, private var property2 : Int = 0) : SomeInterf
 
 The first thing that you'll notice is that there aren't any semi-colons at the ends of the lines.  You can use them, but you don't need to.
 
+Kotlin basically supports all the same [types](https://kotlinlang.org/docs/basic-types.html) as Java, although the primitive types aren't used.  So anything that would be `int` or `Integer` is `Int` in Kotlin.
+
 The second thing that you'll notice is that type declarations are of this structure:
 
 ``` kotlin
@@ -67,15 +71,17 @@ If you are initializing a variable and it can be reasonably inferred as to what 
 ``` kotlin
 var abc = 5
 ```
-Will give you Int.  However, if you want Long, then you need to specify it:
+Will give you `Int`.  However, if you want `Long`, then you need to specify it unless the initial value is too large for `Int`:
 
 ``` kotlin
 var abc : Long = 5
 ```
 
+The same structure follows when you want to define a variable as an interface when the initialization calls the constructor of an implementation of that interface.
+
 ## Instance Variables
 
-I'm very specifically using the term "instance variables" because Kotlin has a different structure for static elements, and these are NOT fields.  Kotlin calls them "Properties".
+Here, we're very specifically using the term "instance variables" because Kotlin has a different structure for static elements, and these instance variables are very different from Java fields.  Kotlin calls instance variables, ["Properties"](https://kotlinlang.org/docs/properties.html).
 
 A Kotlin property is actually a structure that is backed by a "field".  There is a default getter and setter for the property, and should you chose to override them you can access the backing field inside your getter/setter code.  For now, this is all you need to know about this.
 
@@ -84,7 +90,7 @@ One advantage to Kotlin is that it automatically invokes the getter or setter fo
 ``` kotlin
 myClass.property3 = myClass.property4[2]
 ```
-This is completely valid code.  It calls the setter for `property3` and the getter for property4.  On top of that, it calls `List.get()` by using `[]` construct.  You can also do this:
+This is completely proper and valid Kotlin code.  It calls the setter for `property3` and the getter for property4.  On top of that, it calls `List.get()` by using `[]` construct.  You can also do this:
 
 ``` kotlin
 myClass.property4 += "xyz"
@@ -119,7 +125,7 @@ would be allowed.  You can add or remove elements to `list3`, but but you cannot
 
 ## Methods
 
-Methods in Kotlin are called [Functions](https://kotlinlang.org/docs/functions.html) and declared using the `fun` keyword.  The return type of a function is declared the same way as for a variable and the body of the method is enclosed in `{}` if there is more than one line.  If there is more than one line, then you can just use `=` and put the code.  For instance:
+Methods in Kotlin are called [Functions](https://kotlinlang.org/docs/functions.html) and declared using the `fun` keyword.  The return type of a function is declared the same way as for a variable and the body of the method is enclosed in `{}` if there is more than one line.  If the function body is an expression, then you can just use `=` and put the code.  For instance:
 
 ``` kotlin
 fun doubleIt(x: Int): Int {
@@ -150,50 +156,27 @@ And all of these will return the same result.
 
 ## Class Declarations
 
-Now that we've covered all of that, you can understand the class declaration itself.  
+Now that we've covered all of that, you can understand the [class declaration](https://kotlinlang.org/docs/classes.html) itself.  
 
-The first thing you'll notice (from the code at top of the article) is that the class declaration looks almost like a constructor.  That's because it is, but in most case you can skip the `constructor` keyword for the primary constructor.
+Looking at the code at top of this article, you'll notice that the class declaration looks almost like a constructor.  That's because it is, but in most case you can skip the `constructor` keyword for the primary constructor.
 
-One thing that's different from a Java constructor is that all of the parameters listed automatically become properties of the class.  Just like with Functions, you can declare default values for those properties, if they are not specified in the constructor call.
+One thing that's different from a Java constructor is that all of the parameters listed as `val` or `var` automatically become properties of the class.  Just like with Functions, you can declare default values for those properties, if they are not specified in the constructor call.
 
-Primary constructors in Kotlin do not contain any code.  However, you can declare `init {}` blocks in your class and these will be executed, in the order that they appear, from primary constructor.  You can do just about anything that you would expect to do, including set the value for a `val` property in an `init` block.  
+Primary constructors in Kotlin do not contain any code.  However, you can declare `init {}` blocks in your class and these will be executed, in the order that they appear, from the primary constructor.  You can do just about anything that you would expect to do, including initializing the value for a `val` property in an `init` block.  
 
 If a class implements an Interface, or extends another class, then that can be specified using the type style declaration that was used for functions.
 
+Static elements are created by including them in a "[Companion Object](https://kotlinlang.org/docs/object-declarations.html#companion-objects)" inside the class.  
+
 ## Visibility Modifiers
 
-While the default visibility for Java is `package-protected`, there is equivalent for this in Kotlin and the default visibility is `public`.  There is also `private`, which does what you'd expect, and `protected` which exposes the class member to any sub-classes.
+While the default visibility for Java is `package-protected`, there is no equivalent for this in Kotlin and the default visibility is `public`.  There is also `private`, which does what you'd expect, and `protected` which exposes the class member to any sub-classes.
 
 By default, all functions in a Kotlin class are final, and must be declared with the `open` modifier in order to be overridden by a subclass.
 
-# Language Structure
+# Language Features
 
 At this point, you should have enough information to open up a Kotlin class file and navigate around it, understanding at least the structure of the class.  Now let's look at some of the features of the Kotlin language...
-
-## Null Safety
-
-This is the big one!  There is no reason at all to ever get an NPE in Kotlin.  Ever.  
-
-None of the *normal* data types, like `Int`, or `Double` or `String` are allowed to have a Null value.  This means that they must always be initialized when declared, and you cannot put a Null value into them.  
-
-If you want to entertain the idea of having a Null value, then you must declare them as "Nullable".  Nullable types are specified by putting a `?` after the type name.  So `Int?`, `Double?` and `String?` are all types that are allowed to hold Null values.
-
-But note that `Int?` is actually a different type from `Int`.  You cannot perform a mathematical operation on `Int?` directly, nor can you use an `Int?` in an operation to assign to `Int`.  One more time, `Int?` is not `Int`.
-
-In fact, `Int?` is closer to the Java `Optional<Integer>` than anything else.  
-
-In order to use the value in a Nullable type, you need to (effectively) extract it into its non-nullable type.  This is generally done via the `?.` operator, and the `?:` (called the "Elvis operator").  The Elvis operator is a little bit like the ternary operator in Java and, in Java would work like this:
-
-``` java
-  int x = (nullableInt.isNotNull()) ? nullableInt.getIntValue() : y;
-```
-and looks like this in Kotlin:
-``` kotlin
-  val x : Int = nullableInt ?: y
-```
-In both cases, `x` would be whatever integer value was in `nullableInt` if it was non-null, and `y` if it was null.
-
-Just as Java's `Optional` has `map()`, Kotlin has `?.run{}`.  The code in the `{}` will be executed with the value passed as a parameter if it's non-null, otherwise nothing happens and the value remains Null.
 
 ## Lambdas
 
@@ -222,7 +205,27 @@ So, you can do something like this:
     return func(intermediate)
   }
 ```
-You can also use method references much the same way as in Java.
+You can also use method references much the same way as in Java.  
+
+You'll also see the term "higher order function" in a lot of documentation.  This is simply a function that takes another function as a parameter.  It's far more common in Kotlin than Java...
+
+## Functions as Data
+
+This is probably one of the biggest features of Kotlin that should have a impact on the "feel" of programs written in Kotlin.  Kotlin makes it very easy to pass snippets of code around from place to place, very much like data.  Java has headed a little bit in this way with the introduction of "Functional Interfaces" and lambdas, but Kotlin bakes the concept in from the beginning.  
+
+First off, you can declare a function as a data type just by specifying its inputs and outputs, in a format that looks a little bit like a cross between a lambda and a generic type declaration.  For instance:
+
+```kotlin
+var abc : (String, Int) -> Double
+```
+Here, the variable `abc` is declared to be a function that takes a `String` and an `Int` as input and returns a `Double`.  There's no need to declare a Functional Interfaces like `Function`, `Predicate` or `Consumer` as you do in Java.
+
+You can even declare a "Type Alias" to give a name to your function type:
+
+```kotlin
+typealias NumberFinder = (String, Int) -> Double
+var abc : NumberFinder
+```
 
 It's possible to get a little lost between functions declared via `fun` and functions instantiated as lambdas or as variables.  In truth, Kotlin really does treat them very much the same.  For in every instance below, `doubler` is the same:
 
@@ -241,22 +244,30 @@ It's possible to get a little lost between functions declared via `fun` and func
 ```
 The last two versions really make it clear, since you don't need to even specify the type, and `doubler` as just a pointer  for the local function really lays it bare.  
 
-# Extension Functions
+Finally, you can treat `doubler` from above just like `doubleIt()` in your code:
 
-It's possible to add a function to a class without creating a subclass.  This is called an ["extension function"](https://kotlinlang.org/docs/extensions.html#extension-functions).  For instance, you can add a function to `Int` to determine if it is even:
+```kotlin
+val y = doubler(abc)
+val j = doubleIt(abc)
+```
+Both would work just fine.
+
+## Extension Functions
+
+It's possible to add a function to a class without creating a subclass.  This is called an "[Extension Function](https://kotlinlang.org/docs/extensions.html#extension-functions)".  For instance, you can add a function to `Int` to determine if it is even:
 
 ``` kotlin
 fun Int.isEven() = {this %2 == 0}
 ```
 An extension function is an example of a "receiver function".  A receiver function is one that is automatically passed a parameter which is known inside the function by a standard name, usually `this`.  In the case of a receiver called `this`, if it can be inferred by the compiler the `this` can be left out of a statement when accessing class members (very much like in Java).
 
-# Scope Functions
+## Scope Functions
 
-Scope functions are a special class of "receiver" functions.
+[Scope Functions](https://kotlinlang.org/docs/scope-functions.html) are a special class of "receiver" functions.
 
-There are 5 scope functions, and 4 of them are extension functions.  So we'll look at them first.  
+There are 5 Scope Functions, and 4 of them are Extension Functions.  So we'll look at them first.  
 
-## Transformation Functions (My Term)
+### Transformation Functions (My Term)
 
 These two functions take the object as a parameter and return some other value.  The differ only in only how they name the received object.  They are `let` and `run`.  
 
@@ -275,9 +286,9 @@ Now, `let`:
 ``` kotlin
 val stringLength: Int = "This is a String".let{it.length}
 ```
-You can see that they are pretty much the same, except for how the received object is referred to.
+You can see that `run` and `let` are pretty much the same, except that the received object is referred to as `it` in `let`.  When a Scope Function uses `it` you can use the normal lambda syntax to change it to something more meaningful if you like.
 
-## Configuration Functions (Also, My Term)
+### Configuration Functions (Also, My Term)
 
 These two functions take the object as a parameter and return it back, allowing you to configure an item without instantiating it as a variable.  They are `apply` and `also`.  
 
@@ -299,9 +310,9 @@ private fun promptLabel(text: String) = Label(text).apply{styleClass += "label.p
 ```
 Which is a structure I use all the time.
 
-## The Non-Receiver Function - `with`
+### The Non-Receiver Function - `with`
 
-If you're old enough to remember the Pascal language, then you might be familial with `with`.  It's a great way to clean up a block of code that has many references to members of a single object.  Whatever parameter passed to `with` becomes `this` in the associated lambda and, of course, the `this` can then be omitted in references to that objects members.  So you can do something like this:
+If you're old enough to remember the Pascal programming language, then you might be familiar with `with`.  It's a great way to clean up a block of code that has many references to members of a single object.  Whatever parameter passed to `with` becomes `this` in the associated lambda and, of course, the `this` can then be omitted in references to that objects members.  So you can do something like this:
 
 ``` kotlin
 val theResult: String = with(myClass) {
@@ -314,11 +325,53 @@ Where `name`, `age` and `doSomething()` are members of `myClass`.
 
 Since `with` is  a function, it can return a value, in this case the result of `MyClass.doSomething()`.
 
-## The Non-Extension Version of `run`
+### The Non-Extension Version of `run`
 
 This version of `run` is used when a situation requires an expression, but you want to put multi-line code instead.  The format is `run {}`.  There is no receiver object in this case.
 
+## Null Safety
+
+[Null Safety](https://kotlinlang.org/docs/null-safety.html) is one of the biggest features of Kotlin!  There is no reason at all to ever get an NPE in Kotlin.  Ever.  
+
+As important as it is, it had to be left until this point because you need to understand how lambdas and Scope Functions work first, which shows you how tightly integrated into the language null safety is.  
+
+None of the *normal* data types, like `Int`, or `Double` or `String` are allowed to have a `Null` value.  This means that they must always be initialized when declared, and you cannot put a `Null` value into them.  
+
+If you want to entertain the idea of having a `Null` value, then you must declare them as "Nullable".  Nullable types are specified by putting a `?` after the type name.  So `Int?`, `Double?` and `String?` are all types that are allowed to hold `Null` values.
+
+But note that `Int?` is actually a different type from `Int`.  You cannot perform a mathematical operation on `Int?` directly, nor can you use an `Int?` in an operation to assign to `Int`.  One more time, `Int?` is not `Int`.
+
+In fact, `Int?` is closer to the Java `Optional<Integer>` than anything else.  
+
+In order to use the value in a Nullable type, you need to (effectively) extract it into its non-nullable type.  This is generally done via the `?.` operator, and the `?:` (called the "Elvis operator").  The Elvis operator is a little bit like the ternary operator in Java and, in Java would work like this:
+
+``` java
+  int x = (nullableInt.isNotNull()) ? nullableInt.getIntValue() : y;
+```
+and looks like this in Kotlin:
+``` kotlin
+  val x : Int = nullableInt ?: y
+```
+In both cases, `x` would be whatever integer value was in `nullableInt` if it was non-null, and `y` if it was null.
+
+Just as Java's `Optional` has `map()`, Kotlin has `?.{}`.  The code in the `{}` will be executed with the value passed as a parameter if it's non-null, otherwise nothing happens and the value remains Null.
+
+```kotlin
+val x : String? = getSomething()
+val y : Double? = x?.length()?.run{
+  val abc = this * 3
+  return abc / 7.0
+}
+.
+.
+.
+fun getSomething(): String? {}
+```
+In the expressions for `y` the code after `?.` is only executed if the value is non-null.
+
 # Language Structure
+
+This is a quick survey of some of the common language elements that are used in Kotlin that are different from Java.
 
 ## String Templates
 
@@ -328,9 +381,13 @@ You can use templates to create strings:
 val x: Int = 123
 val string: String = "There are $x carrots"
 ```
-The value of `string` will be "There are 123 carrots".
+The value of `string` will be "There are 123 carrots".  For more complex expressions, use {}.  Also, `println` is part of the standard library, so there's no need for `System.out.println()`...
 
-## If Statements 
+```kotlin
+println("There are ${fridge.carrots + table.carrots} carrots")
+```
+
+## If Statements
 
 For the most part, `if` works exactly as in Java.  However, `if` can also be used as an expression that returns a value.
 
@@ -343,6 +400,48 @@ For this reason there is no Ternary operator in Kotlin.  This is just about the 
 
 ## When Expressions
 
-The `when` expression is very similar to the new form of the Java `switch` statement.  Like `if`, `when` can be used as either a statement or an expression.  
+The `when` expression is very similar to the new form of the Java `switch` statement.  Like `if`, `when` can be used as either a statement or an expression so it can return a value.  When the subject of a `when` statement is an `Enum` or a `sealed` class, then the branches of the `when` must be exhaustive, or include an `else` branch.  
 
 ## For Loops and Range Expressions
+
+In Kotlin `for` loops always work across a collection.  To increment a value over a range, Kotlin has a type of `Collection` called a `Range`.  The Java code:
+
+```java
+for(int x = 0; x < 6; x++) {}
+```
+would become:
+
+```kotlin
+for(x in 0..5) {}
+```
+
+If you want to iterate over a `Collection` but also have an index, there's a way to do that, too:
+
+```kotlin
+for((index, item) in collection.withIndex()){
+  println("Item # $index is ${item.description}")
+}
+```
+
+## Collection Operations and Sequences
+
+In Kotlin, you can do almost all of the operations you would do with `Streams` directly on any `Collection`.  This means that there's no need to perform `.stream()` on a `List` or any other `Collection` most of the time.  Operations performed on a `Collection` create a new `Collection` with the elements transformed in some way.
+
+When you do want to process in a manner similar to Java `Streams`, Kotlin has `Sequences`.  You can use the `Collection.asSequence()` function to do this.  There are some cases where the performance of a `Sequence` might be better than a series of `Collection` operations.  There are also some function that are only available as `Sequence` operations.
+
+You can also create an infinite `Sequence` with the `generateSequence()` function that specifies a starting value and a function to create the next value.  You can then treat it like any other `Sequence`.  `Sequence` has a function called `take(x)` that allows you to take the first `x` values of a `Sequence`.
+
+## Maps and Pairs
+
+[Maps](https://kotlinlang.org/docs/map-operations.html) in Kotlin are made up of tuples, just as in Java, but they are thought more of as a collection of tuples than key/value containers.  Tuples are constructed and then added to the `Map` as in the following code:
+
+```kotlin
+val testMap = mutableMapOf("x" to 27, "abc" to 55, "hello" to 74)
+testMap.put(Pair("fred", 18))
+```
+Additionally, you can use the `[]` shorthand operator instead of `put()` and `get()` on a `Map`
+
+```kotlin
+testMap["george"] = 100
+println(testmap["fred"])
+```
