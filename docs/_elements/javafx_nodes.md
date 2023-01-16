@@ -39,6 +39,15 @@ feature_row_imageview:
     url: "/javafx/elements/images"
     btn_label: "Read the Articles"
     btn_class: "btn--primary"    
+
+feature_row_layouts:
+  - image_path: /assets/elements/VBoxHBox.png
+    alt: "Layouts"
+    title: "Introduction to Layout Classes"
+    excerpt: "A basic guide to the layout classes in JavaFX and how to use them effectively"
+    url: "/javafx/elements/layout_classes"
+    btn_label: "Read the Article"
+    btn_class: "btn--primary"    
 ---
 
 # JavaFX nodes
@@ -52,6 +61,8 @@ For user input, you can choose from `TextField`, `ComboBox`, `ChoiceBox`, `Spinn
 All of these Nodes have a large number of methods and properties for controlling their presentation and how they act.  Learning how to use them and configure them can be a daunting task.  Luckily, most of the tutorials on the web seem to focus on this aspect of JavaFX, so help is easy to find.
 
 # The Nodes:
+
+{% include feature_row id="feature_row_layouts" type="left" %}
 
 {% include feature_row id="feature_row_buttons" type="left" %}
 
