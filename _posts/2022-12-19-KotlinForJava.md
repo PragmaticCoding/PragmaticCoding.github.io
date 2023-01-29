@@ -387,9 +387,13 @@ The value of `string` will be "There are 123 carrots".  For more complex express
 println("There are ${fridge.carrots + table.carrots} carrots")
 ```
 
+## Equals
+
+No surprise here, in Kotlin "==" does what you've always wanted it to do in Java!  "==" invokes the `equals()` method for any non primitive class.  If you want referential equality, use "===".
+
 ## If Statements
 
-For the most part, `if` works exactly as in Java.  However, `if` can also be used as an expression that returns a value.
+For the most part, [if](https://kotlinlang.org/docs/control-flow.html#if-expression) works exactly as in Java.  However, `if` can also be used as an expression that returns a value.
 
 ``` kotlin
 val x = if (y > 30) 23 else 100
@@ -400,11 +404,11 @@ For this reason there is no Ternary operator in Kotlin.  This is just about the 
 
 ## When Expressions
 
-The `when` expression is very similar to the new form of the Java `switch` statement.  Like `if`, `when` can be used as either a statement or an expression so it can return a value.  When the subject of a `when` statement is an `Enum` or a `sealed` class, then the branches of the `when` must be exhaustive, or include an `else` branch.  
+The [when](https://kotlinlang.org/docs/control-flow.html#when-expression) expression is very similar to the new form of the Java `switch` statement.  Like `if`, `when` can be used as either a statement or an expression so it can return a value.  When the subject of a `when` statement is an `Enum` or a `sealed` class, then the branches of the `when` must be exhaustive, or include an `else` branch.  
 
 ## For Loops and Range Expressions
 
-In Kotlin `for` loops always work across a collection.  To increment a value over a range, Kotlin has a type of `Collection` called a `Range`.  The Java code:
+In Kotlin [for loops](https://kotlinlang.org/docs/control-flow.html#for-loops) always work across a collection.  To increment a value over a range, Kotlin has a type of `Collection` called a `Range`.  The Java code:
 
 ```java
 for(int x = 0; x < 6; x++) {}
