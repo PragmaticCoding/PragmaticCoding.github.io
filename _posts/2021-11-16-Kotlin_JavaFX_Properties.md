@@ -2,7 +2,7 @@
 title:  "Kotlin: JavaFX Properties"
 date:   2021-08-24 12:00:00 -0500
 categories: javafx kotlin
-logo: /assets/logos/Kotlin.png
+logo: /assets/logos/JavaFXLogo.png
 permalink: /javafx/kotlin_properties
 excerpt: An approach to implementing the JavaFX Property "bean" structure for observable objects in an idiomatic Kotlin fashion.
 ---

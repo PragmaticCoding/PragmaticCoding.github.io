@@ -36,8 +36,14 @@ master:
       - title: CyberTanks!
         url: /coming_soon
 
-  - title: MultiValue Databases
-    url: /pages/multivalue
+  - title: Programming
+    children:
+    - title: Kotlin
+      url: /kotlin/intro
+    - title: MultiValue Databases
+      url: /pages/multivalue
+    - title: Useful Links
+      url: /pages/links
 
   - title: About
     children:
@@ -47,8 +53,7 @@ master:
         url: /pages/about_me
       - title: About The Tutorials
         url: /pages/about_tutorials
-      - title: Useful Links
-        url: /pages/links
+
 
   - title: Projects
     url: /pages/projects

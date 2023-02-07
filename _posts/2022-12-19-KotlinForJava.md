@@ -2,7 +2,7 @@
 title:  "Kotlin For Java Programmers"
 date:   2022-12-19 12:00:00 -0500
 categories: kotlin
-logo: /assets/logos/JavaFXLogo.png
+logo: /assets/logos/Kotlin.png
 permalink: /kotlin/kotlin_for_java_programmers
 excerpt: Need to understand a Kotlin program, but you only know Java?  This article should give you everything you need to know to get started.
 ---
