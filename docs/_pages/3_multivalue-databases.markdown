@@ -1,6 +1,6 @@
 ---
 layout: single
-title:  "MV"
+title:  "MultiValue Database Sytems - A Brief Overview"
 toc: true
 toc_label: "Contents"
 toc_icon: "brain"
@@ -39,7 +39,7 @@ The products that had been developed as databases running on other operating sys
 
 What really made Pick unique and worthwhile, back in the heyday, was the filing system.  It was a key/value system, although that term hadn't been coined until much more recently.  It worked like this:
 
-When you created the file, you specified two things:  the hashing algorithm and the "size" (also known as the modulo).  The file was allocated a number of blocks (way back when, usually 512bytes each) equal to the modulo.  To store a record, the key was run through a numerical process based on the hashing algorithm that turned it into a number, then it was divided by the number of blocks and the remainder was taken.  This would give you a number between zero and the file size.  Your record would be stored in that block.  
+When you created the file, you specified two things:  the hashing algorithm and the "size" (also known as the modulo).  The file was allocated a number of blocks (way back when, usually 512 bytes each) equal to the modulo.  To store a record, the key was run through a numerical process based on the hashing algorithm that turned it into a number, then it was divided by the number of blocks and the remainder was taken.  This would give you a number between zero and the file size.  Your record would be stored in that block.  
 
 To read you record, the same process was followed.  You supplied the key, and the system would figure out which block the data was in almost instantly, and then only a single disc read was required.  Then the system only had to look through that block of data in memory to fetch your record.  
 
