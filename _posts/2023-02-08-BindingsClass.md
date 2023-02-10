@@ -1,6 +1,6 @@
 ---
 title:  "Understanding the JavaFX Bindings Class"
-date:   2022-05-20 12:00:00 -0500
+date:   2023-02-08 12:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
 permalink: /javafx/elements/bindings_class
@@ -15,10 +15,10 @@ Bindings are the "meat and potatoes" of Reactive JavaFX application design.  The
 There are three techniques to create Bindings in JavaFX:
 
 The "Fluent" API
-: This is
+: This is a set of methods included in interfaces like, `NumberBinding` which allow `ObservableValues` to be modified and transformed in a decorator style.  
 
 Create a Custom Binding
-: This involves
+: This involves extending one of the abstract `Binding` classes in the JavaFX library.  You can read about it [here](https://www.pragmaticcoding.ca/javafx/elements/custom_binding).
 
 Using the Methods in the Bindings Class
 : This is what this article is all about.  Read on to find out more...
@@ -41,11 +41,11 @@ This can get a little bit confusing. The word "bindings" is used in so many diff
 
 # Understand Custom Bindings First
 
-The best way to understand what bindings are and how they work is to look at how to create custom `Binding` classes.   
+The best way to understand what bindings are and how they work is to look at how to create custom `Binding` classes.  I strongly recommend that you read my tutorial on [Custom Bindings](https://www.pragmaticcoding.ca/javafx/elements/custom_binding).
 
 # What is the "Bindings" Class?
 
-The Bindings class is a utility library consisting of around 200 static methods that create or manipulate Bindings.  I've made an effort divide them up into a number of different types, and we'll look at these with examples of how they can be used.
+The Bindings class is a utility library consisting of around 200 static methods that create or manipulate Bindings.  I've made an effort divide them up into a number of different types, and we'll look at these with examples of how they can be used.  Once you understand what's in this library, you'll probably never need to create a Custom Binding again, unless you're doing something really off beat.
 
 # The "Create" Methods
 
@@ -54,7 +54,7 @@ Possibly the most useful methods are the "Create" methods, and there are 7 of th
 ``` java
 static StringBinding 	createStringBinding​(Callable<String> func, Observable... dependencies)
 ```
-Obviously, it's a static method and it retuns a `StringBinding`.  The first parameter is a `Callable` that returns a `String`.  
+Obviously, it's a static method and it returns a `StringBinding`.  The first parameter is a `Callable` that returns a `String`.  
 
 What's `Callable`?
 
@@ -157,7 +157,7 @@ This example is very, very similar to the first example from the Custom Binding 
 
 #### Which Method to Use
 
-Here we are `Bindings.createStringBinding()` because we are going to bind the results to the `Text` property of a `Label`, which needs a `StringBinding`. This is useful here because is shows how we can handle the conversion from numbers to the correct type for the application right in the method call.
+Here we use `Bindings.createStringBinding()` because we are going to bind the results to the `Text` property of a `Label`, which needs a `StringBinding`. This is useful here because is shows how we can handle the conversion from numbers to the correct type for the application right in the method call.
 
 With the custom Binding example of this, we left the Binding as an `IntegerBinding` and then use the Fluent API method `asString()` to convert it to a `StringBinding`.  This made sense as the custom Binding was dealing with numbers and, as a stand-alone class, there isn't any context to suggest that the result should be anything other than some sort of numeric `Binding`.
 
@@ -173,9 +173,10 @@ You should follow the general rules for using lambdas in any place.  Readability
 
 This should underscore how close this is to a custom `Binding`:  To create this code, I just copy/pasted the `computeValue()` code from the custom Binding example I already had and renamed it to `calculateAmountAsString()`, and then inserted the parameter list from the custom Binding's constructor.  Some small modifications to add calls to `Integer.toString()` and it was all done.
 
-### How Important Are These Methods?
+#### How Important Are These Methods
 
 These 7 methods can do just about anything you need to do.  The rest of the methods described in this tutorial... I don't use them too much myself.  For me, it's often just as clear to use `create{type}Binding()`, as it is to use any of the other methods in this library, and there's a little bit of extra consistency.  
+
 
 Let's look at an example:
 
@@ -214,13 +215,14 @@ Well... maybe not so much in this case, but you get the idea.
 
 Personally, I find that the Fluent API is great as long as the relationships and manipulations are simple and straight-forward.  But when it starts to get more complicated, the Fluent API makes it even more complicated.  When you find yourself scratching your head trying to figure out how to do something with the Fluent API, you probably should just stop and use `Bindings.create{type}Binding()` instead.
 
-# The "Operation" Methods
+## The Operation Methods
 
 This set of methods is aimed pretty squarely at the functionality provided through the Fluent API.  Basically, these methods allow you to manipulate and combine both Observable and concrete values into a Binding of some type.  You'll find that these methods often overloaded, so that you can generally just pass them the parameters that you have and you'll automatically invoke the right method and get an appropriate Binding type back.
 
+
 We have the following groups of operations:
 
-## The "Manipulation" Methods
+### The "Manipulation" Methods
 
   1. Concat<br>
      You pass this method a vararg of Strings and Observable String types and it will create an StringExpresson, which implements ObservableStringValue.
@@ -233,7 +235,7 @@ We have the following groups of operations:
 
 
 
-## The "Boolean" Methods
+### The "Boolean" Methods
 
 There's a set of methods that return a `BooleanBinding`.  For each of these you can supply a mixture of Observable and concrete data types and the method will create a BooleanBinding:
 
@@ -242,21 +244,50 @@ There's a set of methods that return a `BooleanBinding`.  For each of these you 
   1. Equal and NotEqual
   1. And and Or
 
-## The "Mathematical" Methods
+### The "Mathematical" Methods
 
 There are a set of methods that return `DoubleBinding` or `NumberBinding` and perform mathematical operations on concrete number types and numeric ObservableValues:
 
   1. Max and Min
   1. Multiply and Divide
-  1. Add and Substract
+  1. Add and Subtract
+  1. Negate
 
 
-# The "Extraction" Methods
+## The "Extraction" Methods
 
 Sometimes you need to create a relationship between an `ObservableIntegerValue` and an `ObservableList` of some nature.  This is potentially tricky to do, but these methods make it relatively easy.
 
 ## List and Map Extractors
 
+These are the `valueAt` methods.  For `ObservableLists` you can either supply an `ObservableIntegerValue` or an `int` and these methdos will return an `ObjectBinding` of whatever type is in the `ObservableList`.
+
+For `ObservableMaps`, you supply either a key value or on `ObservableValue` as the same type as the `ObservableMap's` keys and these methods will return an `ObjectBinding` of whatever type make up the values in the `ObservableMap`.
+
 ## Member Extractors
 
-# The "Bind" Methods
+These are a set of methods that are all named like `select{Type}()`, so `selectInteger()` or `selectBoolean()`.
+
+Sometimes you have `ObservableObjectValues` that are composed of other `ObservableObjectValues`, which may be composed of other `ObservableObjectValues` in turn.  **If** those `ObservableObjectValues` have their components implemented as JavaFX Beans, then you can use these methods to extract the member values.  
+
+Let's imagine that we have an `ObservableObjectValue<CustomerOrder>`, where `CustomerOrder` has a member which is `ObservableObjectValue<Customer>`, called `customer`.  And `Customer` has a member which is  `ObservableObjectValue<Address>` called `address`.  And `Address` has a member which is `ObservableStringValue` called `streetName`.
+
+Let's also assume that all of the members are implemented as JavaFX Beans.  So there's a method `CustomerOrder.customerProperty()`, and one called `Customer.addressProperty()`, and one called `Address.streeNameProperty`.
+
+In this case, you can do the following:
+
+``` java
+ObservableObjectValue<CustomerOrder> order = ...
+StringBinding binding = Bindings.selectString(order, "customer.address.streetname")
+```
+
+
+## The "Bind" Methods
+
+The last few methods are used to bind (or effectively bind) two elements together.
+
+First, we have `bindContent()`.  This allows you to bind a normal `List` to an `ObservableList`, a normal `Set` to an `ObservableSet`, or a normal `Map` to an `ObservableMap`.  Once you've bound them, the normal `Collection` will be kept in sync with observable `Collection`, but you won't be able to manually update the normal collection any more.
+
+Then there is `bindContentBidirectional()`.  This allows you to synchronize the elements of two observable `Collections`.
+
+Finally, there is `bindBidirectional()` which is used to bind a `StringProperty` to some other kind of `Property` through either a `Format` or `StringConverter`.
