@@ -124,7 +124,7 @@ And what about the Presentation Model?  It becomes fields in the FXML Controller
 
 And where do those domain objects get stored?  Once again...as fields in the FXML Controller.
 
-So off they go, and now there's database access code sitting in the FXML Controller - probably in some code that defines and `EventHandler` for a `Button`.  
+So off they go, and now there's database access code sitting in the FXML Controller - probably in some code that defines an `EventHandler` for a `Button`.  
 
 You can't get more coupled than that.
 
@@ -377,9 +377,11 @@ And when it's all done, it looks like this:
 
 The View class is clearly doing **all** of the View stuff and **nothing but** the View stuff.  It handles the layout, the View related `Button` interaction, styling, the configuration of the `TextField` and binding to the Presentation Model.  I even put a fade-in transition on the `ProgressIndicator` so that you could see how it's all handled by the View.
 
-The View reveals nothing of its inner workings to any of the other components.  It has only two dependencies, and they are clearly declared in its constructor: it needs the Presentation Model, and the action handler for the `Button` (or whatever triggers the action).  It takes a `Consumer<Runnable>` for this action handler, because it needs to perform the cleanup of the GUI after the action has completed.  Note that there's nothing in this action handler that requires the GUI element to be a `Button`, or even something that generates an `ActionEvent`. It could be a mouse-over or a keystroke, for example.
+The View reveals nothing of its inner workings to any of the other components.  
 
-The Model is very specifically designed and named to make the intent of the structure clear..  The Presentation Data is split out into an enclosed class called `Model.PresentationModel`, and instantiated into a field called `presentationModel`.  There's a field called `domainData`, to make a point about how domain data can be handled.  
+The View has only two dependencies, and they are clearly declared in its constructor: it needs the Presentation Model, and the action handler for the `Button` (or whatever triggers the action).  It takes a `Consumer<Runnable>` for this action handler, because it needs to perform the cleanup of the GUI after the action has completed.  Note that there's nothing in this action handler that requires the GUI element to be a `Button`, or even something that generates an `ActionEvent`. It could be a mouse-over or a keystroke, for example.
+
+The Model is very specifically designed and named in this example to make the intent of the structure clear.  The Presentation Data is split out into an enclosed class called `Model.PresentationModel`, and instantiated into a field called `presentationModel`.  There's a field called `domainData`, to make a point about how domain data can be handled.  
 
 However, the `PresentationModel` is split out so that it can be passed to the View without the need to expose all of the other public methods of the Model to the View.  In this way, the View is ignorant of the Model itself, and only has knowledge of the `PresentationModel` on which it depends.  
 
