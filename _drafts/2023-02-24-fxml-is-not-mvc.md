@@ -10,6 +10,7 @@ ScreenSnap3: /assets/elements/FxmlIsNotMVC3.png
 ScreenSnap4: /assets/elements/FxmlIsNotMVC4.png
 ScreenSnap5: /assets/elements/FxmlIsNotMVC5.png
 ScreenSnap6: /assets/elements/FxmlIsNotMVC6.png
+diagram: /assets/elements/model-view-controller-light-blue.png
 
 excerpt: Lot's of programmers think that FXML instantly gives them as step up on Model-View-Controller, with the FXML File yielding the View and the FXML Controller acting as the Controller.  We'll look at why this isn't correct, and how you should implement FXML in the context of MVC.
 ---
@@ -30,7 +31,9 @@ I think the quote from the Oracle tutorial is a perfect example of the problem h
 
 # The Structure of MVC
 
-Before we can go any further, let's look at the parts of MVC and what they do:
+Before we can go any further, let's look at the parts of MVC and what they do.  First, here's a diagram form Wikipedia:
+
+![MVC Diagram]({{page.diagram}})
 
 View
 : The View is the GUI.  It's the only part of the framework that the user interacts with.  
