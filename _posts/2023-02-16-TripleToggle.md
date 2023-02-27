@@ -192,7 +192,7 @@ And...you'll need this Style Sheet:
 
 First of all, this is Kotlin.  If you're confused by the Kotlin, then you can take a look at [this article](https://www.pragmaticcoding.ca/kotlin/kotlin_for_java_programmers) and [this article](https://www.pragmaticcoding.ca/kotlin/kotlin_for_java_programmers) for some help.  
 
-The first part of the code is setting up the Java Beans.  I'm using a technique that was described in [this article](https://www.pragmaticcoding.ca/javafx/kotlin_properties).  The net result is that you get the three public function that you need for a Bean.  
+The first part of the code is setting up the Java Beans.  I'm using a technique that was described in [this article](https://www.pragmaticcoding.ca/javafx/kotlin_properties).  The net result is that you get the three public functions that you need for a Bean.  
 
 The `init{}` section is kind of like a constructor, and it calls the layout function and connects the `Value` property to the `ToggleGroup`.  
 
