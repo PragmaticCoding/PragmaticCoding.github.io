@@ -61,3 +61,12 @@ After years, I spent a lot of time researching these frameworks to try to get to
 If you're interested in my conclusions about this, you can read this article here:
 
 [Unravelling MVC, MVP and MVVM](/javafx/Frameworks){: .btn .btn--info}
+
+
+# FXML is Not MVC
+
+There's a widely held fallacy out there that using FXML automatically means you're using MVC.  I large part of this confusion has to do with the fact that the authors of JavaFX chose to call the code part of FXML the "Controller".  However, the FXML Controller has a very different role from that of the MVC Controller, and it's disastrous to treat your FXML Controller like an MVC Controller.  The result is almost always monolithic, single-class applications with a spaghetti of business logic and View code in one place.  
+
+If you're curious about this, or if you want to learn how to integrate FXML into MVC (or MVCI) the *right* way then read this article here:
+
+[FXML is NOT MVC](/javafx/fxml_isnt_mvc){: .btn .btn--info} 
