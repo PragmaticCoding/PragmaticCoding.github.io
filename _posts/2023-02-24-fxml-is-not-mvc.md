@@ -31,9 +31,11 @@ I think the quote from the Oracle tutorial is a perfect example of the problem h
 
 # The Structure of MVC
 
-Before we can go any further, let's look at the parts of MVC and what they do.  First, here's a diagram form Wikipedia:
+Before we can go any further, let's look at the parts of MVC and what they do.  First, here's a diagram from somewhere out in the web:
 
 ![MVC Diagram]({{page.diagram}})
+
+This diagram shows a particular use case (user adds something to a "cart"), but has the essentials down.
 
 View
 : The View is the GUI.  It's the only part of the framework that the user interacts with.  
