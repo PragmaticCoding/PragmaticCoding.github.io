@@ -46,7 +46,7 @@ Model-View-Controller-Interactor allows you to construct a framework that define
 
 With MVCI, it's really easy to connect multiple frameworks to each other in a number of different ways.  Here's an article that shows how to put together most of the scenarios you're likely to encounter:
 
-[Building Multi-Screen Applications with MVCI](/javafx/Mvci-Introduction){: .btn .btn--info}
+[Building Multi-Screen Applications with MVCI](/javafx/multimvci){: .btn .btn--info}
 
 # What's Wrong with the Other Frameworks?
 
