@@ -74,7 +74,9 @@ class FactoryMethodStyle : Application() {
 
 fun main() = Application.launch(FactoryMethodStyle::class.java)
 ```
-This is Kotlin, but there's nothing scary in here.  We have a `BorderPane`, and in the centre we're putting our widget, which we'll call "CustomBox" throughout this article.  The factory method needs the text for the `Label` and the `Button`, the `StringProperty` to bind to the `TextField` and the `EventHandler` for the `Button`.  
+This is Kotlin, but there's nothing scary in here.  If you're really stuck, you can read my [Kotlin for Java Programmers](https://www.pragmaticcoding.ca/kotlin/kotlin_for_java_programmers) article, which should clear everything up.
+
+We have a `BorderPane`, and in the centre we're putting our widget, which we'll call "CustomBox" throughout this article.  The factory method needs the text for the `Label` and the `Button`, the `StringProperty` to bind to the `TextField` and the `EventHandler` for the `Button`.  
 
 Then we construct the `HBox` and we create the contents, do all the bindings and put the parts into the `HBox`.
 
