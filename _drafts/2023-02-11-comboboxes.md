@@ -47,4 +47,14 @@ The pop-up list works very much like a `ListView` and does, therefore, have a `S
 
 So what if you don't want to have your `ComboBox` return a primitive like `int`, or a `String`? How do you do that?
 
-First off, you need to remember that the items that populate the list in a `ComboBox` are part of your Presentation Model, so they should be designed with the idea that 
+First off, you need to remember that the items that populate the list in a `ComboBox` are part of your Presentation Model, so they should be designed with the intent that they are going to be used to support your view.  So the idea that you're just going to rip some customer records out of a database and dump them into a `ComboBox` as the choices is probably a bad design decision.  
+
+That being said, there are times when you might have a more complex object used to populate your `ComboBox`.  It's generally considered bad form to rely on `toString()` to create the display for your `ComboBox`, so you'll need to customize it in some way to make it work properly.  
+
+In this example, we're going to look at using an object with two fields.  This will be a "Customer" record with an account number and a name.  We'll need the account number to look the customer up in the business logic, but the users need the name to select which customer from the `ComboBox`...
+
+
+
+# Linking ComboBoxes
+
+Something that comes up fairly often is the idea of having two `ComboBoxes` that are somehow connected to each other.  Changing the selection in one `ComboBox` changes the list of items available in the second `ComboBox`.
