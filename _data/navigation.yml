@@ -29,6 +29,8 @@ master:
           url: /javafx/elements/events
         - title: PseudoClasses
           url: /javafx/elements/pseudo_classes
+        - title: Custom Components
+          url: /javafx/elements/custom_components_page
       - title: Absolute Beginners Guide to JavaFX
         url: /beginners/intro
       - title: Model-View-Controller-Interactor
