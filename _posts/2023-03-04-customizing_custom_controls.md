@@ -12,7 +12,7 @@ ScreenSnap5: /assets/elements/CustomClass5.png
 ScreenSnap6: /assets/elements/CustomClass6.png
 
 
-excerpt: Creating a custom control really isn't that hard to do.  But when should you use one, and when should you just use a builder to create a layout?
+excerpt: Once you've decided extend Region to create a custom control, there are some basic things you should do to make your new control look professional and unified.  Here's how to do that.
 ---
 
 # Introduction
