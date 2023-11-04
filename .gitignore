@@ -30,3 +30,15 @@ _site
 
 # Example Files
 docSamples
+.vscode/settings.json
+assets/beginners/.gradle/7.3.3/checksums/checksums.lock
+assets/beginners/.gradle/7.3.3/checksums/sha1-checksums.bin
+assets/beginners/.gradle/7.3.3/dependencies-accessors/dependencies-accessors.lock
+assets/beginners/.gradle/7.3.3/dependencies-accessors/gc.properties
+assets/beginners/.gradle/7.3.3/executionHistory/executionHistory.lock
+assets/beginners/.gradle/7.3.3/fileChanges/last-build.bin
+assets/beginners/.gradle/7.3.3/fileHashes/fileHashes.lock
+assets/beginners/.gradle/7.3.3/gc.properties
+assets/beginners/.gradle/buildOutputCleanup/buildOutputCleanup.lock
+assets/beginners/.gradle/buildOutputCleanup/cache.properties
+assets/beginners/.gradle/vcs-1/gc.properties

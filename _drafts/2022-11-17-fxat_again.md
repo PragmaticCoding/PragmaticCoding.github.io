@@ -1,12 +1,12 @@
 ---
 title:  "Another Reason to Get Off the FXAT"
-date:   2022-11-15 12:00:00 -0500
+date:   2023-07-23 12:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
 ScreenSnap: /assets/posts/StarterFX.png
 GitHubDialog: /assets/posts/StarterFX-GitHub.png
 Diagram: /assets/posts/MVCI.png
-excerpt: Perhaps the most important reason to learn how to deal with the FXAT is build a different way of thinking about your GUI code.
+excerpt: Perhaps the most important reason to learn how to deal with the FXAT is to build a different way of thinking about your GUI code.
 ---
 
 # Introduction
@@ -48,3 +48,23 @@ The problem, though, is what happens in the middle.  It always seems to involve 
 Programmers are really good at what I call, "Linear Thinking".  That's the idea that you do one thing, get the results and then do the next.  Rinse and repeat.  Sometimes you do "this" instead of "that", sometimes you loop, sometimes you quit early.  But you do one thing after the other and get to the answer at the end.
 
 Graphically, it looks like this:
+
+For many, many implementations, this works just fine.  But event-driven systems are different.  
+
+In an event-driven system, there are typically hundreds, if not thousands of events being fired by the GUI an any given second.  Most of these aren't going to trigger any actions, and even less of them are going to trigger application code.  Think of a user swirling the cursor around the screen with the mouse.  That alone is going to generate gobs of events.  You'll get mouse positioning events.  You'll get events when the mouse enters a `Region`.  You'll get events when the mouse leaves a `Region`.  Any of those events could trigger something.  Things like resizing a window, or dragging a window around the screen are going to cause lots of "behind-the-scenes" GUI activity as things are resized, recalculated and re-rendered.  
+
+The important thing is, though, that if any of these events do trigger an action or a handler, that action is bundled up as a job and dropped onto the back end of a queue.  And that queue is serviced entirely on the FXAT.  
+
+Let's put aside the issues with running big jobs on the FXAT for now, and just think about the implications of this event firing and the resulting queuing of actions and handlers...
+
+At an application level, you have no practical control over when the events are fired or the sequence in which jobs are going to pulled off the queue and run on the FXAT.  And even if you did figure out a way to control it, you'd essentially be breaking the event-driven model and doing something not philosophically  JavaFX any more.  So you have to let go of that.  
+
+The big implication of this is that **you cannot assume any amount of contiguousness between pieces of code in two separate event handlers**.  
+
+In other words, if you have a line of code at the top of a handler, and a line of code at the bottom, you can assume that the line at the top will be executed first.  But if you have a line of code at top of one handler, and a line of code in the middle of another, you cannot make any assumptions about which one will be run first.  This is especially true if the handlers are triggered by GUI events.  
+
+Yes, if you use `Platform.runLater()`, inside a handler, you can assume that all of the code in the current handler will complete before the code in that `Runnable` will be executed.  But you cannot assume it will be run immediately after the current handler.  
+
+# Thinking in an Event-Driven Way 
+
+
