@@ -2,7 +2,7 @@
 title:  "Handling TableView Cell Data"
 date:   2023-11-17 12:00:00 -0500
 categories: javafx
-logo: /assets/logos/brain.png
+logo: /assets/logos/JavaFXLogo.png
 permalink: /javafx/elements/tableview-data
 ScreenSnap1: /assets/elements/TableView8.png
 ScreenSnap2: /assets/elements/TableView7.png
