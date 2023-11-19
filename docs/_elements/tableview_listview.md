@@ -36,7 +36,9 @@ feature_row_cell_data:
 
 # TableView
 
+We all know what tables look like.  Rows and columns of data that feel a little bit like spreadsheets once you've got enough rows and columns to need scrollbars.  `TableView` is the JavaFX layout element to create tables in your layouts.
 
+For some reason, beginner programmers love tables, and they rush start using them as soon as possible.  Unfortunately, the official documentation for JavaFX and most of the information you'll find on web about `TableViews` is lacking in insight.  The articles here take a different look at `TableView`, and try to explain how things really work "under the hood" so that you can make informed decisions about how to code up your own `TableViews`
 
 ## The Articles
 
