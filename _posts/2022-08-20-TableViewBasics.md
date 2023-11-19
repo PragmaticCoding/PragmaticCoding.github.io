@@ -4,13 +4,12 @@ date:   2023-10-10 12:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
 permalink: /javafx/elements/tableview-basics
-ScreenSnap1: /assets/posts/TableView1.png
-ScreenSnap2: /assets/posts/TableView2.png
-ScreenSnap3: /assets/posts/TableView3.png
-ScreenSnap4: /assets/posts/TableView4.png
-ScreenSnap5: /assets/posts/TableView5.png
-ScreenSnap6: /assets/posts/TableView6.png
-GitHubDialog: /assets/posts/StarterFX-GitHub.png
+ScreenSnap1: /assets/elements/TableView1.png
+ScreenSnap2: /assets/elements/TableView2.png
+ScreenSnap3: /assets/elements/TableView3.png
+ScreenSnap4: /assets/elements/TableView4.png
+ScreenSnap5: /assets/elements/TableView5.png
+ScreenSnap6: /assets/elements/TableView6.png
 Diagram: /assets/posts/MVCI.png
 excerpt: What is a TableView and how do you use it?  Here's enough information to get you started with TableView the right way.
 ---

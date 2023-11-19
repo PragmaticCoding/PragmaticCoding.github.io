@@ -47,7 +47,16 @@ feature_row_layouts:
     excerpt: "A basic guide to the layout classes in JavaFX and how to use them effectively"
     url: "/javafx/elements/layout_classes"
     btn_label: "Read the Article"
-    btn_class: "btn--primary"    
+    btn_class: "btn--primary" 
+    
+feature_row_tables:
+  - image_path: /assets/elements/TableView2.png
+    alt: "Layouts"
+    title: "Introduction to TableView and ListView"
+    excerpt: "A set of articles about how to use the JavaFX tools to create lists and tables in your layouts."
+    url: "/javafx/elements/tableview_listview"
+    btn_label: "Read the Article"
+    btn_class: "btn--primary"       
 ---
 
 # JavaFX nodes
@@ -69,3 +78,5 @@ All of these Nodes have a large number of methods and properties for controlling
 {% include feature_row id="feature_row_textformatter" type="left" %}
 
 {% include feature_row id="feature_row_imageview" type="left" %}
+
+{% include feature_row id="feature_row_tables" type="left" %}

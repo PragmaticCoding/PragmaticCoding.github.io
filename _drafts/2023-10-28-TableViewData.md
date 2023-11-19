@@ -3,10 +3,10 @@ title:  "Handling TableView Cell Data"
 date:   2023-11-17 12:00:00 -0500
 categories: javafx
 logo: /assets/logos/brain.png
-permalink: /tableview-data
-ScreenSnap1: /assets/posts/TableView8.png
-ScreenSnap2: /assets/posts/TableView7.png
-ScreenSnap3: /assets/posts/TableView9.png
+permalink: /javafx/elements/tableview-data
+ScreenSnap1: /assets/elements/TableView8.png
+ScreenSnap2: /assets/elements/TableView7.png
+ScreenSnap3: /assets/elements/TableView9.png
 excerpt: In this article, we taka a look at how TableView handles data, the mechanism that move data in and out of TableCells, and how to work with it.
 ---
 
