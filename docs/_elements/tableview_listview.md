@@ -32,6 +32,14 @@ feature_row_cell_data:
     btn_label: "Read the Article"
     btn_class: "btn--primary"
   
+feature_row_listview_basics:
+  - image_path: /assets/elements/ListView2.png
+    alt: "ListView Basics"
+    title: "Understanding ListView"
+    excerpt: 'Learn the basics about ListView and how to customize the display of simple data.'
+    url: "/javafx/elements/listview-basics"
+    btn_label: "Read the Article"
+    btn_class: "btn--primary"  
 ---
 
 # TableView
@@ -45,3 +53,11 @@ For some reason, beginner programmers love tables, and they rush to start using 
 {% include feature_row id="feature_row_table_basics" type="left" %}
 
 {% include feature_row id="feature_row_cell_data" type="left" %}
+
+# ListView
+
+`ListView` is one of the most common elements that you'll find in JavaFX, yet it's under-used by most programmers.  It's possible to look at a `ListView` as just a `TableView` with a single column, but there are some fundamental differences that make it much easier to use `ListView` to present complicated layouts that display complex data structures.
+
+## The Articles
+
+{% include feature_row id="feature_row_listview_basics" type="left" %}
