@@ -55,7 +55,7 @@ feature_row_tables:
     title: "Introduction to TableView and ListView"
     excerpt: "A set of articles about how to use the JavaFX tools to create lists and tables in your layouts."
     url: "/javafx/elements/tableview_listview"
-    btn_label: "Read the Article"
+    btn_label: "Read the Articles"
     btn_class: "btn--primary"       
 ---
 
