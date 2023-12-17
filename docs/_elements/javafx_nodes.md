@@ -51,7 +51,7 @@ feature_row_layouts:
     
 feature_row_tables:
   - image_path: /assets/elements/TableView2.png
-    alt: "Layouts"
+    alt: "Tables and Lists"
     title: "Introduction to TableView and ListView"
     excerpt: "A set of articles about how to use the JavaFX tools to create lists and tables in your layouts."
     url: "/javafx/elements/tableview_listview"

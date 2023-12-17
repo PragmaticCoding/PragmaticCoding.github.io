@@ -10,7 +10,6 @@ ScreenSnap3: /assets/elements/TableView3.png
 ScreenSnap4: /assets/elements/TableView4.png
 ScreenSnap5: /assets/elements/TableView5.png
 ScreenSnap6: /assets/elements/TableView6.png
-Diagram: /assets/posts/MVCI.png
 excerpt: What is a TableView and how do you use it?  Here's enough information to get you started with TableView the right way.
 ---
 
