@@ -163,3 +163,23 @@ linux:
         url: /linux/resources
       - title: "Users and Groups"
         url: /linux/users
+
+widgetsfx:
+  - title: Introducing WidgetsFX
+    url: /widgetsfx/main
+    children:
+      - title: "Layout Helpers"
+        url: /widgetsfx/main
+      - title: "DirtyFX"
+        url: /widgetsfx/main
+      - title: "The Basics of Bash"
+        url: /widgetsfx/main
+      - title: "Custom Controls"
+        url: /widgetsfx/main
+      - title: "API Documentation"
+        url: /widgetsfx-docs
+        children:
+         - title: "KDocs"
+           url: /widgetsfx-docs
+         - title: "JavaDocs"
+           url: /widgetsfx-docs
