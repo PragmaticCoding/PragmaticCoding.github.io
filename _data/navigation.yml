@@ -169,13 +169,11 @@ widgetsfx:
     url: /widgetsfx/main
     children:
       - title: "Layout Helpers"
-        url: /widgetsfx/main
+        url: /widgetsfx/layout-helpers
       - title: "DirtyFX"
-        url: /widgetsfx/main
-      - title: "The Basics of Bash"
-        url: /widgetsfx/main
+        url: /widgetsfx/dirtyfx
       - title: "Custom Controls"
-        url: /widgetsfx/main
+        url: /widgetsfx/controls
       - title: "API Documentation"
         url: /widgetsfx-docs
         children:

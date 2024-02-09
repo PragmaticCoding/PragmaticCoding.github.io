@@ -302,7 +302,7 @@ To implement the colours, I used a standard "trick" from Modena:
 ```
 (Note that this snippet just has the colour stuff, other styling info has been stripped out.)
 
-The "trick" here is to define a standard colour, "-rm-fill-colour", using it in the base "radial-menu-item" selector, then redefine it for the `hover` status.  In this case, it's a standard colour called "-rm-saturate-colour".  Default values for these colours are defined in the `.root` section.  Finally, the standard definitions for these colours are overridden in the context of the specific menu items.  
+The "trick" here is to define a standard colour, `-rm-fill-colour`, using it in the base `radial-menu-item` selector, then redefine it for the `hover` status.  In this case, it's a standard colour called `-rm-saturate-colour`.  Default values for these colours are defined in the `.root` section.  Finally, the standard definitions for these colours are overridden in the context of the specific menu items.  
 
 Using this technique, we don't have to define two states, "normal" and "hover" for each menu item, which keeps the stylesheet a bit simpler.
 
@@ -654,6 +654,7 @@ fun main() {
     Application.launch(RadialMenuApplication::class.java)
 }
 ```
+I used the `Ikonli` package which gives excellent integration with `FontAwesome` for JavaFX.  This gives `FontIcon`, which is an extension of `Text` that shows icons.  There's lots of good icons spread across several dozen icon packs made by various people.  I used the `Captionicon` pack for this project.
 
 # Conclusion
 
