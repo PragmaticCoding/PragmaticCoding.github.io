@@ -68,7 +68,7 @@ Let's look at the Jar file that Gradle creates:
 
 ![Jar File]({{page.ScreenSnap2}})
 
-Here you can see that all three of my CSS files are placed into `/ca/pragmaticcoding/widgetsfx/css`.  There's no `main` or `resources` anywhere.  Could it be that these resources are just mingled in with the classes in their respective package folders?  There are no clases defined in `ca.pragmaticcoding.widgetsfx`, but `ca.pragmaticcoding.widgetsfx.layouts.buttons` has some.  Let's add a CSS file to that packagae to see what happens:
+Here you can see that all three of my CSS files are placed into `/ca/pragmaticcoding/widgetsfx/css`.  There's no `main` or `resources` anywhere.  Could it be that these resources are just mingled in with the classes in their respective package folders?  There are no clases defined in `ca.pragmaticcoding.widgetsfx`, but `ca.pragmaticcoding.widgetsfx.layouts.buttons` has some.  Let's add a CSS file to that package to see what happens:
 
 ![Project Structure]({{page.ScreenSnap3}})
 
