@@ -19,7 +19,7 @@ Everybody has this problem when they start out.  There's an image, property, FXM
 
 No matter what they do.  It's maddening.
 
-If they are on the right track, they're at least using `Object.getResource()`. Inevitably, however, they get lost trying to figure out where they should put the file so that `Object.getResource()` can find it.  It's extra frustrating, because `Object.getResource()` has no facility to tell you where it looked for the file.  If it can't find it, it just returns `Null`, which doesn't seem very enlightning, and certainly not useful.
+If they are on the right track, they're at least using `Object.getResource()`. Inevitably, however, they get lost trying to figure out where they should put the file so that `Object.getResource()` can find it.  It's extra frustrating, because `Object.getResource()` has no facility to tell you where it looked for the file.  If it can't find it, it just returns `Null`, which doesn't seem very enlightening, and certainly not useful.
 
 So where does `Object.getResource()` look for the file?????
 
@@ -54,7 +54,7 @@ It is possible to configure a Gradle build to do all kinds of wild and wonderful
 
 ## What This Means
 
-The biggest thing to keep in mind about all of this is that your code is going to run against the file and folder structure in the "build" subdirectory.  This means that the real source of truth for how you should be looking for your resources is contained in the `build` subdirectory.  If you are using an IDE like Intellij Idea, you'll be able to see the `build` directory right in your project structure window, and you can expand that folder and see exactly where Gradle has put your resource files.
+The biggest thing to keep in mind about all of this is that your code is going to run against the file and folder structure in the "build" subdirectory.  This means that the real source of truth for how you should be looking for your resources is contained in the `build` subdirectory.  If you are using an IDE like IntelliJ IDEA, you'll be able to see the `build` directory right in your project structure window, and you can expand that folder and see exactly where Gradle has put your resource files.
 
 If you're stuck, then look in the `build` directory to see where your resources *really* are.  
 
@@ -62,13 +62,13 @@ Let's take a look at the structure of my `WidgetsFX` project:
 
 ![Project Structure]({{page.ScreenSnap1}})
 
-This is IntelliJ Idea, and the orange part is the `/build` section of the project, rebuilt every time that Gradle does a build (or other operations).  You can see how the files have been copied over.  Perhaps the biggest thing to note is that `/resources` and `/main` have been inverted.  We have `/src/main/resources` on the source side, and `/build/resources/main` on the build side.
+This is IntelliJ IDEA, and the orange part is the `/build` section of the project, rebuilt every time that Gradle does a build (or other operations).  You can see how the files have been copied over.  Perhaps the biggest thing to note is that `/resources` and `/main` have been inverted.  We have `/src/main/resources` on the source side, and `/build/resources/main` on the build side.
 
 Let's look at the Jar file that Gradle creates:
 
 ![Jar File]({{page.ScreenSnap2}})
 
-Here you can see that all three of my CSS files are placed into `/ca/pragmaticcoding/widgetsfx/css`.  There's no `main` or `resources` anywhere.  Could it be that these resources are just mingled in with the classes in their respective package folders?  There are no clases defined in `ca.pragmaticcoding.widgetsfx`, but `ca.pragmaticcoding.widgetsfx.layouts.buttons` has some.  Let's add a CSS file to that package to see what happens:
+Here you can see that all three of my CSS files are placed into `/ca/pragmaticcoding/widgetsfx/css`.  There's no `main` or `resources` anywhere.  Could it be that these resources are just mingled in with the classes in their respective package folders?  There are no classes defined in `ca.pragmaticcoding.widgetsfx`, but `ca.pragmaticcoding.widgetsfx.layouts.buttons` has some.  Let's add a CSS file to that package to see what happens:
 
 ![Project Structure]({{page.ScreenSnap3}})
 
@@ -123,7 +123,7 @@ Before it goes looking for the resource, it's going to massage the resource loca
 
 * If your resource name does NOT start with a "/"<br>Get the package name of the `Class`, transform every "." separating the sub-packages into "/" and then put it in front of the resource name, separated with another "/".
 
-This tells us everything that we need to know.  By understanding how this method is going to pass our resource location on to the rountine that actually finds it, we can control where we want to put our resources.
+This tells us everything that we need to know.  By understanding how this method is going to pass our resource location on to the routine that actually finds it, we can control where we want to put our resources.
 
 ## Some Examples
 
@@ -173,7 +173,7 @@ Generally, you won't see anyone handling possible `Null` values from `Class.getR
 ``` java 
 scene.getStylesheets().add(this.getClass().getResource(resourceName).toExternalForm());
 ```
-Honestly, `getStylesheets().add()` won't care if you pass it a `Null` value, but `toExternalForm()` will throw an `NPE`.  IntelliJ Idea complains about it and gives the following "improvement" to the code:
+Honestly, `getStylesheets().add()` won't care if you pass it a `Null` value, but `toExternalForm()` will throw an `NPE`.  IntelliJ IDEA complains about it and gives the following "improvement" to the code:
 ``` java
 scene.getStylesheets().add(Objects.requireNonNull(this.getClass().getResource(resourceName)).toExternalForm());
 ```
@@ -187,7 +187,7 @@ if (resource != null) {
 ```
 Of course, if this fails to load the resource, you won't get any notice, and you'll probably waste a lot of time wondering why your styleclass selector isn't working.  Perhaps you should put an `else` block on to it and throw a custom `BadResourceException` or something like that.  You could also just put the original version in a try/catch block that throws a meaningful exception when it fails.
 
-In Java you can get access to the `Class` in a static fashion, you just access `{ClassName}.class`:
+In Java, you can get access to the `Class` in a static fashion, you just access `{ClassName}.class`:
 ``` java
 URL resource = ResourceDemo.class.getResource(resourceName);
 ```

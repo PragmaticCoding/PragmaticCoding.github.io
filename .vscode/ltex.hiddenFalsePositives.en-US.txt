@@ -7,3 +7,7 @@
 {"rule":"SOME_OF_THE","sentence":"^\\QThis is valid, but also easy to fix by creating factory methods and Kotlin extension functions that automate some of the boilerplate.\\E$"}
 {"rule":"MD_BE_NON_VBP","sentence":"^\\QThe rules for determining the where a resource should be are actually quite simple\\E$"}
 {"rule":"OUTSIDE_OF","sentence":"^\\QThis is useful because it can be defined at the file level, outside of any classes:\\E$"}
+{"rule":"SENTENCE_WHITESPACE","sentence":"^\\QString).\\E$"}
+{"rule":"EXTREME_ADJECTIVES","sentence":"^\\QThis means that all of your names have to be really, really good.\\E$"}
+{"rule":"EN_A_VS_AN","sentence":"^\\QPerhaps you should put an \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q block on to it and throw a custom \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q or something like that.\\E$"}
+{"rule":"EN_A_VS_AN","sentence":"^\\QHonestly, \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q won't care if you pass it a \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q value, but \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q will throw an \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q.\\E$"}
