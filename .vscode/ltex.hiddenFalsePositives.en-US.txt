@@ -11,3 +11,12 @@
 {"rule":"EXTREME_ADJECTIVES","sentence":"^\\QThis means that all of your names have to be really, really good.\\E$"}
 {"rule":"EN_A_VS_AN","sentence":"^\\QPerhaps you should put an \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q block on to it and throw a custom \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q or something like that.\\E$"}
 {"rule":"EN_A_VS_AN","sentence":"^\\QHonestly, \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q won't care if you pass it a \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q value, but \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q will throw an \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q.\\E$"}
+{"rule":"EN_A_VS_AN","sentence":"^\\QLet's say you've got a field in your class \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q, and it's just an \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q.\\E$"}
+{"rule":"EN_A_VS_AN","sentence":"^\\QThe important thing is that it may make sense to treat \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q as an \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q internally inside your class.\\E$"}
+{"rule":"EN_A_VS_AN","sentence":"^\\QAnd somewhere in there, there probably was one or two lines of code that actually tried to call an \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q method that isn't in \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q.\\E$"}
+{"rule":"EN_A_VS_AN","sentence":"^\\QYour code inside the class knows all about it and can deal with appropriately as an \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q.\\E$"}
+{"rule":"EN_A_VS_AN","sentence":"^\\QI've seen people express the opinion that every class should implement an \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q, and while I think that's extreme, I do think that programmers tend to under-utilize interfaces.\\E$"}
+{"rule":"EN_A_VS_AN","sentence":"^\\QHaving an \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q formalizes the contract about what a specific class is going to expose to the outside world, and it unlocks the client code from using a specific implementation of that contract.\\E$"}
+{"rule":"EN_A_VS_AN","sentence":"^\\QUsing an \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q lets your service classes hide as much as possible, reveal only the required methods, and prevents the client code from knowing anything more about the service than it absolutely needs to.\\E$"}
+{"rule":"EN_A_VS_AN","sentence":"^\\QImagine that you had an \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q for the few functions of \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q that your client code uses, let's call it \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q.\\E$"}
+{"rule":"EN_A_VS_AN","sentence":"^\\QAnd somewhere in there, there probably was only one or two lines of code that actually tried to call an \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q method that isn't in \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q.\\E$"}
