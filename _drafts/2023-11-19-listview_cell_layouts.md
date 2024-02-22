@@ -1,6 +1,6 @@
 ---
 title:  "Using ListView Cell Layouts"
-date:   2023-12-05 12:00:00 -0500
+date:   2024-02-15 12:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
 permalink: /javafx/elements/listview-layouts
@@ -17,9 +17,9 @@ excerpt: Looking at ListView as a scrolling region of customized layouts, not ju
 
 This is the second article in a series that started with [Understanding ListView](/javafx/elements/listview-basics).  If you're new to `ListView` you might want to take a look at that article first, as it explains some important concepts about how `ListView` works, and we'll be building on that information in this article.
 
-# ListCell as a Layout 
+# ListCell as a Layout
 
-`ListView` really starts to shine when you look at it as an alternative to `TableView` to display complex data models.  `ListView` is especially good when you have sparsely populated fields in your data, where `TableView` would gobble up valuable screen real estate on largely empty columns.  It can also compress the display of information into a much tighter space and improve the visibility of certain data.  Even more, `ListView` is extremely powerful when you look at it as a container for layouts that uses the power of `VirtualFlow` to handle large amounts of data.
+`ListView` really starts to shine when you look at it as an alternative to `TableView` to display complex data models.  `ListView` is especially good when you have sparsely populated fields in your data, where `TableView` would gobble up valuable screen real estate on largely empty columns.  It can also compress the display of information into a much tighter space and improve the visibility of certain data.  Even more, `ListView` is extremely powerful when you look at it as a container for layouts that using the power of `VirtualFlow` to handle large amounts of data.
 
 For the example of this, I found a really nifty resource on the web - a JSON file filled with thousands and thousands of clues and answers from the game show, "Jeopardy!".  The data for this is highly structured, with information about the show that each question appeared on, what round it came from, the question value and so on.  It also has good potential to be interactive, which further shows how `ListView` can be much, much more than just a "List".
 
@@ -27,7 +27,7 @@ Before we look at any code, let's take a look at what the final product should l
 
 ![Jeopardy! Screen Shot]({{page.ScreenSnap5}})
 
-Yeah, it looks a little busy, but that's the point (as a matter of fact, it looks like a bad 1990's website).  Each row on the `ListView` here has an image to show what round the question came from, and then a section that shows the question itself, with a heading that's holds the value of the question and its category.  On the right side there's some information about the show number and the date and a `Button` that says, "Reveal Answer".  When the user clicks the `Button`, it disappears and is replaced with the answer and a pair of `RadioButtons` that say, "Right" and "Wrong".  When you click one of thes `RadioButtons` it changes the background colour of the question heading to either red or green. 
+Yeah, it looks a little busy, but that's the point (as a matter of fact, it looks like a bad 1990's website).  Each row on the `ListView` here has an image to show what round the question came from, and then a section that shows the question itself, with a heading that's holds the value of the question and its category.  On the right side there's some information about the show number and the date and a `Button` that says, "Reveal Answer".  When the user clicks the `Button`, it disappears and is replaced with the answer and a pair of `RadioButtons` that say, "Right" and "Wrong".  When you click one of the `RadioButtons` it changes the background colour of the question heading to either red or green.
 
 The whole thing starts to look like the visualization of an interface for a practice application for Jeopardy! contestants.  There's no database functionality behind it to allow subsets of the questions to be selected, or to track the results, but the visuals are there.
 
@@ -37,7 +37,7 @@ I switched over to Kotlin for this example.  It's just easier to do some of the 
 
 # The Data
 
-The original data for this was a 50MB JSON file.  I stipped out the first 10KB or so of data to use as a sample.  The JSON data looks like this:
+The original data for this was a 50MB JSON file.  I stripped out the first 10KB or so of data to use as a sample.  The JSON data looks like this:
 
 ``` json
 {
@@ -54,9 +54,9 @@ I want to point out that this is the state that data came.  If you're offended t
 
 Well, so am I.  But I wasn't about to fiddle with the JSON data to fix it.
 
-And I deserialized it into a data object that has the same *wrong* field names:
+And I de-serialized it into a data object that has the same *wrong* field names:
 
-``` kotlin 
+``` kotlin
 @Serializable
 data class JeopardyQuestion(
     val category: String = "",
@@ -72,7 +72,7 @@ You can see how simple the Kotlin serialization library is to use.  In this case
 
 Let's take a look at a sample data model:
 
-``` kotlin 
+``` kotlin
 class DemoListModel1(question: JeopardyQuestion) {
     val category: StringProperty = SimpleStringProperty(question.category)
     val airDate: StringProperty = SimpleStringProperty(question.airDate)
@@ -114,7 +114,7 @@ class DemoListModel1(question: JeopardyQuestion) {
     }
 }
 ```
-The constructor allows us to create `DemoListModel1` from `JeopardyQuestion`, simply putting the values from `JeopardyQuestion` into the corresponding `Property` fields in `DemoListModel1`.  There are 3 `BooleanProperty` fields that aren't populated from `JeopardyQuestion` and these are all used to control aspects of the dispaly in each `ListView` row. 
+The constructor allows us to create `DemoListModel1` from `JeopardyQuestion`, simply putting the values from `JeopardyQuestion` into the corresponding `Property` fields in `DemoListModel1`.  There are 3 `BooleanProperty` fields that aren't populated from `JeopardyQuestion` and these are all used to control aspects of the display in each `ListView` row.
 
 After that, we have two methods that allow the individual fields in two `DemoListModel1s` to be bound together.  Since we're going to use bidirectional binding on those 3 `BooleanProperty` fields, we need to pass the previously bound `DemoListModel` so that the unbinding can happen.  These are basically convenience methods that allow this logic to be kept out of our custom `ListCell`.  We'll see this in a little bit.  
 
@@ -138,7 +138,7 @@ I left it as two methods because, if there was a database or service behind this
 
 The layout for the application is just the `ListView`:
 
-``` kotlin 
+``` kotlin
 class DemoViewBuilder1(val data: ObservableList<DemoListModel1>) : Builder<Region> {
     override fun build(): Region {
         return ListView<DemoListModel1>().apply {
@@ -187,7 +187,7 @@ fun main() {
 
 Finally, we'll look at the enum for the "round", which I called `QuestionType`:
 
-``` kotlin 
+``` kotlin
 enum class QuestionType(filePath: String) {
     JEOPARDY("Jeopardy_S38_OnSetLogo.png"),
     DOUBLE_JEOPARDY("JS37TOC-S38_DJ.png"),
@@ -209,7 +209,7 @@ This is very similar to the `Animal` enum earlier.  However, we've added a stati
 
 # The Custom ListCell
 
-You can see from this that just about all of the components of the application are very straight-forward and simple.  The Interactor gets the data and loads it into the Presentation Model, which is just a list of JavaFX Property POJO's, the layout is just a `ListView` and the Controller doesn't do much excepty instantiate things and get the Interactor started on fetching the data.  
+You can see from this that just about all of the components of the application are very straight-forward and simple.  The Interactor gets the data and loads it into the Presentation Model, which is just a list of JavaFX Property POJO's, the layout is just a `ListView` and the Controller doesn't do much except instantiate things and get the Interactor started on fetching the data.  
 
 Which means that all the cool stuff must be in the custom `ListCell!`  First let's take another look at `Cell.updateItem()`
 
@@ -217,7 +217,7 @@ Which means that all the cool stuff must be in the custom `ListCell!`  First let
 
 Let's talk about what `Cell.updateItem()` actually does.  First, here's the source code for it:
 
-``` java 
+``` java
  protected void updateItem(T item, boolean empty) {
     setItem(item);
     setEmpty(empty);
@@ -228,7 +228,7 @@ Let's talk about what `Cell.updateItem()` actually does.  First, here's the sour
 ```
 That's not much, actually.  What do `setItem()`, `setEmpty()` and `updateSelected()` do?  Here's the `setItem()` code:
 
-``` java 
+``` java
 private ObjectProperty<T> item = new SimpleObjectProperty<T>(this, "item");
 
 public final ObjectProperty<T> itemProperty() { return item; }
@@ -253,7 +253,7 @@ This makes it very difficult to simply `Bind` your data properties in the `Nodes
       textProperty.bind(getItem().abcProperty())
   }
 ```
-Then you are going to have problems.  The first of which is that `getItem()` is going to return `Null` when this code is run as part of the constructor of your `ListCell`, that's because nothing will have been loaded into the `ListCell` yet. 
+Then you are going to have problems.  The first of which is that `getItem()` is going to return `Null` when this code is run as part of the constructor of your `ListCell`, that's because nothing will have been loaded into the `ListCell` yet.
 
 But even if you could get around that somehow, as soon as a new value is loaded into `item`, then `getItem().abcProperty()` would return an entirely new `Property`, and your binding on `someText.textProperty()` would become invalid.  
 
@@ -261,9 +261,11 @@ Clearly, that's a problem.
 
 A better approach is to create an immutable Presentation Model of the same type as the `ListCell` data type (in other words, the same type as the object contained in `item`), and bind your `Node` properties to that object.  Then manage the values in its fields, updating them as `item` changes.
 
-And that brings us back to `Cell.updateItem()`.  Since we know that any changes to `item` have to go through here, we can treat it as a `ChangeListener` and use it to reset our immutable Presentation Model.  Also, since we want our layout to respond to any changes in the underlying data in real-time, we `Bind` the fields in our Presentation Model to the fields in the new `item`.  Let's take a look at that:
+And that brings us back to `Cell.updateItem()`.  
 
-``` kotlin 
+Since we know that any changes to `item` have to go through here, we can treat it as a virtual `ChangeListener` and use it to reset our immutable Presentation Model.  Also, since we want our layout to respond to any changes in the underlying data in real-time, we `Bind` the fields in our Presentation Model to the fields in the new `item`.  Let's take a look at that:
+
+``` kotlin
 public override fun updateItem(item: DemoListModel1?, isEmpty: Boolean) {
     model.unbindFrom(this.item)
     super.updateItem(item, isEmpty)
@@ -275,17 +277,17 @@ public override fun updateItem(item: DemoListModel1?, isEmpty: Boolean) {
     }
 }
 ```
-In this code snippet, `model` is the immutable Presentation Model in our `ListCell`.  Now you can see the reason that we put the `bindTo()` and `unbindFrom()` methods into `DemoListModel1`.  The other thing to note about this is that we are undbinding **before** we call `super.updateItem()`.  This means that we are really treating `updateItem()` as a `ChangeListener` since we're accessing both the old value in `item` and the new value that's going in.
+In this code snippet, `model` is the immutable Presentation Model in our `ListCell`.  Now you can see the reason that we put the `bindTo()` and `unbindFrom()` methods into `DemoListModel1`.  The other thing to note about this is that we are unbinding **before** we call `super.updateItem()`.  This means that we are really treating `updateItem()` as a `ChangeListener` since we're accessing both the old value in `item` and the new value that's going in.
 
 In Kotlin, `if` is also an expression, and the value of the last line in a block is the return value of that block.  The `if` statement here will either populate `graphic` with `Null` or our layout depending on the the condition.
 
 ## The Layout
 
-Honestly, we could just stop this article right here, since you've seen all of the code specific to manipulating the data into and out of the `ListCell`.  At this point the layout of the `ListCell` is just like any other layout, with an immutable Presentation Model that we bind to the various properties of our layout's `Nodes`.  But we'll take a look at it anyway. 
+Honestly, we could just stop this article right here, since you've seen all of the code specific to manipulating the data into and out of the `ListCell`.  At this point the layout of the `ListCell` is just like any other layout, with an immutable Presentation Model that we bind to the various properties of our layout's `Nodes`.  But we'll take a look at it anyway.
 
 Here's the entire `ListCell`:
 
-``` kotlin 
+``` kotlin
 class JeopardyCell() : ListCell<DemoListModel1>() {
 
     private val model = DemoListModel1(JeopardyQuestion())
@@ -395,9 +397,9 @@ What's important to note here is that all three of the interactive elements are 
 And this is important because when the user scrolls that row out of the viewport, then that `ListCell` is released to be reused for another row.  But if the user scrolls that row back into the viewport, then those updated values are going to be loaded back into the `ListCell` through `updateItem()`.
 
 
-Here's the StyleSheet:
+Here's the Stylesheet:
 
-``` css 
+``` css
 .root {
    -theme-colour: #3612dF;
    -contrast-colour: #8F2F2F;
@@ -469,5 +471,8 @@ Here's the StyleSheet:
 }
 ```
 
-# Conclusion 
+# Conclusion
 
+The point of this tutorial is to help you to see a `ListView` as a container for a reusable layout allowing it to display a potentially large amount of date - not just as a vehicle to show a "list" of stuff.  Essentially, this reusable layout is no different from any other kind of Reactive layout that you might create, except that you need to deal with the issue of loading new Presentation Models into it as cells are reused when they scroll into the viewport.  
+
+Once you see `ListView` in this light, it opens up a whole world of possibilities for interesting GUI designs.  And it frees you from the spreadsheet-like confines of `TableView`.

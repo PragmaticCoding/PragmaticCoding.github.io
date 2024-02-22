@@ -1,6 +1,6 @@
 ---
 title:  "EventHandlers, Listeners and Bindings - What to Use Where"
-date:   2022-12-19 12:00:00 -0500
+date:   2024-02-16 12:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
 permalink: /javafx/events_and_listeners

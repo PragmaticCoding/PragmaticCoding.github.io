@@ -1,6 +1,6 @@
 ---
 title:  "Custom Control:  Radial Menu"
-date:   2023-12-05 12:00:00 -0500
+date:   2024-02-17 12:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
 permalink: /javafx/elements/radial-menu
@@ -29,7 +29,7 @@ This project didn't turn out the way I had expected it to.  Originally, I had pl
 
 My next attempt was to build the wedges as `Shapes` created from `Paths`, all built at the top of the menu and then rotated around the centre of the menu to their correct places.  It would have been a win for the layout, as my intention was to create the `Labels` at the same time, and I wouldn't need to worry about rotations when doing the layout.
 
-While that worked better than using `Panes`, it had some problems.  The biggest was that the aspect ratio of the monitor meant that the rated wedges didn't connect back to make a circle.  They connected nicely, but the complete shape was stretched in one dimension.  Also, when scaled up during a "mouse" hove, they grew in funny directions, and not straight out from the centre - which was a problem.
+While that worked better than using `Panes`, it had some problems.  The biggest was that the aspect ratio of the monitor meant that the rated wedges didn't connect back to make a circle.  They connected nicely, but the complete shape was stretched in one dimension.  Also, when scaled up during a "mouse" hover, they grew in funny directions, and not straight out from the centre - which was a problem.
 
 Finally, I had no choice but to create each menu "wedge" in its correct place around the menu, and deal with the rotations of the `Labels` as part of their layout.  The result is that the overall design really feels like a disconnected bunch of elements that happen to occupy the same space on the screen.  That being said, it works well.
 
@@ -37,7 +37,7 @@ Before we look at any code, let's take a look at what the final product should l
 
 ![Jeopardy! Screen Shot]({{page.ScreenSnap1}})
 
-If you look closely, you can see that the menu item labeled, "This is the Sixth", which has the mouse over it, is a bit bigger and brighter than the others.  It's also more opaque, but it's hard to tell with the white background.  It also has a fuzzy outline from the `Bloom` effect that's been added.  All of this is easier to see when you're actually using the menu.
+If you look closely, you can see that the menu item labelled, "This is the Sixth", which has the mouse over it, is a bit bigger and brighter than the others.  It's also more opaque, but it's hard to tell with the white background.  It also has a fuzzy outline from the `Bloom` effect that's been added.  All of this is easier to see when you're actually using the menu.
 
 You can also see that the text is upside-down for the three items at the bottom of the menu.  I decided to leave this way, as I felt that the added complexity of changing this outweighed the benefits.  I was also tempted to find a way to have the text curve to follow along the outer radius - for the same reason.
 
@@ -61,7 +61,7 @@ Obviously, the size of a wedge is dependent on the number of wedges that make up
 
 The angle width of each wedge is 2&pi; divided by the number of menu items (let's call that `numMenuItems`), so 2&pi;/`numItems`.  Since &theta; is 1/2 of that, we can make it &pi;/`numMenuItems`.  We also want the first menu item to point straight up, and since straight up is 0 radians, we need to straddle 0 with our two &theta; angles.  Looking at the diagram, the angles are -&theta;, and +&theta;.  Going clockwise, the left side of the next wedge would be 1&theta;, and the right side would be 3&theta;.  And so on.
 
-Mathematically, if we (as programmers do) start counting at 0, then the left side of each wedge is ((2 * itemNumber) - 1)&theta; and the right side is ((2 * itemNumber) + 1)&theta;.  So item number 0 gives -&theta; and +&theta;, and item number 2 gives &theta; and 3&theta;, and then 3&theta; and 5&theta; and so on.
+Mathematically, if we (as programmers do) start counting at 0, then the left side of each wedge is ((2 * itemNumber) - 1) * &theta; and the right side is ((2 * itemNumber) + 1) * &theta;.  So item number 0 gives -&theta; and +&theta;, and item number 2 gives &theta; and 3&theta;, and then 3&theta; and 5&theta; and so on.
 
 Each corner has an X and Y coordinate based on which multiple of theta that it uses, and which radius it is located on.  For X, it's:
 
@@ -77,13 +77,13 @@ Finally, using the standard JavaFX coordinate system, this would put the origin 
 
 ### Dependencies
 
-This is very important.  The geometry of our menu is actually dependent on a very small number of things.
+This is very important.  The geometry of our menu is actually dependent on a very small number of things:
 
-`Theta` (&theta;) is dependent on the number of menu items.  Nothing else, and we can derive it just from knowing how many menu items we have.
+1. `Theta` (&theta;) is dependent on the number of menu items.  Nothing else, and we can derive it just from knowing how many menu items we have.
 
-The origin X and Y are entirely dependent on the outer radius.
+1. The origin X and Y are entirely dependent on the outer radius.
 
-Every corner is dependent on either the inner or outer radius, the origin location, &theta; and which `itemNumber` it is.
+1. Every corner is dependent on either the inner or outer radius, the origin location, &theta; and which `itemNumber` it is.
 
 We can store all of these dependencies as properties of our class:
 
@@ -101,11 +101,11 @@ private val originY = Bindings.createDoubleBinding({ outerRadiusProperty.value *
 The `numItems` `Property` is derived from the size `ObservableList` holding the menu items.  `Theta` is a binding to that through a formula and the inner and outer radii are `StyleableDoubleProperties`.  `OriginX` and `originY` are `Bindings` based on the outer radius.
 
 
-## Drawing Shapes 
+## Drawing Shapes
 
 JavaFX has a `Shape` subclass called `Path`.  `Path` is a closed shape that is constructed by stringing together a set of connected `PathElements`.  Think of `Path` like drawing the shape with a pencil.  You put the pencil down on the paper, then you move it along the paper to the next corner, and then the next and so on.  
 
-There's a number of different `PathElements` in JavaFX, but we're going to just use three of them: `MoveTo`, `LineTo` and `ArcTo`.  We'll use `MoveTo` to get the "pencil" in the right place to start drawing, then we'll use `ArcTo` to draw the curves that run along the inner and outer circumfrences of the wedge, and `LineTo` to draw the straight sides.  Actually, we won't draw the left side because we'll end at the fourth corner and JavaFX will automatically draw the line to our starting point and close the shape for us. 
+There's a number of different `PathElements` in JavaFX, but we're going to just use three of them: `MoveTo`, `LineTo` and `ArcTo`.  We'll use `MoveTo` to get the "pencil" in the right place to start drawing, then we'll use `ArcTo` to draw the curves that run along the inner and outer circumfrences of the wedge, and `LineTo` to draw the straight sides.  Actually, we won't draw the left side because we'll end at the fourth corner and JavaFX will automatically draw the line to our starting point and close the shape for us.
 
 Our path is going to look like this:
 
@@ -171,7 +171,7 @@ We have a field for the text and graphic components of the `Label` that will app
 
 A new menu wedge can be created by instantiating a `RadialMenuModel` and then adding via the `RadialMenu.addMenuItem()` function.
 
-# The Labels 
+# The Labels
 
 The contents of the menu wedges is just a `Label`.  Here, it's necessary to instantiate the `Label` and then translate it to the correct position and the use a `Rotation` transformation to keep it oriented downwards to the centre of the menu.  
 
@@ -179,7 +179,7 @@ The tricky part here is that the placement of the items in JavaFX is done via th
 
 So, where does this top left corner go?
 
-Well, it depends on the amount of `Text`, which will determine how wide the `Label` is.  Essentially, we need to get coordinates of the centre angle of the wedge just a bit in from the outer radius, and then shift it counterclockwise by 1/2 the width of the `Label`.  Everything is done in terms of bindings, too.  It's finicky, but the solution in the code seems to work well enough: 
+Well, it depends on the amount of `Text`, which will determine how wide the `Label` is.  Essentially, we need to get coordinates of the centre angle of the wedge just a bit in from the outer radius, and then shift it counterclockwise by 1/2 the width of the `Label`.  Everything is done in terms of bindings, too.  It's finicky, but the solution in the code seems to work well enough:
 
 ``` kotlin
 private fun createLabel(radialMenuModel: RadialMenuModel, itemNumber: Int) =
@@ -212,11 +212,11 @@ private fun createLabel(radialMenuModel: RadialMenuModel, itemNumber: Int) =
 
 # Disabling Menu Items
 
-This was a surprise.  I checked and found that the `disable` property is inherited from `Node` - way, way up the hierachy.  This also means that both `Group` and `Shape` have a `disable` property.  This was counter-intuitive to me.  `Disable` makes sense for controls like `Button` or `TextField`, but not so much for `Nodes` like `Shape`.  So I tried it.  
+This was a happy surprise.  I checked and found that the `disable` property is inherited from `Node` - way, way up the hierachy.  This also means that both `Group` and `Shape` have a `disable` property.  This was counter-intuitive to me.  `Disable` makes sense for controls like `Button` or `TextField`, but not so much for `Nodes` like `Shape`.  So I tried it.  
 
 I added a `BooleanProperty` called `disable` to `RadialMenuItem` and the bound the `disable` property of the `Group` that holds the wedge and the `Label`.  I set up the sixth item to have its `diable` set to `true`.  Bingo!  It just worked.  The wedge no longer responded to `hover` or mouse clicks.  It also inherited some default styling from the Modena style sheet, which basically made it more transparent.
 
-# Styling 
+# Styling
 
 The idea for this project was to create a control which, for the programmer, has the same kind of interface as any other control.  This means making its styling configurable via CSS, just like any other JavaFX Node.  For the most part, this done by giving the menu and the menu items specific styleclass selectors.  Which then allows standard JavaFX styling elements to be used.
 
@@ -232,7 +232,7 @@ These are both straight-forward.  They're just regular `Properties` with tag for
 
 And now the configuration stuff where that CSS metadata is defined:
 
-``` kotlin 
+``` kotlin
 companion object CssStuff {
     val OUTER_RADIUS_META_DATA: CssMetaData<RadialMenu, Number> =
         object : CssMetaData<RadialMenu, Number>("-rm-outer-radius", StyleConverter.getSizeConverter()) {
@@ -258,7 +258,7 @@ This code is all pretty much boilerplate, but you should note that the two style
 
 ## Styleclass Selectors and Colours
 
-The entire Radial Menu is given the selector `radial-menu`. 
+The entire Radial Menu is given the selector `radial-menu`.
 
 Each menu item is given two selectors: `radial-menu-item` and `radial-menu-item-{itemNumber}`.  So we have `radial-menu-item-0` and `radial-menu-item-1` and so on.  The label in each item is given the selector: `contents`.
 
@@ -268,7 +268,7 @@ I checked the JavaFX source code for some routines like `Color.saturate()` to se
 
 I came up with a pallet of complementary pastel colours and got their HSB definitions.  I decided on a two stage approach to colour definition.  First I would define them as "named" colours; one for normal and then a saturated version.  Like this:
 
-``` css 
+``` css
 -brown-sugar: hsb(11, 42%, 54%);
 -s-brown-sugar: hsb(11, 52%, 45%);
 ```
@@ -286,7 +286,7 @@ I used the "-rm" prefix to avoid collisions with the Modena namespace.  This gav
 
 To implement the colours, I used a standard "trick" from Modena:
 
-``` css 
+``` css
 .radial-menu-item .wedge {
   -fx-fill: -rm-fill-colour;
 }
@@ -435,7 +435,7 @@ The centre section is pretty staight-forward, as there are no translations invol
 
 Here's the code for the RadialMenu all in one place:
 
-``` kotlin 
+``` kotlin
 class RadialMenu(
     menuItem1: RadialMenuModel,
     menuItem2: RadialMenuModel,
@@ -601,7 +601,7 @@ class RadialMenu(
 
 Here's the code for my sample application that draws the RadialMenu:
 
-``` kotlin 
+``` kotlin
 class RadialMenuApplication : Application() {
     override fun start(stage: Stage) {
         val scene = Scene(createContent { Platform.exit() }, 640.0, 500.0).apply {

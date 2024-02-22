@@ -1,6 +1,6 @@
 ---
 title:  "JavaFX: Understanding the ComboBox"
-date:   2023-02-11 12:00:00 -0500
+date:   2024-02-11 12:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
 permalink: /javafx/elements/comboboxes
@@ -43,7 +43,7 @@ OnAction
 
 The pop-up list works very much like a `ListView` and does, therefore, have a `SelectionModel`.  For some reason, and I don't know why (probably some copypasta that ended up in every on-line tutorial), people seem to think that the way to get a `ComboBoxes` value is to go through the pop-up list `SelectionModel`.  In reality, there's almost never any reason to go through this round-about route - just use the `Value` property.
 
-# ComboBox<Object>
+# ComboBox\<Object\>
 
 So what if you don't want to have your `ComboBox` return a primitive like `int`, or a `String`? How do you do that?
 

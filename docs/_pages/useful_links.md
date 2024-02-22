@@ -39,6 +39,7 @@ This website is running in Jekyll on GitHub Pages using the MinimalMistakes them
 - [MinimalMistakes](https://mmistakes.github.io/minimal-mistakes/){:target="_blank"} is the theme that this website uses.  It consolidates a lot of the look and feel and allows for a lot more customization than the default "Minima" theme.
 - [Liquid](https://shopify.github.io/liquid/){:target="_blank"} is the templating language used by Jekyll.
 - [Kramdown](https://kramdown.gettalong.org/index.html){:target="_blank"} is the markdown language used by Jekyll (actually it's the parser, but let's not split hairs)
+- [Pulsar](https://pulsar-edit.dev/) I used to use Atom, but it's dead now.  I tried VS Code, but hated it.  Pulsar is a fork of Atom that's still in development and it seems good.
 
 # Libraries
 
