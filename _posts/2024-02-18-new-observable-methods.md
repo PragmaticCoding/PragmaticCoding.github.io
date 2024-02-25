@@ -409,6 +409,53 @@ I would reserve the `Runnable` version for those rare cases when you really do c
 
 The other big thing to think about is this initial firing of the `Consumer` version when it's initiated.  I've seen applications where a `Property` is used to connect to modules of a together, and it's passed from the first module to the second via a constructor parameter.  Then the dependent module uses a `ChangeListener` to do something when the controlling module changes the value of the `Property`.  In that situation, you usually want to run whatever code executes when the value changes when you first get the property, because often it already has a valid value in it.  So you're forced to put the `ChangeListener` code into a method so that you can manually force it to run from the constructor.  With this version of `Subscription`, you don't need to do that.
 
+## Combining and Unsubscribing
+
+One of the big advantages to `Subscriptions` is that it's easier to remove them than the corresponding `Listener` type, especially when the `Listener` was declared via a lambda or method reference.  This is because the `removeListener()` functions take a reference to `Listener` to be removed.  For instance, in our example code above, we have this:
+
+``` kotlin
+boundCounter.addListener(InvalidationListener { textArea.text += "Invalidation Listener triggered\n" })
+```
+If we want to be able to remove this listener, then we have to do this:
+``` kotlin
+val listener = InvalidationListener { textArea.text += "Invalidation Listener triggered\n" }
+boundCounter.addListener(listener)
+```
+and then, later on we can do:
+``` kotlin
+boundCounter.removeListener(listener)
+```
+While `addListener()` has a return type of `void`, `subscribe()` has a return type of `Subscription`.  And the `Subscription` interface has a method called `unsubscribe`.  Back to our example code, we can do this:
+
+``` kotlin
+val subscription = boundCounter.subscribe { _: Number, _: Number -> textArea.text += "Subscription triggered \n" }
+```
+Which means that later we can do this:
+
+``` kotlin
+subscription.unsubscribe()
+```
+Now, if you have a number of `Subscriptions` and you don't want to keep track of them individually throughout your code, you can do something like this:
+
+``` kotlin
+val subscriptions = Subscription.EMPTY
+   .
+   .
+subscriptions.add(boundCounter.subscribe { _: Number, _: Number -> textArea.text += "Subscription triggered \n" })
+   .
+   .
+subscriptions.unsubscribe()
+```
+alternatively, you can do something like this:
+
+``` kotlin
+val subscriptions = Subscription.combine(subscription1, subscription2, subscription3)
+   .
+   .
+subscriptions.unsubscribe()
+```
+
+
 # ObservableValue.when()
 
 `Observable.when()` is described primarily as a means to avoid having defunct references which prevent garbage collection of otherwise unused `Properties`.  But how does it work, and what can we expect to see when we use `when()`
