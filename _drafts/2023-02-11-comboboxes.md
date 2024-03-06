@@ -45,14 +45,13 @@ The pop-up list works very much like a `ListView` and does, therefore, have a `S
 
 # ComboBox\<Object\>
 
-So what if you don't want to have your `ComboBox` return a primitive like `int`, or a `String`? How do you do that?
+So what if you don't want to have your `ComboBox` return a primitive like `int`, or a `String`? How do you do that?  `ComboBox` is a generic class, so to use one you'll need to specify the type of data values that it will return, and will be held in `items`.
 
-First off, you need to remember that the items that populate the list in a `ComboBox` are part of your Presentation Model, so they should be designed with the intent that they are going to be used to support your view.  So the idea that you're just going to rip some customer records out of a database and dump them into a `ComboBox` as the choices is probably a bad design decision.  
+First off, though, you need to remember that the items that populate the list in a `ComboBox` should be part of your Presentation Model, and they should be designed with the intent that they are going to be used to support your view.  This means that the idea that you're just going to rip some customer records out of a database and dump them into a `ComboBox` as the choices is probably a bad design decision.  
 
-That being said, there are times when you might have a more complex object used to populate your `ComboBox`.  It's generally considered bad form to rely on `toString()` to create the display for your `ComboBox`, so you'll need to customize it in some way to make it work properly.  
+That being said, there are times when you might have a more complex object used to populate your `ComboBox`.  It's generally considered bad form to rely on `toString()` to create the display for your `ComboBox`, so you'll need to customize it in some way to make it work properly.  This means that you're going to have to treat the popup as a `ListView` (which it is) and customize the cells.
 
-In this example, we're going to look at using an object with two fields.  This will be a "Customer" record with an account number and a name.  We'll need the account number to look the customer up in the business logic, but the users need the name to select which customer from the `ComboBox`...
-
+In this example, we're going to look at using an object with two fields.  One of the easiest ways to do that is to use an `Enum` class, so that's what we'll do.  
 
 
 # Linking ComboBoxes

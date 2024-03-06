@@ -39,9 +39,9 @@ But, it's probably safe to assume that the core JavaFX libraries are robust, wel
 
 # "State" in JavaFX = Bindings
 
-When we think about connecting things via "State" in JavaFX, that almost exclusively means employing `Bindings` as the mechanism.  There are some edge cases that the standard binding tools cannot handle, and in those cases it may be necessary to use a `ChangeListener`.  But, for the most part, we're talking about `Bindings`.
+When we think about connecting things via "State" in JavaFX, that almost exclusively means employing `Bindings` as the mechanism.  There are some edge cases that the standard binding tools cannot handle, and in those cases it may be necessary to use a `Listener`.  But, for the most part, we're talking about `Bindings`.
 
-When you bind a `Property` to another `ObservableValue`, JavaFX will initialize the bound property to the same value as that of the `ObservableProperty` it's been bound to, and from that point on it will remain synchronized.  
+When you bind a `Property` to another `ObservableValue`, JavaFX will initialize the bound property to the same value as that of the `ObservableProperty` it's been bound to, and from that point on it will remain synchronized.  No matter what.  You can count on this.
 
 Properties are all over the JavaFX `Node` classes.  `Labels`, `Texts` and `TextFields` all have `TextProperty` which holds the value that's displayed on the screen.  Many of the other input controls have a `ValueProperty` which serves a similar function.  `Regions` have `HeightProperty`, `WidthProperty`, `MinHeightProperty`, `MaxWidthProperty` and `PaddingProperty` amongst many others.  These all control how these `Nodes` are displayed.  
 
@@ -51,7 +51,7 @@ All of these `Properties` and `ObservableLists` that aren't read-only can be bou
 
 ## All of Your JavaFX Data Should be Encapsulated in Observables
 
-In order to leverage all of these `Properties` in the JavaFX `Nodes`, you need to wrap all of the data in your Presentation Model inside `Properties`, `ObservableValues` and `ObservableLists`.  When you've done this, you can connect these elements of your Presentation Model to the GUI through bindings.  Now your Presentation Model truly represents the "State" of your GUI.
+In order to leverage all of these `Properties` in the JavaFX `Nodes`, you need to wrap all of the data in your Presentation Model inside `Properties`, `ObservableValues` and `ObservableLists`.  When you've done this, you can connect these elements of your Presentation Model to the GUI through bindings.  Now your Presentation Model truly becomes a data representation of the "State" of your GUI.  You can read it from outside the GUI, and you can alter it from outside the GUI to change the GUI - without knowing about the GUI implementation.
 
 
 # Listeners Convert State Changes to Actions
