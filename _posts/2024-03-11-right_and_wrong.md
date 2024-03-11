@@ -1,6 +1,6 @@
 ---
 title:  "Is There a Right or Wrong Way to Program Something"
-date:   2024-03-11 12:00:00 -0500
+date:   2024-03-11 00:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
 permalink: /right-and-wrong

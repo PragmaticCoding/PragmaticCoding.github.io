@@ -1,6 +1,6 @@
 ---
 title:  "JavaFX: Understanding the ComboBox"
-date:   2024-02-11 12:00:00 -0500
+date:   2024-03-08 12:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
 permalink: /javafx/elements/comboboxes

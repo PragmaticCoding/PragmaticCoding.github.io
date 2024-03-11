@@ -1,6 +1,6 @@
 ---
 title:  "Using ListView Cell Layouts"
-date:   2024-02-15 12:00:00 -0500
+date:   2024-03-05 12:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
 permalink: /javafx/elements/listview-layouts
