@@ -83,4 +83,4 @@ Let's say that you've found some web service like [Chomp](https://chompthis.com)
 
 ## Presentation Data
 
-The Model contains just "Presentation Data".  In other words, every element is something that is potentially used directly by the View.  
+The Model contains just "Presentation Data".  In other words, every element is something that is potentially used directly by the View.  For instance, my Kobo e-reader (like a Kindle) has a setting to reset the screen every so many pages, this clears out the
