@@ -1,6 +1,6 @@
 ---
 title:  "EventHandlers, Listeners and Bindings - What to Use Where"
-date:   2024-03-06 12:00:00 -0500
+date:   2024-03-07 00:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
 permalink: /javafx/events_and_listeners
@@ -14,7 +14,7 @@ excerpt: Taking a look at how EventHandlers, Listeners, Subscriptions and Bindin
 
 # Introduction
 
-One issue that seems to come up quite often is connecting pieces of your application through JavaFX
+One issue that seems to come up quite often is how to connect pieces of your application through JavaFX `Observable` classes.
 
 # State vs Events
 
@@ -117,31 +117,3 @@ If you are using JFX or later, you should probably use `Subscriptions` instead o
 It's easy to get the impression that an `EventHandler` is "triggered" by the JavaFX object where it is defined, but this isn't technically correct.  That JavaFX object will "fire" an `Event` and that `Event` is passed around through the JavaFX components of the application according to some specific rules.  In most cases, it will land back at the JavaFX object that fired the `Event` (also known as the "source") and if it has an `EventHandler` of the correct type defined on it, that `EventHandler` will be invoked.
 
 This may sound like I'm splitting hairs, but this can be an important concept to understand.  JavaFX objects will often be passed `Events` that they did not trigger.  JavaFX objects can, therefore, act on `Events` that they did not trigger.  JavaFX objects can also intercept `Events` that they did not trigger and prevent them from reaching the JavaFX object that fired the `Event`.
-
-## Event Dispatch Chain
-
-There's technically one thing wrong with the description above:  The "source" isn't really the key element.  It's the "target".  Every `Event` that's fired has a target assigned.  Typically, this is the `Node` that you'd view as having "fired" the `Event`, so it borders on being just an issue of semantics.  However, if you look at any official documentation for this stuff, it will talk about "target", not "source".  On top of that "source" is still an actual thing, and part of the information stored in the `Event`.
-
-Let's look at how `Events` are passed around the JavaFX application, it's something called the, "Event Dispatch Chain".  For this, I'm going to brazenly scoop some images from the Oracle tutorial, because they are good.
-
-Here's our application window:
-
-![Dispatch Chain Window]({{page.Dispatch1}})
-
-In case it's not clear, we have a window with a `Rectangle` at the top, and below it a `Pane` holding a `Circle` and a `Triangle`.  
-
-Here's the hierarchy of our `SceneGraph`:
-
-![Dispatch Hierarchy]({{page.Dispatch2}})
-
-This is what you'd expect:  There's `Stage` holding a `Scene` that has a `Group` which, in turn holds a `Rectangle` and a `Pane`.  The `Pane` holds the `Circle` and the `Triangle`.
-
-For any given target `Node` in that hierarchy, the event dispatch chain will be the shortest route from the `Stage` to that `Node`.  It's that simple.
-
-There are two phases to event routing, the "Event Capturing Phase" and the "Event Bubbling Phase".  In the Event Capturing Phase, the `Event` is passed to every `Node`, in order, starting with the `Stage` and ending with the target.  If the target in our diagram above was the `Triangle`, then the `Event` would be passed to the `Stage`, then the `Scene`, then the `Group` followed by the `Pane` and then the `Triangle`.  In this phase, the `Event` is handled by any `Handler` attached to the `Node` for that `EventType` as a `Filter`.
-
-Bubbling up is the same process in reverse, in this case from the `Triangle` to the `Stage` and the `Events` are handled by any `Handler` attached to the `Node` for that `EventType` as a `Handler`.
-
-Any of these `Handlers` attached to any of the `Nodes` in the Dispatch Chain, either as a `Filter` or a `Handler` can call `Event.consume()` to "consume" the `Event`.  Once the `Event` has been consumed, it won't be delivered to any more `Nodes`.  In this way, a `Node` can prevent other `Nodes` from seeing, and responding to an `Event`.
-
-Viewed from this perspective, it's much easier to see `Events` as messages that are passed around the `Nodes` in your application.
