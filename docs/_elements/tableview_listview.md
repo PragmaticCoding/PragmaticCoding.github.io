@@ -31,13 +31,22 @@ feature_row_cell_data:
     url: "/javafx/elements/tableview-data"
     btn_label: "Read the Article"
     btn_class: "btn--primary"
-  
+
 feature_row_listview_basics:
   - image_path: /assets/elements/ListView2.png
     alt: "ListView Basics"
     title: "Understanding ListView"
     excerpt: 'Learn the basics about ListView and how to customize the display of simple data.'
     url: "/javafx/elements/listview-basics"
+    btn_label: "Read the Article"
+    btn_class: "btn--primary"  
+
+feature_row_listview_layouts:
+  - image_path: /assets/elements/ListView5.png
+    alt: "ListView Cell Layouts"
+    title: "ListView Cell Layouts"
+    excerpt: 'Learn how to customize ListView cell layouts to handle complex data structures and interactive data presentation'
+    url: "/javafx/elements/listview-layouts"
     btn_label: "Read the Article"
     btn_class: "btn--primary"  
 ---
@@ -61,3 +70,5 @@ For some reason, beginner programmers love tables, and they rush to start using 
 ## The Articles
 
 {% include feature_row id="feature_row_listview_basics" type="left" %}
+
+{% include feature_row id="feature_row_listview_layouts" type="left" %}
