@@ -39,6 +39,25 @@ feature_row_triple_switch:
     url: "/javafx/elements/tripletoggle"
     btn_label: "Read the Articles"
     btn_class: "btn--primary"    
+
+feature_row_labelled_box:
+  - image_path: /assets/posts/LabelBox12.png
+    alt: "LabelledPane"
+    title: "Custom Component Example: LabelledPane"
+    excerpt: "Another useful component that seems to be missing from the standard JavaFX Nodes, a Box with a title embedded within the border."
+    url: "label-box"
+    btn_label: "Read the Articles"
+    btn_class: "btn--primary"  
+
+
+feature_row_radial_menu:
+  - image_path: /assets/elements/RadialMenu1.png
+    alt: "RadialMenu"
+    title: "Custom Component Example: Radial Menu"
+    excerpt: "Radial menus aren't seen very often in business applications, but they can be useful and look different.  In this article we look at how to grapple with the geometry involved and develop a custom Node that can be used like any other JavaFX Node."
+    url: "/javafx/elements/radial-menu"
+    btn_label: "Read the Articles"
+    btn_class: "btn--primary"  
 ---
 
 JavaFX has a large library of standard components that you can use to create your layouts.  
@@ -60,3 +79,7 @@ This is not hard to do.  If you can write and configure a JavaFX layout, then yo
 {% include feature_row id="feature_row_customizing" type="left" %}
 
 {% include feature_row id="feature_row_triple_switch" type="left" %}
+
+{% include feature_row id="feature_row_radial_menu" type="left" %}
+
+{% include feature_row id="feature_row_labelled_box" type="left" %}

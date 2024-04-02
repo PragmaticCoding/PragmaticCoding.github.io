@@ -3,7 +3,7 @@ title:  "New Methods For Observables"
 date:   2024-02-18 12:00:00 -0500
 categories: java
 logo: /assets/logos/JavaFXLogo.png
-permalink: /javafx/subscribe_and_map
+permalink: /javafx/elements/subscribe_and_map
 ScreenSnap1: /assets/elements/Subscriptions1.png
 ScreenSnap2: /assets/elements/Subscriptions2.png
 ScreenSnap3: /assets/elements/Subscriptions3.png

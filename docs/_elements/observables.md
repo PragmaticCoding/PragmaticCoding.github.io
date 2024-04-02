@@ -39,11 +39,22 @@ feature_row_bindings_class:
     url: "/javafx/elements/bindings_class"
     btn_label: "Read the Article"
     btn_class: "btn--primary"
+
+feature_row_new_methods:
+  - image_path: /assets/logos/LittleBrain.jpg
+    alt: "New Observable Methods"
+    title: "New Observable Methods"
+    excerpt: 'JavaFX versions 19 and 21 gave us new methods for dealing with Observables.  We now have ObservableValue.map(), and variations on ObservableValue.subscribe().  These new methods should be your "go to" approach to Listeners and Bindings from now on.'
+    url: "/javafx/elements/subscribe_and_map"
+    btn_label: "Read the Article"
+    btn_class: "btn--primary"
 ---
 
 # JavaFX Observables, Bindings and Listeners
 
 Observables, Bindings and Listeners are the key elements supplied by the JavaFX library to create Reactive applications in JavaFX.  This is incredibly complete toolkit, which means that it can also be complicated and difficult to understand.  These articles are designed to explain what each of these elements are, and how you can use them to create simple, easy to understand and maintain Reactive applications.
+
+{% include feature_row id="feature_row_new_methods" type="left" %}
 
 # Bindings:
 
