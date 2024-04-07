@@ -46,6 +46,8 @@ master:
       url: /pages/multivalue
     - title: Useful Links
       url: /pages/links
+    - title: Examples
+      url: /examples/intro
 
   - title: About
     children:

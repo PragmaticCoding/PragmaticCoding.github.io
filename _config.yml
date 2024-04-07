@@ -164,6 +164,7 @@ include:
   - _linux
   - _cybertanks
   - _widgetsfx
+  - _examples
   - widgetsfx-docs
 exclude:
   - "*.sublime-project"
@@ -375,6 +376,27 @@ defaults:
       sidebar:
         title: "The Beginner's Guide to Linux"
         nav: "linux"
+      header:
+        overlay_image: /assets/images/brain.jpg
+        overlay_filter: 0.4
+
+  - scope:
+      path: docs/_examples
+      type: pages
+    values:
+      layout: single
+      author_profile: false
+      read_time: true
+      comments: # true
+      share: true
+      related: true
+      toc: true
+      toc_label: "Contents"
+      toc_icon: "brain"
+      toc_sticky: true
+      sidebar:
+        title: "Examples"
+        nav: "examples"
       header:
         overlay_image: /assets/images/brain.jpg
         overlay_filter: 0.4
