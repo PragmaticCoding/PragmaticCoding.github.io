@@ -1,6 +1,6 @@
 ---
 title:  "Example: Hexadecimal Editor"
-date:   2024-03-18 00:00:00 -0500
+date:   2024-04-06 00:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
 permalink: /examples/hex-editor
