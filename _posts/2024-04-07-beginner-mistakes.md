@@ -1,35 +1,33 @@
 ---
-layout: single
-title: Common JavaFX Mistakes
-except: Taking a look at a JavaFX application that suffers from some very common beginner mistakes, converting it to Kotlin and sorting out the issues.
-toc: true
-toc_label: "Contents"
-toc_icon: "brain"
-toc_sticky: true
-header:
-  overlay_image: /assets/images/brain.jpg
-  overlay_filter: 0.4
-
-sidebar:
-    nav: "master"
-permalink: /pages/beginner_mistakes/
-skip_link: true
+title:  "Common JavaFX Mistakes"
+date:   2024-04-07 00:00:00 -0500
+categories: javafx
+logo: /assets/logos/JavaFXLogo.png
+permalink: /javafx/beginner_mistakes
 mandelbrot: /assets/posts/Mandelbrot.png
+excerpt:  Taking a look at a JavaFX application that suffers from some very common beginner mistakes, converting it to Kotlin and sorting out the issues.
 ---
 
 # Introduction
 
-Recently there was a question posed on StackOverflow.com that asked about how to run parallel processing to speed up the rendering of a Mandelbrot set in a JavaFX application.  Presumably, the core problem was the the rendering was taking too long and the OP was looking for a way to speed it up.
+A while back, there was a question posed on StackOverflow.com that asked about how to run parallel processing to speed up the rendering of a Mandelbrot set in a JavaFX application.  Presumably, the core problem was the the rendering was taking too long and the OP was looking for a way to speed it up.
 
 The complete code was posted in the question.  
 
-It turns out that the primary problem was probably fairly easy to fix by moving a single line of code, but it was also possible to improve the performance by introducing a Parallel Stream into the calculation.  
+It turns out that the primary problem was probably
+ fairly easy to fix by moving a single line of code, but it was also possible to improve the performance by introducing a Parallel Stream into the calculation.  
 
 However...
 
 ## Beginner Coding Problems
 
 The original Java code was fairly typical of beginner JavaFX code.  In other words, a bit of a mess.
+
+First, about that:
+
+Personally, I don't feel any great emotionaly attachment to any code I write, and I tend to view any critisism of my code as a commentary on the code or, at most, on my coding ability at the time that I wrote it.  Coding is a skill, and as such we can all hope to improve with practice.  Beginners, by definition, make beginner mistakes and it is to be expected that much of their code will be, "a bit of a mess".  None of the comments in this article are about the coder, but just about the code.
+
+With that said, let's look at the kind of problems you'll find in beginners' code:
 
 Violations of "Don't Repeat Yourself" (DRY)
 : This is something that sneaks into JavaFX fairly easily if you don't watch out.  There's lots of boilerplate in JavaFX, and you can find yourself doing the same thing over and over.
@@ -83,11 +81,13 @@ Proper Handling of the Keystrokes
 
 The code for both the Java and Kotlin versions can be found [here](/pages/mandelbrot_code).  I had to move it out because this article was just getting too big with it included.
 
+Alternatively, you can get the complete source code on GitHub, [here](https://github.com/PragmaticCoding/Blog/tree/master/src/main/kotlin/ca/pragmaticcoding/blog/mandelbrot).
+
 # Notes on the Refactoring
 
 ## General Notes
 
-As seems normal when comments are used, the comments in the Java code were either really obvious or meaningless to me.  When my reaction to a comment in code is "Duh?", or "What?" I usually just delete them and never think about them again.  Otherwise they just take up valuable screen real estate.  There was one place where I would have liked to have seen a comment explaining why something was done, but there weren't any there.  
+As seems normal when comments are used, the comments in the Java code were either really obvious or meaningless to me.  When my reaction to a comment in code is "Duh?", or "What?" I usually just delete them and never think about them again.  Otherwise they just take up valuable screen real estate.  There was one place where I would have liked to have seen a comment explaining why something was done, but, of course, there weren't any there.  
 
 I was surprised to see that the entire application was just one class.  I've left the Kotlin code the same way because this is really an exercise in correcting issues, not in re-designing the application.  This should help make it easier to compare the two versions.  For this reason, I've left the structure of the class largely intact, which is why the menu code is way down at the bottom far away from all of the other layout code.
 
@@ -669,3 +669,9 @@ private fun processKeystroke(keyCode: KeyCode, isShiftDown: Boolean): Boolean {
    }
 ```
 Since `processKeystroke()` only recognizes certain keystrokes, it returns a `Boolean` to indicate whether or not it did anything.  Then we use that return value to decide if we should consume the `Event`.  For the most part, the navigation keystrokes aren't really used inside a TextField, so the two uses of keystrokes are fairly mutually exclusive.  This approach works good enough.
+
+# Conclusion
+
+Beginners seem to be taught only how to create code that runs, with little consideration for the quality of the code in respect to readability and maintance.  But these are critical factors, even when the application is still in development.  This project is a case in point, the actual problem was made much more difficult to solve because the entire code was much more complicated than it needed to be.
+
+I don't think you need to read through all the code in detail and understand what every lines does in both versions to appreciate the *process* of cleaning up the code and making it easier to deal with.  I've tried to explain the reasoning behind the changes as much as I can, so that you can decide if you agree with it or not.  
