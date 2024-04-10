@@ -14,8 +14,7 @@ A while back, there was a question posed on StackOverflow.com that asked about h
 
 The complete code was posted in the question.  
 
-It turns out that the primary problem was probably
- fairly easy to fix by moving a single line of code, but it was also possible to improve the performance by introducing a Parallel Stream into the calculation.  
+It turns out that the primary problem was probably fairly easy to fix by moving a single line of code, but it was also possible to improve the performance by introducing a Parallel Stream into the calculation.  
 
 However...
 
@@ -25,7 +24,7 @@ The original Java code was fairly typical of beginner JavaFX code.  In other wor
 
 First, about that:
 
-Personally, I don't feel any great emotionaly attachment to any code I write, and I tend to view any critisism of my code as a commentary on the code or, at most, on my coding ability at the time that I wrote it.  Coding is a skill, and as such we can all hope to improve with practice.  Beginners, by definition, make beginner mistakes and it is to be expected that much of their code will be, "a bit of a mess".  None of the comments in this article are about the coder, but just about the code.
+Personally, I don't feel any great emotional attachment to any code I write, and I tend to view any critisism of my code as a commentary on the code or, at most, on my coding ability at the time that I wrote it.  Coding is a skill, and as such we can all hope to improve with practice.  Beginners, by definition, make beginner mistakes and it is to be expected that much of their code will be, "a bit of a mess".  None of the comments in this article are about the coder, but just about the code.
 
 With that said, let's look at the kind of problems you'll find in beginners' code:
 
