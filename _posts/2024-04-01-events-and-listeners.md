@@ -138,7 +138,7 @@ As of JavaFX 21 we now have a new alternative to `Listeners`: `Subscriptions`.
 
 If you are using JFX or later, you should probably use `Subscriptions` instead of `Listeners` 95%+ of the time.  There is virtually no advantage in using a `Listener` over a `Subscription`, and `Subscriptions` will give you simpler, cleaner code.  
 
-To learn more about `Subscriptions` you can read my article [here](https://www.pragmaticcoding.ca/javafx/subscribe_and_map#observablevaluesubscribe-and-observablesubscribe).
+To learn more about `Subscriptions` you can read my article [here](https://www.pragmaticcoding.ca/javafx/elements/subscribe_and_map#observablevaluesubscribe-and-observablesubscribe).
 
 # EventHandlers Describe Actions Triggered by Events
 

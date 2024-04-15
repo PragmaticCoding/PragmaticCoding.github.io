@@ -26,23 +26,9 @@ So why write the examples in my tutorials in Kotlin?  There are a number of reas
 
 # Kotlin is Just Better
 
-Kotlin is everything that Java wants to be, but never will be.  The best comparison I can think of is this...
+Kotlin is everything that Java wants to be, but never will be.  There really is no other way to characterize it.
 
-Back in 1994 my wife and I purchased at brand new VW Golf.  We test drove a number of different cars in the same price range and we were impressed at how quiet it was, how smooth the ride was even though the suspension and the handling was much tighter than the other cars we tested.  We were also impressed at how peppy it was with just a 90hp engine.
-
-Fast forward about 8 years and our financial situation was better and we decided to buy a car that was more expensive than the bare minimum to meet our needs.  After looking around, we settled on a BMW 318ti.  It was a little hatchback and hardly even considered to be a true BMW by the BMW snobs, and was certainly the cheapest car in the BMW line-up at the time.  But man, it was so much nicer than the Golf.
-
-We still had that Golf, and I drove it 1.6km to the train station and back each day, and that was about all the use it got.  On the weekends, the 318ti got all the use (which would you pick?) and the Golf just sat in the driveway.  
-
-Then one day about 6 months later I had to go somewhere for work that involved driving on the highway  with the Golf.  As I came off the ramp and stomped on the gas, I was shocked.  "This thing is broken!", I thought to myself.  It was noisy but it didn't accelerate quickly.  As I changed lanes it felt like it sloshed around.
-
-Then I realized that it was exactly the same as it had ever been.  It wasn't broken.  Months of driving almost only the 318ti had reset my expectations of how a car should feel and sound.
-
-It's like that with Kotlin and Java for me.  
-
-I now know what life is like without semicolons or "new".
-
-When I switch back to Java, I'm instantly back into, "This thing is broken!".  Of course it's not.  It's the same Java that it's always been, it's just that the clunky stuff I never noticed before can't be unnoticed after months and month of Kotlin.
+When I switch back to Java, my first thought is, "This is so clunky!".  Of course it's not.  It's the same Java that it's always been, it's just that the clumsy stuff I never noticed before can't be unnoticed after months and month of Kotlin.
 
 # Kotlin Means Less Code
 
@@ -84,7 +70,7 @@ In my opinion, the block of code above is super easy to read. At a glance, you c
 
 Is it hard for Java only coders to understand? I don't think it should be. IMHO there's a world of difference between reading and getting the gist of code versus writing valid code. The level of knowledge for simply understanding code is so much lower that virtually any Java programmer should be able to look at the Kotlin code and at least get the idea about what's going on.
 
-I mean, you don't have to understand about field accessors to intuitively understand that layoutX = 10.0 is somehow the same as label.setLayoutX(10.0). The important point is that layoutX is getting set. And these articles are supposed to be about understanding how to deal with concepts in JavaFX, not about being a source for copy/paste into your own projects (which I'm totally fine with people doing, BTW).
+I mean, you don't have to understand about field accessors to intuitively understand that `layoutX = 10.0` is somehow the same as `label.setLayoutX(10.0)`. The important point is that `layoutX` is getting set. And these articles are supposed to be about understanding how to deal with concepts in JavaFX, not about being a source for copy/paste into your own projects (which I'm totally fine with people doing, BTW).
 
 I'll also point out that I avoid using the full toolset of utilities that I've written for my own personal projects that really, really squeeze the rubbish boilerplate out of layout code. Something like this:
 
@@ -135,6 +121,18 @@ Now, `b` is an `Int`, and will have the value `0` when `a` is `Null`.
 In Kotlin, use of these constructs in not optional, unlike `Optional` in Java which is completely optional to use.  If you want a variable to be declared but initialized later, then it has to be nullable.  If it's nullable, then you need to use the null safety operator to deal with it.
 
 On top of all of that, even though it completely changes the way that you think about `Null`, it's so much cleaner and easier to us than `Optional`.  The null operator works brilliantly with Scope Functions and everything just fits together nicely.
+
+# Spreading the Kotlin Word
+
+## Kotlin as a JavaFX Layout DSL
+
+I've always been clear that I think that FXML is a waste of time.  It does allow you to use SceneBuilder, but I don't see a great deal of value in that either.  Instead, I've argued that well designed hand-written layout code is far easier to deal with - meaning to write, understand and maintain - than FXML and the complications that it brings.  
+
+I've also argued that the strict application of just two "Clean Coding" rules - "Don't Repeat Yourself", and the "Single Responsibility Principle" - will inevitably result in the development of a library of builder or "helper" functions that you can use over and over again.  This will leave your actual layout code lean and clean.
+
+Kotlin let's you take this one step further.  The use of `.apply{}` allows you to implement any number and combination of internal `Node` configuration methods into "decorators" that can be chained together.  The `infix` qualifier allows you to strip away the `.()` part of the call.  Extension functions allow you to add new methods to `Node` classes that, in turn, can be used as decorators if you want.
+
+
 
 # Understanding Kotlin Code
 
