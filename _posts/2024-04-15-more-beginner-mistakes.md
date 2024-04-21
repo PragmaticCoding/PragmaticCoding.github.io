@@ -1,6 +1,6 @@
 ---
 title:  "More Beginner Mistakes"
-date:   2024-03-17 00:00:00 -0500
+date:   2024-04-30 00:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
 permalink: /javafx/beginner_mistakes2
@@ -213,6 +213,8 @@ You should make it a habit to **never** cut and paste from your own code.  Maybe
 
 Programmers always seem to want to over-engineer and future-proof everything.  Yet the truth is that most of the time, "You Ain't Gonna Need It" (YAGNI).  And then, once they've built something they don't need they won't use the `Delete` key on it - clinginess.  
 
+In this example we have both `titleGroupSec` and `buttonClicked` which are instantiated as fields, but never used.  In the end this just clutters things up and causes confusion.
+
 
 ## Excessive Coupling
 
@@ -340,7 +342,7 @@ fun main() {
 
 ```
 
-You'll see that pretty much all of it is still inside `Opening` which extends `Application`.  It was left this way because it really doesn't "do" anything, so there was no need to create a framework for the application.  It would be easy, though, to replace `createContent()` with `OpeningController.getView()` and introduce an MVCI framework.
+You'll see that pretty much all of it is still inside `Opening` which extends `Application`.  It was left this way because the application really doesn't "do" anything, so there was no need to create a framework for the application.  It would be easy, though, to replace `createContent()` with `OpeningController.getView()` and introduce an MVCI framework.
 
 ## Application.start()
 
@@ -374,7 +376,7 @@ It's just 5 lines of code, so it can't be hard to understand.  You can immediate
 
 The `bottom` region gets an exit `Button` created through a builder/factory method and put in an `HBox` so that it too can be centred.
 
-The `centre` region gets a `StackPane` with two "boxes" created through builder methods and then modified with something called `showWhen`.  We'll look at `showWhen` later, but those builder methods now...
+The `center` region gets a `StackPane` with two "boxes" created through builder methods and then modified with something called `showWhen`.  We'll look at `showWhen` later, but those builder methods now...
 
 ## The buttonBox() Method
 
@@ -388,10 +390,10 @@ This is technically one line of code, but it's been formatted out to 2 for reada
 
 ``` kotlin
 private fun newGameBox(): Region = BorderPane().apply {
-		center = VBox(
-				HBox(6.0, Label("Name:") styleWith "prompt-label", TextField(), Button("OK")).centred()
-		).centred()
-		top = Button("Back").apply { setOnAction { isShowingNewGame.value = false } } styleWith "transparent-button"
+	center = VBox(
+			HBox(6.0, Label("Name:") styleWith "prompt-label", TextField(), Button("OK")).centred()
+	).centred()
+	top = Button("Back").apply { setOnAction { isShowingNewGame.value = false } } styleWith "transparent-button"
 }
 ```
 This is another `BorderPane` because we want to have the "Back" `Button` in the top left corner, and the `HBox` holding the input stuff centred.  There's no problem putting `BorderPane` inside another `BorderPane` or any other container class.  Also, there's nothing "heavyweight" about `BorderPane` that would have you want to avoid it.  
@@ -470,7 +472,7 @@ In this particular case, it seems like making that "OK" `Button` do something is
 
 ## Excessive Coupling
 
-The entire application now has only **one** variable defined, and that the final `BooleanProperty` field, `isShowingNewGame`.  It is very, very difficult to have coupling without variables to reference.  In fact, `isShowingNewGame` was only introduced to act as a central coupling point for the functionality of the `Buttons` and layout swapping - eliminating the need to instantiate those `Buttons` or layouts as variables in order to reference them from other layout elements.  
+The entire application now has only **one** variable defined, and that is the final `BooleanProperty` field, `isShowingNewGame`.  It is very, very difficult to have coupling without variables to reference.  In fact, `isShowingNewGame` was only introduced to act as a central coupling point for the functionality of the `Buttons` and layout swapping - eliminating the need to instantiate those `Buttons` or layouts as variables in order to reference them from other layout elements.  
 
 ## Bad Names
 
@@ -490,3 +492,9 @@ It's 20 lines of code.  It's a `BorderPane` and you can see at a glance that onl
 
 
 # Conclusion
+
+It's pretty easy to look at the final code and say, "Yeah, but that's a pretty trivial example.  It's only 20 lines of layout code.  You can't do that with something complex."  But yet...the original code was over 100 lines long, and was non-trivial enough that the author got stuck trying to figure out how to make it work.  
+
+Hopefully, you can also see how Kotlin makes life so much better with JavaFX.
+
+One really big rule when writing layout code is *NOT* to reference `Nodes` from other `Nodes`, especially when those `Nodes` aren't closely related in the layout.  Especially, especially in the case where they are so unrelated in the layout that you need to instantiate one of them as a field, so that it's global to the layout.  Instead, create a `Property` as a field, or in your Model, and then reference that `Property` from the `Nodes` that need to interact (but now indirectly).
