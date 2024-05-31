@@ -195,6 +195,8 @@ So you make your delagate methods not static.  But it's still effectively static
 
 # Conclusion
 
-The truth is that any large application that does real work is going to have ample complication to keep you busy for a long time.  It will seem like none of the design decisions are simple, and everything has some twist that makes life more difficult.  
+The truth is that any large application that does real work is going to have ample complications to keep you busy for a long time.  It will seem like none of the design decisions are simple, and everything has some twist that makes life more difficult.  
 
 Having a solid idea about how your application architecture will help to reduce the coupling through the application can make a lot of these decisions much easier.
+
+The nice thing about MVCI with this architecture is that it just works.  MVCI provides exactly the things you need to write a Reactive JavaFX GUI connected to business logic.  The tiered structure below it isolates everything else so that it doesn't become a tangled mess of logical spaghetti.  
