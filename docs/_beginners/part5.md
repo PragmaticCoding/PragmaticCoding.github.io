@@ -16,7 +16,7 @@ excerpt: Building an application that "does something" means adopting a framewor
 
 In order to organize our application so that the GUI will be separated from the business logic, and to facilitate the creation of a Reactive application, we'll need to adopt a framework.  There are lots to choose from, but I'm going to use one that I've developed myself that I find works very well.
 
-This framework is called Model-View-Controller-Interactor (MVC-I).  Rather than spend a lot of time talking about how it works, we'll just start cook it up as simple as possible and it should be clear how things go as we build it out in our application.
+This framework is called Model-View-Controller-Interactor (MVC-I).  Rather than spend a lot of time talking about how it works, we'll just start by cooking it up as simple as possible and it should be clear how things go as we build it out in our application.
 
 But, to start with, we'll need the skeleton to build everything on.  So here we go.
 
@@ -101,3 +101,9 @@ Even more bare-bones.  We need this class, but it hasn't come into play yet.
 # This Will Run
 
 Yep.  It's complete, and you get an empty window on the screen.  Woo-hoo!
+
+Okay, so there's not much here, but...
+
+You should be able to see how all three of the other components share a reference to the `Model` so it's going to be a way for them to communicate with each other without actually knowing about each other.  That's a crucial concept.  
+
+You should also be able to see that the Controller knows about both the ViewBuilder and the Interactor, yet neither of those classes knows about the Controller.
