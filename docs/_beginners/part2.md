@@ -66,7 +66,7 @@ This sets the initial window size to 400 pixels wide, and 200 pixels tall.  When
 
 ![Hello]({{page.hello}})
 
-That somewhat of an improvement, even though the "Hello World" is still tucked over way to the left.  We'll look at that kind of thing in a little bit.
+That's somewhat of an improvement, even though the "Hello World" is still tucked over way to the left.  We'll look at that kind of thing in a little bit.
 
 That's about all "Hello World" is good for.  Let's move on to something more interesting...
 
@@ -99,7 +99,7 @@ public class Main extends Application {
 ```
 ## What's an HBox?
 
-`HBox` is an example of a "layout" class.  It's a `Region` type `Node` that holds other `Nodes` inside it.  There are a number of different layout classes, like `BorderPane`, `ScrollPane`, `GridPane`, `VBox` and `HBox`.  Each one has different characteristics and is designed for different methods of organizing their contents.
+`HBox` is an example of a "layout" class.  It's a `Region` subtype `Node` that holds other `Nodes` inside it.  There are a number of different layout classes, like `BorderPane`, `ScrollPane`, `GridPane`, `VBox` and `HBox`.  Each one has different characteristics and is designed for different methods of organizing their contents.
 
 `HBox` presents its contents in a horizontal row, with the first item at the far left and each new item added to the right.  `VBox` is similar except that it shows it's contents arranged vertically, from the top down.  In this case, I've chosen to populate the contents of the `HBox` in its constructor.
 
@@ -112,7 +112,7 @@ If you run this code, you'll see it looks like this:
 ![Input]({{page.input}})
 
 
-Well, it's all squished up in the top right corner, and the "Name:" prompt seems to be a little higher than the `TextField`.  So let's fix that.
+Well, it's all squished up in the top left corner, and the "Name:" prompt seems to be a little higher than the `TextField`.  So let's fix that.
 
 This is done by configuring the layout of the containing HBox.  The code ends up looking like this:
 
@@ -149,7 +149,7 @@ The first thing that you'll notice is that we're now instantiating the `HBox` as
   : This defines the space between the edges of the `HBox` and its contents.
 
 `Insets`
-  : This class is used to define space around or inside a Node.  `Insets` has two constructors.  One takes a single number which is applied to all sides of the `Node`.  In this case, we've used the second constructor, which takes a separate number for each side in the order -> Top, Right, Bottom and Left.
+  : This class is used to define space around or inside a Node.  `Insets` has two constructors.  One takes a single number which is applied to all sides of the `Node`.  In this case, we've used the second constructor, which takes a separate number for each side in the order: Top, Right, Bottom and Left.
 
 `setAlignment()` and `Pos`
   : This defines how the `Nodes` contained in the `HBox` will be oriented in relation to the `HBox`.  In this case, they are going to be left aligned and vertically centred.  The default is `Pos.TOP_LEFT`, which explains why the `Label` looked higher than the `TextField`.  `TextField` is slightly taller than `Label` in its default styling.
@@ -160,4 +160,4 @@ When you run this, you'll see it looks **almost** like this:
 
 I've added an extra line to put a red border around the `HBox`.  It's not included in the code above because it uses concepts we haven't looked at yet.  But since `HBox` is usually invisible, it helps to have a border to understand how it works.  We'll get to the border later on.
 
-When you see the red border it becomes clear that the `HBox` is occupying all of the space available to it, not just the amount of space required to hold its contents.  This explains why everything was originally up in the top left corner, with the default `Pos.TOP_LEFT` alignment, and why it's now moved to the middle of the window.
+When you see the red border it becomes clear that the `HBox` is occupying all of the space available to it, not just the amount of space required to hold its contents.  This explains why everything was originally up in the top left corner with the default `Pos.TOP_LEFT` alignment, and why it's now moved to the middle of the window.  It's not all the way over at the left because we set a 50 pixel padding on the left side of the `HBox`.

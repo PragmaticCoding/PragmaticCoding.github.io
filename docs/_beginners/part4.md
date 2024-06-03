@@ -38,12 +38,12 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        Scene scene = new Scene(createContents(), 400, 200);
+        Scene scene = new Scene(createContent(), 400, 200);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    private Region createContents() {
+    private Region createContent() {
         VBox results = new VBox(20, createInputRow(), createOutputLabel(), createGreetingButton());
         results.setAlignment(Pos.CENTER);
         return results;

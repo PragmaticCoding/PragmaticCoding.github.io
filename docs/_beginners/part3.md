@@ -14,6 +14,7 @@ excerpt: GUI applications need a way for the user to interact with them.  In thi
    - Avoiding excess coupling
    - How to organize your layout code to make it easy to understand
 1. Events
+1. How to use Bindings
 
 
 # Adding User Interaction
@@ -31,12 +32,12 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        Scene scene = new Scene(createContents(), 400, 200);
+        Scene scene = new Scene(createContent(), 400, 200);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    private Region createContents() {
+    private Region createContent() {
         HBox results = new HBox(new Label("Name:"), new TextField(""));
         results.setSpacing(6);
         results.setPadding(new Insets(0,0,0,50));
@@ -61,12 +62,12 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        Scene scene = new Scene(createContents(), 400, 200);
+        Scene scene = new Scene(createContent(), 400, 200);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    private Region createContents() {
+    private Region createContent() {
         TextField inputTextField = new TextField("");
         HBox inputRow = new HBox(new Label("Name:"), inputTextField);
         inputRow.setSpacing(6);
@@ -126,7 +127,7 @@ Let's take a look at the problems with the code we've written so far:
 
 ## It's Getting Busy
 
-This code no longer follows the "Single Responsibility Principle".  It does the following:
+This method no longer follows the "Single Responsibility Principle".  It does the following:
 
 - Populates the input row and configures its layout
 - Creates the output `Label`
@@ -182,12 +183,12 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        Scene scene = new Scene(createContents(), 400, 200);
+        Scene scene = new Scene(createContent(), 400, 200);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    private Region createContents() {
+    private Region createContent() {
         VBox results = new VBox(20, createInputRow(), createOutputLabel(), createGreetingButton());
         results.setAlignment(Pos.CENTER);
         return results;
@@ -252,3 +253,27 @@ Now you have a problem since `createContents()` is expecting a `Label` so that i
 ### The EventHandler in the Button is Just a Trigger to call `setGreeting()`
 
 Even though the code in `setGreeting()` is just one line, now the action in the `EventHandler` has a name, "Set Greeting" which makes it easier to read the intent of the `EventHandler` at a glance.
+
+# Binding
+
+The last thing to note about this code are these two lines:
+
+``` java
+results.textProperty().bind(greeting);
+```
+and:
+``` java
+textField.textProperty().bindBidirectional(name);
+```
+
+What are these two functions `bind()` and `bindBidirectional()`?
+
+One of the key components of JavaFX is a library of classes that are called "Observable".  These are all wrapper classes that hold particular kinds of values and notify other objects when their contents change.  
+
+The main types of observable classes are called `Properties`.  There are different types of `Properties` for different types of content.  In this example we have used `StringProperty`, which is an `Observable` wrapper around a `String` value.
+
+One of the key ways to use this observability is with something called `Binding`.  `Binding` allows you to link two `Properties` together, so that when one changes, the other will change too.  This can be in one direction, or bidirectional.  
+
+Both `Label` and `TextField` have an internal property called `Text`.  This holds the contents of the `Node`, and whatever is in this property will be displayed on the screen.  `Label` is output only, so we've bound its `Text Property` to our `greeting Property`, while `TextField` allows user input, so we've connected it to `name` bidirectionally.
+
+`Binding` is the critical component that allows us to decouple all of the elements of our layout and create a data representation of the "State" of our GUI.  It's really the only way that you should be updating any non-static `Nodes` in your layout.  Get comfortable with `Binding`, because you are going to be using it a lot.

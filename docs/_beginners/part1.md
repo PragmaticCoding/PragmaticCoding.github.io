@@ -40,8 +40,9 @@ module ca.pragmaticcoding.beginners {
     exports ca.pragmaticcoding.beginners.part1;
 }
 ```
+Make sure that you change both references to the package `ca.pragmaticcoding.beginners` to whatever you are using.
 
-Finally, select that package and then use the menu "New -> Java Class", and call it "Main".  Copy the following into it:
+Finally, select that package in the `Project` listing, and then use the menu "New -> Java Class", and call it "Main".  Copy the following into it:
 
 ``` java
 import javafx.application.Application;
@@ -65,11 +66,11 @@ And there you go!  Now we have the skeleton of your first JavaFX application.
 
 # Application, Stage and Scene
 
-Let's take a quick look at this little bit of code, because there's more going on there than it seems.
+Let's take a quick look at this little bit of code, because there's more going on there than it might seem.
 
 ## Application
 
-`Application` is an abstract class that has all of the guts that gets the JavaFX engine up and running for you.  This is all started up when the `launch()` method is called.  Eventually, `launch()` will call `start()` which is an abstract method.  We're going to be putting all of our customized code for the application in here.
+`Application` is an abstract class that has all of the functionality that gets the JavaFX engine up and running for you.  This is all started up when its `launch()` method is called.  Eventually, `launch()` will call `start()` which is an abstract method.  We're going to be putting all of our customized code for the application in here.
 
 ## Stage and Scene
 
@@ -77,7 +78,7 @@ The most mystifying thing when you start with JavaFX is all this `Stage` and `Sc
 
 `Scene` is the component that holds the contents of your window.  Why is `Scene` separate from `Stage`?  I don't honestly know, and I don't know what advantage is gained by having the functionality split between two classes.  
 
-Ordinarily, you'll create a Scene and then put a JavaFX `Region` subclass `Node` inside it.  Then you put the `Scene` inside the `Stage`, and call the `Stage's`, `show()` method.
+Ordinarily, you'll create a Scene and then put a JavaFX `Region` subclass object inside it.  Then you put the `Scene` inside the `Stage`, and call the `Stage's`, `show()` method.
 
 So let's do that:
 
@@ -96,12 +97,12 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        Scene scene = new Scene(createContents());
+        Scene scene = new Scene(createContent());
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    private Region createContents() {
+    private Region createContent() {
         return new Label("Hello World");
     }
 }
@@ -117,6 +118,6 @@ Not very exciting really, but it **is** something that runs and opens a window.
 
 Two little pieces of explanation first, and then we'll conclude Part 1.
 
-You'll notice that I've split `createContents()` out from the rest of the code in `start()`, even though it's really simple.  Personally, I think `start()` should be all about `Scene` and `Stage` and getting the window on the screen.  The details about the contents of the `Stage` really don't belong in `start()`.  Keeping methods small and purposeful is just as important with JavaFX as it is with any other programming.
+You'll notice that I've split `createContent()` out from the rest of the code in `start()`, even though it's really simple.  Personally, I think `start()` should be all about `Scene` and `Stage` and getting the window on the screen.  The details about the contents of the `Scene` really don't belong in `start()`.  Keeping methods small and purposeful is just as important with JavaFX as it is with any other programming.
 
-You should also notice that `createContents()` returns `Label` as a `Region`.  Strangely enough, all of the `Control` classes in JavaFX, including `Label` extend from `Region`, even though they don't seem at first to be `Region` kind of objects.  In the specific case of `Label`, there's actually more going on to its structure than you think, and it actually does make sense to think of it as a `Region`.  We'll look at that later.
+You should also notice that `createContent()` returns `Label` as a `Region`.  Strangely enough, all of the `Control` classes in JavaFX, including `Label` extend from `Region`, even though they don't seem at first to be `Region` kind of objects.  In the specific case of `Label`, there's actually more going on to its structure than you think, and it actually does make sense to think of it as a `Region`.  We'll look at that later.
