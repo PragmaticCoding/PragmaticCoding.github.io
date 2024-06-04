@@ -64,6 +64,10 @@ Sometimes, it's not so clear.  Let's go back to that conversion of `firstName` a
 
 That can depend.  In a lot of cases, it's purely View.  You'll get the greatest decoupling of the elements by having both `firstName` and `lastName` in your Presentation Data, and letting the View decide how to display them.  But what if there's a requirement to display a bunch of names in alphabetical order?  Now you might be talking about a business rule.  Sorted by `firstName` or `lastName`?  So maybe, in this case, you need to deal with the conversion in the Business Logic.
 
+## Traffic Management
+
+Every framework needs some element to manage how the parts interact with each other, and possibly with other frameworks.  There needs to be a component that accepts some signal from the View - possibly containing data - and turning that into an action involving the business logic that's contained inside the Model.  There also needs to be some component that understands about background threads, and has the logic to control them.  
+
 # How Do These Patterns Work?
 
 The first thing to understand is that all of these patterns have the same goal, to create independence between the business logic and the presentation that the user interacts with.  They all have a great deal of similarity, but they have some profound differences in the details.
@@ -98,27 +102,43 @@ The Model
 : As previously discussed, the Model has all of the data, and all of the business logic contained within it including service calls and persistence logic.  It should also make data available in a state ready to be applied to the View.  Calls to databases and external API's also go in the Model.
 
 The View
-: In MVP the View is supposed to be an entirely passive layout entity.  It contains virtually no decision-making logic of it's own, and it's entire purpose is to put data on the screen, and to receive input from the user.  Once it gets input from the user, its only role is to pass it on to the Presenter, which will decide how to handle it.
+: In MVP the View is supposed to be an entirely passive layout entity containing only static configuration and styling.  It contains virtually no decision-making logic of it's own, and it's entire purpose is to put data on the screen, and to receive input from the user.  Once it gets input from the user, its only role is to pass it on to the Presenter, which will decide how to handle it.
 
 The Presenter
 : The Presenter works hand-in-glove with the View.  The Presenter has access (perhaps indirectly) to the View and the inside components of the View and manipulates them to make the View behave as it should.  For instance, the Presenter is responsible for placing data from the Model into the View components, and visa versa.  The Presenter contains all of the logic for defining how active components like Buttons will behave.
 
 MVP uses the View for pure layout and styling.  All other aspects of the GUI are handled via the Presenter.  It's hard to imagine a system where the Presenter and the View are not tightly coupled.  The Presenter has to have detailed information about the internal structure of the View in order to configure it.  In this respect, it's probably easiest to treat the Presenter and View as a single component.
 
+### The Problem with Model-View-Presenter
+
+The problem with MVP is the intense coupling between the View and the Presenter.  It's hard to imagine a situation where you could do anything less trivial than move a widget around on the screen, or change its styling without needing to make a corresponding change to the Presenter.  
+
+The end result is that the View and the Presenter are essentially one object divided into two classes and irrevocably tangle together.  This, of course defeats the purpose of using a framework in the first place.  This kind of makes MVP useless, in my opinion.
+
+One situation where I could see implementing MVP is if you are married to the idea that FXML somehow gives you an automatic step up towards a framework.  In that case, if you are careful, you can implement the FXML file as the View, and then the FXML Controller as the Presenter.  Of course, you've still just started to implement MVP - which is probably not worth the effort.
+
 ## Model-View-Controller
 
 In the traditional, non-Reactive, implementation of MVC the View is generally seen as only a consumer of the Model's data, and the Controller is responsible for taking any updates from the User, and updating the Model.
 
 The Model
-: The Model contains *all* of the data in the framework.  This includes the elements of State, plus any domain objects that are required for the business logic.  It also contains all of the logic to interface with external parts of the system such as databases or external API's.
+: The Model contains *all* of the data in the framework.  This includes the elements of State, plus any domain objects that are required for the business logic.  The Model exposes some "presentation ready" data elements to the Controller and the View.  It also contains all of the logic to interface with external parts of the system such as databases or external API's.
 
 The View
-: The View contains all of the elements of the UI and, unlike the View in MVP, is complete unto itself.  There is some mechanism to allow the View to be directly updated from the Model.  Perhaps the View has a reference to the Model, and can call getters in the Model (when notified by the Controller), or perhaps the Model has a reference to the View and can call setters in the View.  
+: The View contains all of the elements of the UI and, unlike the View in MVP, is complete unto itself.  There is some mechanism to allow the View to be directly updated from the Model.  Perhaps the View has a reference to the Model, and can call getters in the Model (when notified by the Controller), or perhaps the Model has a reference to the View and can call setters in the View (probably not a good design).  
 
 The Controller
 : The Controller handles the actions for the GUI.  This includes transporting updates from the View to the Model, and handling "events" triggered by user actions.  
 
 MVC couples the View to the Model, since it needs to be able to access data elements from it and from the Controller to the View since it needs to get data from the View.  
+
+### The Problem with Model-View-Controller
+
+The big issue with MVC is when you try to implement it with a reactive GUI.  Remember that a reactive application has a data representation of its "State", which in MVC is stored in the Model.  Then the GUI and the data representation of state are kept in lockstep with each other.  The GUI changes to reflect changes in the data, and the data changes to reflect actions in the GUI.
+
+However, in MVC the View is allowed to look at and update from the Model, but it's not allow to update the Model directly.  All changes to the Model from the View have to go through the Controller.  In JavaFX, this rules out using `Bindings` from the View `Nodes` to the Model elements - which is a showstopper.
+
+Now, if you are using JavaFX in a non-reactive way, then MVC may be just the thing for you.  But if you are not using JavaFX in a reactive way, then you're also missing out on a lot of the power of JavaFX - and making a lot of work for yourself.
 
 ## Model-View-ViewModel
 
@@ -127,7 +147,7 @@ At first glance MVVM appears to be the best match for modern, reactive UI's as i
 ![MVVM]({{page.mvvm}})
 
 The ViewModel
-: The ViewModel contains the data in a structure appropriate to bind it to various components of the View.  It also contains the functionality to prepare the data in that format.  In order to do this, the ViewModel needs to access to the data elements stored in the Model, and will probably call methods in the Model to initiate data storage and retrieval.  Additionally, the ViewModel handles actions triggered by user "events" from the View.
+: The ViewModel contains the data in a structure appropriate to bind it to various components of the View.  It also contains the functionality to prepare the data in that format (called "Presentation Logic" in the diagram).  In order to do this, the ViewModel needs to access to the data elements stored in the Model, and will probably call methods in the Model to initiate data storage and retrieval.  Additionally, the ViewModel handles actions triggered by user "events" from the View.
 
 The Model
 : The Model in this pattern *potentially* leans more towards dealing with application domain data, as the ViewModel handles some amount of the transformation of this data into presentation data.  From that perspective, the business logic is split between the Model and the ViewModel, with the Model handling persistence and external API's.
@@ -135,7 +155,15 @@ The Model
 The View
 : Just as in MVC, the View in MVVM is self-contained and includes not just the layout but styling and configuration of the elements.  The big difference is that data elements from the ViewModel are *bound* to the screen elements.  This means that the "State" of the View is accessible to the ViewModel at any given time and there's no need to provide any functionality to "scrape" the data out of the View to pass it to the ViewModel.  At the same time, the ViewModel can update the View simply by changing the value in those data elements bound to the View.
 
-Here again, the View is very tightly coupled to the ViewModel.  At least, it's one way, with dependencies from the View to data elements of the ViewModel.  
+### The Problem with Model-View-ViewModel
+
+The big problem with MVVM is that the ViewModel isn't allowed to see the domain objects, and the Model isn't allowed to see the presentation objects.
+
+This means that the Model can't just pass over a `CustomerInfo` object to the ViewModel and let it figure out what it needs to take out to populate the elements of the presentation objects.  No, the Model has to provide some sort of "presentation ready" data to the ViewModel.   So if the ViewModel needs `customerName`, then it has to ask for it and the Model pulls it out of `CustomerInfo` and sends it as a `String`.
+
+On top of that, the ViewModel cannot have any business logic.  So if `customerName` is sourced from 5 different fields in `CustomerInfo` and put together in some particular way which satisfies business rules, then it has to happen in the Model.  
+
+And the same conditions hold true in reverse.  If the ViewModel wants to request an update to the Customer database, it can't just pass a new `CustomerInfo` record to the Model.  It has to pass either discrete primitive data elements to the Model, or some DTO-like object instead.  
 
 # The Elephant in the Room
 
@@ -149,20 +177,22 @@ This leads to the following corollary:
 The Model Has to Present "GUI-Ready" Data Upstream
 : Since the Model is the only element that can deal with Domain Objects, it follows that it has to contain the logic that extracts data from the Domain Objects, packages it up in a manner that the Presenter, Controller or ViewModel can deal with it, and provide some way to transfer it out of the Model.
 
-Which has the following consequence:
+And this has the following consequence:
 
-Everybody Encapsulates "GUI-Ready" Data in a Class
-: If you want to have a single method like `Model.getCustomerData()` that returns a value that can be used by the Controller or the View, then that return value has to be a class that encapsulates "GUI-Ready" data.  And that class, for all intents and purposes, is a "Presentation Model".  
+## Everybody Encapsulates "GUI-Ready" Data in a Class
+There's a problem that pops up in the class that creates and holds the presentation data - in MVC it's the Model, and in MVVM it's the ViewModel.  And that problem is that those classes end up with a massive amount of fields and access methods that get jumbled in with the other functionality of the class.  On top of this, all of those public accessor methods become coupling points between that class and the other classes in the framework.
+
+Think about it, if you're using MVC and you have 30 `Property` elements that are needed for the View, plus maybe a List or two to support some tables - and if you follow the ordinary practice of having a delegate setter and getter, plus a `Property` getter for each of those elements then you are going to have 90+ public methods dedicated to just that in your Model.  That's in *addition* to the business logic and fields to hold domain objects and the rest.
+
+If nothing else it becomes a mess to deal with, and is a pretty clear violation of the "Single Responsibility Principle".
+
+To get around this issue, composition is used, and the presentation-ready data is placed into its own class which is then a single field in the Model or ViewModel.  If you want to have a single method like `Model.getCustomerData()` that returns a value that can be used by the Controller or the View, then that return value has to be a class that encapsulates presentation-ready data.  And that class, for all intents and purposes, is a "Presentation Model".  
 
 What this means, as a practical matter, is that virtually every implementation of these frameworks has **4** components: A `Model`, a `View`, one of `Controller`, `Presenter` or `ViewModel`, and a `Presentation Model`.
 
-## This is where we have problems.  
+## This is Where the Problems Occur  
 
-Nobody talks about this.  
-
-Probably because they haven't thought it through.  
-
-A little bit of time spent searching the Web will find lots and lots of sites explaining how MVC works with examples.  Virtually without exception, they all explain the Model has data and associated logic, some of them with diagrams that show the Model directly connected to the database. But then, in their example code...
+A little bit of time spent searching the Web will find lots and lots of sites explaining how MVC works with examples.  Virtually without exception, they all explain **the Model has data and associated logic**, some of them with diagrams that show the Model directly connected to the database. But then, in their example code...
 
 They Cheat
 : The Model has just Presentation Data in it, without any persistence or business logic and they dummy up a Model in the `main()` class that has a database call.
@@ -172,7 +202,7 @@ or
 They Put Persistence in the Controller
 : The Model has just Presentation Data in it, and the Controller has a simple database call that stuffs the Model with data from the database.
 
-In other words, virtually every example that you'll find, consists of a Presentation Model, View and Controller.  No "Model", as defined by the framework, to be found anywhere.  
+In other words, virtually every example that you'll find, consists of a Presentation Model, View and Controller.  No "Model", as defined by the framework, to be found anywhere.  It's probably because they cannot reconcile the idea of having all these elements of GUI data cohabiting and cluttering up a class with business logic.
 
 To be fair, this is completely logical and reasonable way to handle the "GUI" part of an application.  It's highly intuitive and makes a lot of sense.  In fact, A lot of people think that this is what MVC is.  
 
@@ -362,7 +392,9 @@ public class WeatherModel {
     .
 }
 ```
-I've trimmed out most the methods as it just repeats for each Property.  What we will see is that each of the elements in the Model has some direct relationship to some aspect of the GUI, which is why it is part of the Model.
+I've trimmed out most the methods as it just repeats for each Property.  That's one of the strengths of this framework:  The Model is almost always just boilerplate and 90% of the code is of no interest to anyone.  You can look at those 6 lines of field declarations and you know everything.  You don't need to see the other 60 lines of code with the accessor methods.  
+
+What we will see is that each of the elements in the Model has some direct relationship to some aspect of the GUI, which is why it is part of the Model.
 
 ## The ViewBuilder
 

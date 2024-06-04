@@ -126,11 +126,11 @@ Now our production code runs with a delay, and our test code completes in less t
 
 # The Solution: A Background Thread
 
-Now, if our database has latency and blocks so that we can't access it on the FXAT then the only solution is to do the access on some other thread.  This is usually referred to as a "background thread", because it runs in the background while the FXAT keeps doing its thing.
+Now, if our database has latency and blocks, meaning that we can't access it on the FXAT, then the correct solution is to do the access on some other thread.  This is usually referred to as a "background thread", because it runs in the background while the FXAT keeps doing its thing.
 
-JavaFX has a tool just for doing this.  It's called Task.  So that's what we're going to use.
+JavaFX has a tool just for doing this.  It's called `Task`.  So that's what we're going to use.
 
-In MVC-I, the Controller is responsible for controlling threads.  So that's where we are going to implement our Task:
+In MVCI, the Controller is responsible for controlling threads.  So that's where we are going to implement our `Task`:
 
 ``` java
 public class CustomerController {
@@ -161,7 +161,7 @@ public class CustomerController {
     }
 }
 ```
-Amongst other things, Task implements Runnable, so we can put it into a Thread and call Thread.start(), which is what we do here.  Really, at this point, all we've done is take the call to CustomerInteractor.saveCustomer() and run it in another thread.  We don't need Task to do *that*, do we?
+Amongst other things, `Task` implements `Runnable`, so we can put it into a `Thread` and call `Thread.start()`, which is what we do here.  Really, at this point, all we've done is take the call to `CustomerInteractor.saveCustomer()` and run it in another thread.  We don't need Task to do *that*, do we?
 
 Let's take a look at what happens when this runs.  There's nothing much to see, but the GUI isn't dead any more.  I can interact with it while I'm waiting for the database call to complete, and it works.
 
@@ -193,13 +193,13 @@ public void saveCustomer() {
     System.out.println("Saving account: " + model.getAccountNumber() + " Name: " + model.getCustomerName() + " Result: " + result);
 }
 ```
-We call the broker, which call the DAO which calls the "slow" database which returns a results after 5 seconds.  Then we output some information to the console which combines the return value from database with data from the Model.  But the Model is now shared between two threads, the FXAT and our background thread.  And when we click over and over, it's shared by even more threads.
+We call the Broker, which calls the DAO which calls the "slow" database which returns a results after 5 seconds.  Then we output some information to the console which combines the return value from database with data from the Model.  But the Model is now shared between two threads, the FXAT and our background thread.  And when we click over and over, it's shared by even more threads.
 
 This can be a problem.
 
 Since changes to the GUI are "live" changes to State, whenever we need to use State in a background thread we need to do one of two things:
 
-1.  Copy the elements of State to someplace private to the background thread.
+1.  Copy the elements of State to some place private to the background thread.
 1.  Lock the GUI so that it cannot update State.
 
 Let's do the first here:
@@ -222,25 +222,25 @@ Saving account: 123 Name: Fred Smith Result: 2
 Saving account: 123 Name: Fred Smith Result: 3
 ```
 
-That's way better.  It's probably a safe bet that the background thread is going to launch and the broker call is going to start executing before anyone could ever get their hand off the mouse start typing into any of the TextFields.  That being said, this is something that you might want to look out for in a real application.
+That's way better.  It's probably a safe bet that the background thread is going to launch and the broker call is going to start executing before anyone could ever get their hand off the mouse and start typing into any of the `TextFields`.  That being said, this is something that you might want to look out for in a real application.
 
 But it's still disturbing that you could click on that Button three times before it finished processing.  That's something that we should deal with.
 
 ## Task Completion
 
-One of the things that makes Task better than just a Runnable is that it fires an Event on completion.  You can set up an EventHandler (which will run on the FXAT, as all EventHandlers do) to catch that Event and do something with your GUI.
+One of the things that makes `Task` better than just a `Runnable` is that it fires an `Event` on completion.  You can set up an `EventHandler` (which will run on the FXAT, as all `EventHandlers` do) to catch that `Event` and do something with your GUI.
 
 Generally, the process is like this:
 
-1. Put the GUI in the state that you want it while the Task runs.
-1. Execute the Task.
-1. Put the GUI back into its "normal" state when the Task completes.
+1. Put the GUI in the state that you want it while the `Task` runs.
+1. Execute the `Task`.
+1. Put the GUI back into its "normal" state when the `Task` completes.
 
-The first and last steps are performed on the FXAT, the Task executes on the background thread.
+The first and last steps are performed on the FXAT, the `Task` executes on the background thread.
 
-There's just one problem, though.  The GUI stuff is the property of the View, and the Task is part of the Controller.  How do you handle this?
+There's just one problem, though.  The GUI stuff is the property of the View, and the `Task` is part of the Controller.  How do you handle this?
 
-The first thing we're going to do is change our saveHandler from a Runnable to a Consumer<Runnable>.  Then we're going to have our Controller execute that Runnable passed through the Consumer in the Task completion EventHandler.  It's more complicated to explain than it is to just see the code:
+The first thing we're going to do is change our `saveHandler` from a `Runnable` to a `Consumer<Runnable>`.  Then we're going to have our Controller execute that `Runnable` passed through the `Consumer` in the `Task` completion `EventHandler`.  It's more complicated to explain than it is to just see the code:
 
 ``` java
 private void saveCustomer(Runnable postTaskGuiActions) {
@@ -257,7 +257,7 @@ private void saveCustomer(Runnable postTaskGuiActions) {
 }
 ```
 
-Now saveCustomer() is passed a Runnable, which it runs when the Task completes.  
+Now `saveCustomer()` is passed a `Runnable`, which it runs when the `Task` completes.  
 
 What happens in the View is a little bit more interesting, first the constructor:
 
@@ -283,7 +283,7 @@ private Node createButtons() {
 }
 ```
 
-Now, when the Button is clicked, the first thing that happens is that it is disabled.  Then the saveHandler is invoked, passing it a Runnable that re-enables the Button.  Like this:
+Now, when the `Button` is clicked, the first thing that happens is that it is disabled.  Then the `saveHandler` is invoked, passing it a `Runnable` that re-enables the `Button`.  Like this:
 
 ![Disabled Button Screenshot]({{page.screenshot_2}})
 

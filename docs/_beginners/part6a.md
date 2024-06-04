@@ -72,7 +72,7 @@ In this case, both the account number and customer name fields are `StringProper
 
 # The ViewBuider
 
-Now, let's take a look at the ViewBuider, which is, naturally ,the most complicated part of this section since we're concentrating on the GUI:
+Now, let's take a look at the ViewBuider, which is, naturally, the most complicated part of this section since we're concentrating on the GUI:
 
 ``` java
 public class CustomerViewBuilder implements Builder<Region> {
@@ -156,7 +156,7 @@ There are two private methods that return Labels that are called from the layout
 
 What's with this?
 
-As we've seen before, we're following DRY by putting the styling code for `Label` into a builder method so that we're not repeating a pattern in our layout code.  In my opinion, making a call to `promptLabel()` is a little be easier to read in the layout code than calling `styledLabel("some text", "prompt-label")`.  There also the argument that repeatedly calling `styledLabel()` with the same `styleClass` value is a violation of DRY.  Think of how much refactoring you would need if you decided to change the css selector from "prompt-label" to something else.
+As we've seen before, we're following DRY by putting the styling code for `Label` into a builder method so that we're not repeating a pattern in our layout code.  In my opinion, making a call to `promptLabel()` is a little bit easier to read in the layout code than calling `styledLabel("some text", "prompt-label")`.  There also the argument that repeatedly calling `styledLabel()` with the same `styleClass` value is a violation of DRY.  Think of how much refactoring you would need if you decided to change the css selector from "prompt-label" to something else.
 
 ## Bottom
 
@@ -172,7 +172,7 @@ In this case, our `Button` needs to eventually trigger some code in our Interact
 
 ## Center
 
-Here we just have a `VBox` containing two `HBoxes`.  Each `HBox` contains a prompt `Label`, and a `TextField`.  The `TextFields` are each bound bidirectionally to the appropriate `Property` in the Model.  bidirectional binding that means that either value can be changed, and the the other value will automatically follow along with it.  So if we programmatically change the value in `model.customerNameProperty()`, then we'll see the value in the `TextField` change instantly.  And if we type in the `TextField`, then the `Property` in the Model will instantly change to the same value.
+Here we just have a `VBox` containing two `HBoxes`.  Each `HBox` contains a prompt `Label`, and a `TextField`.  The `TextFields` are each bound bidirectionally to the appropriate `Property` in the Model.  Bidirectional binding means that either value can be changed, and the the other value will automatically follow along with it.  So if we programmatically change the value in `model.customerNameProperty()`, then we'll see the value in the `TextField` change instantly.  And if we type in the `TextField`, then the `Property` in the Model will instantly change to the same value.
 
 ## Return Values of Builder Methods
 
@@ -221,7 +221,7 @@ public class CustomerController {
 
     private final Builder<Region> viewBuilder;
     private final CustomerInteractor interactor;
-The structure of cascading style sheet
+
     public CustomerController() {
         CustomerModel model = new CustomerModel();
         interactor = new CustomerInteractor(model);
@@ -249,7 +249,8 @@ public class CustomerInteractor {
     }
 
     public void saveCustomer() {
-        System.out.println("Saving account: " + model.getAccountNumber() + " Name: " + model.getCustomerName());
+        System.out.println("Saving account: " + model.getAccountNumber() +
+           " Name: " + model.getCustomerName());
     }
 }
 ```
