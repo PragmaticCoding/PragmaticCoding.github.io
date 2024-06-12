@@ -651,7 +651,7 @@ dependencies {
 }
 ```
 
-Groovy has the idea of "run configurations".  These are the contexts under which your code is going to run, and each context could require different libraries.  There's a lot to this subject, but if you are just running and testing an application you're probably going to be dealing with `implementation` and `testImplementation`.  
+Gradle has the idea of "run configurations".  These are the contexts under which your code is going to run, and each context could require different libraries.  There's a lot to this subject, but if you are just running and testing an application you're probably going to be dealing with `implementation` and `testImplementation`.  
 
 Generally, if you need a library to run and use your application, you'll specify `implementation`.  This will also have it available for testing purposes, too.  If you just need it for testing, like a mocking library, you'll need to use `testImplementation` or maybe `testRuntimeOnly`.  The documentation for virtually any of these libraries will tell you which context to use.
 
