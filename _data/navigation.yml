@@ -27,6 +27,8 @@ master:
           url: /javafx/elements/observables
         - title: Events
           url: /javafx/elements/events
+        - title: The FXAT
+          url: /javafx/elements/fxat-intro
         - title: PseudoClasses
           url: /javafx/elements/pseudo_classes
         - title: Custom Components

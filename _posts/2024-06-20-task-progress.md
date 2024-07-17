@@ -5,7 +5,7 @@ categories: javafx
 logo: /assets/logos/JavaFXLogo.png
 taskArticle: /javafx/elements/fxat
 nonbinaryArticle: /javafx/nonbinary-pseudoclass
-permalink: /javafx/task-progress
+permalink: /javafx/elements/task-progress
 ScreenSnap0: /assets/elements/TaskProgress0.png
 ScreenSnap1: /assets/elements/TaskProgress1.png
 ScreenSnap2: /assets/elements/TaskProgress2.png
