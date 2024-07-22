@@ -1,11 +1,11 @@
 ---
 title:  "Conditional Bindings"
-date:   2024-06-20 00:00:00 -0500
+date:   2024-07-20 00:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
 taskArticle: /javafx/elements/fxat
 nonbinaryArticle: /javafx/nonbinary-pseudoclass
-permalink: /javafx/conditional-binding
+permalink: /javafx/elements/conditional-binding
 Modena: /assets/elements/modena.css
 excerpt: A look at how to extend the idea of Bindings to include internal state to encapsulate the mechanics of more complicated relationships between ObservableValues in your GUI and your Model.
 ---

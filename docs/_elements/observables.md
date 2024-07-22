@@ -48,6 +48,15 @@ feature_row_new_methods:
     url: "/javafx/elements/subscribe_and_map"
     btn_label: "Read the Article"
     btn_class: "btn--primary"
+
+feature_row_conditional_bindings:
+  - image_path: /assets/logos/LittleBrain.jpg
+    alt: "Conditional Bindings"
+    title: "Conditional Bindings"
+    excerpt: "Bindings don't just have to be simple evaluations based on the current values of their dependencies.  Here's how to create Bindings with internal state that allows them to do some very sophisticated things"
+    url: "/javafx/elements/conditional-binding"
+    btn_label: "Read the Article"
+    btn_class: "btn--primary"
 ---
 
 # JavaFX Observables, Bindings and Listeners
@@ -63,6 +72,8 @@ Observables, Bindings and Listeners are the key elements supplied by the JavaFX 
 {% include feature_row id="feature_row_custom_binding" type="left" %}
 
 {% include feature_row id="feature_row_bindings_class" type="left" %}
+
+{% include feature_row id="feature_row_conditional_bindings" type="left" %}
 
 # Listeners:
 
