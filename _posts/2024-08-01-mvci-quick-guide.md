@@ -81,9 +81,9 @@ Another question to ask is whether the code deals solely with how the data is pr
 
 For example, imagine you have a list of grocery items and you want veggies in one colour, and fruit in another, and dairy in another colour.  If your list is just; bananas, carrots, apples, tomatoes and milk, then you'll have a problem determining the colours in the View.  What's a "tomato"?  Is it a fruit, a veggie or dairy?  That's a business logic decision, and cannot be made in the View.  Update your Model such that the list also contains the type, and then populate it accordingly from the Interactor.  Now you'll get; bananas(fruit), carrots(veggie), apples(fruit), tomatoes(technically fruit, but used like a veggie), and milk(dairy).  In your View, you look at the types and determine the colour based on that, because now that is solely a presentation decision.
 
-## Service Logic
+## Domain Logic
 
-It's important to understand that "Business Logic", as it is used above actually means, "business logic specific to this MVCI construct".  This does not include calling external API's or parsing JSON data.  Things like that belong in a layer below your Interactor that holds "Services".
+It's important to understand that "Business Logic", as it is used above actually means, "business logic specific to this MVCI construct".  This does not include calling external API's or parsing JSON data.  Things like that belong in a layer below your Interactor that holds the "Domain".
 
 Let's take a look at the fruit and veggie example above.  If your list of items is coming from a database somewhere, you are NOT going to put SQL statements or any equivalent in your Interactor.  Create a `GroceryListService` that does the database access, then parses the resultant JSON data and creates a list of `GroceryItem` which probably has at least `name` and `quantity`.  `GroceryItem` is your domain object, and that list is passed back to your Interactor.  
 
