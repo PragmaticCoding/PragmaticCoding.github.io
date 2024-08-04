@@ -1,6 +1,6 @@
 ---
 title:  "JavaFX: Quick Guide to MVCI"
-date:   2024-07-09 12:00:00 -0500
+date:   2024-08-01 12:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
 permalink: /javafx/elements/mvci-quick
