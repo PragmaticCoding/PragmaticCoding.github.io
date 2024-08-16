@@ -187,11 +187,29 @@
        width="131.40067"
        height="55.428835"
        id="rect22" />
+    <rect
+       x="357.29952"
+       y="186.59905"
+       width="179.06815"
+       height="35.144216"
+       id="rect33" />
   </defs>
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1">
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.258461px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 229.93865,102.5433 h 14.90604 V 57.472493"
+       id="path34"
+       inkscape:connector-type="orthogonal"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.33593px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 201.77923,119.68294 h 0.17008 V 80.083597"
+       id="path33"
+       inkscape:connector-type="orthogonal"
+       inkscape:connector-curvature="0" />
     <g
        id="g40"
        transform="translate(4.4325041,-25.9544)">
@@ -210,7 +228,7 @@
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:29.3333px;font-family:Mallanna;-inkscape-font-specification:'Mallanna, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect2);display:inline;fill:#0b1d1d;fill-opacity:1;stroke:#030303;stroke-width:0.494;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none;stroke-opacity:0.521053"><tspan
            x="357.29883"
            y="207.32052"
-           id="tspan2">Observable</tspan></text>
+           id="tspan1">Observable</tspan></text>
     </g>
     <g
        id="g21">
@@ -229,7 +247,7 @@
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.3333px;font-family:Mallanna;-inkscape-font-specification:'Mallanna, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect6);display:inline;fill:#0b1d1d;fill-opacity:1;stroke:#030303;stroke-width:0.494;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none;stroke-opacity:0.521053"><tspan
            x="357.29883"
            y="201.66935"
-           id="tspan8">ReadOnlyProperty&lt;T&gt;</tspan></text>
+           id="tspan2">ReadOnlyProperty&lt;T&gt;</tspan></text>
     </g>
     <g
        id="g41"
@@ -249,27 +267,27 @@
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.3333px;font-family:Mallanna;-inkscape-font-specification:'Mallanna, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect8);display:inline;fill:#0b1d1d;fill-opacity:1;stroke:#030303;stroke-width:0.494;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none;stroke-opacity:0.521053"><tspan
            x="357.29883"
            y="201.66935"
-           id="tspan9">ObservableValue&lt;T&gt;</tspan></text>
+           id="tspan3">ObservableValue&lt;T&gt;</tspan></text>
     </g>
     <g
-       id="g37"
-       transform="translate(-5.6561645,-11.257848)">
+       id="g34"
+       transform="translate(-6.4137368,-11.072684)">
       <rect
          style="fill:#bec2e0;fill-opacity:1;stroke:#fa0505;stroke-width:0.687145;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none;stroke-opacity:0.521569"
          id="rect13"
          width="48.905262"
          height="14.895658"
-         x="211.12358"
-         y="98.924484"
+         x="193.79697"
+         y="78.035355"
          ry="0.34489819" />
       <text
          xml:space="preserve"
-         transform="matrix(0.26458333,0,0,0.26458333,122.00228,54.580784)"
+         transform="matrix(0.26458333,0,0,0.26458333,100.86195,33.642225)"
          id="text13"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.3333px;font-family:Mallanna;-inkscape-font-specification:'Mallanna, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect14);display:inline;fill:#0b1d1d;fill-opacity:1;stroke:#030303;stroke-width:0.494;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none;stroke-opacity:0.521053"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;font-family:Mallanna;-inkscape-font-specification:'Mallanna, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect14);display:inline;fill:#0b1d1d;fill-opacity:1;stroke:#030303;stroke-width:0.494;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none;stroke-opacity:0.521053"><tspan
            x="357.29883"
-           y="201.66935"
-           id="tspan10">WritableValue&lt;T&gt;</tspan></text>
+           y="199.78568"
+           id="tspan4">WritableObjectValue&lt;T&gt;</tspan></text>
     </g>
     <g
        id="g12">
@@ -288,7 +306,7 @@
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:29.3333px;font-family:Mallanna;-inkscape-font-specification:'Mallanna, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect16);display:inline;fill:#0b1d1d;fill-opacity:1;stroke:#030303;stroke-width:0.494;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none;stroke-opacity:0.521053"><tspan
            x="357.29883"
            y="207.32052"
-           id="tspan11">Property&lt;T&gt;</tspan></text>
+           id="tspan5">Property&lt;T&gt;</tspan></text>
     </g>
     <g
        id="g49"
@@ -308,7 +326,7 @@
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Mallanna;-inkscape-font-specification:'Mallanna, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect18);display:inline;fill:#0b1d1d;fill-opacity:1;stroke:#030303;stroke-width:0.494;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none;stroke-opacity:0.521053"><tspan
            x="357.29883"
            y="203.5531"
-           id="tspan14">ObjectProperty&lt;T&gt;</tspan></text>
+           id="tspan6">ObjectProperty&lt;T&gt;</tspan></text>
     </g>
     <g
        id="g11">
@@ -327,7 +345,7 @@
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;font-family:Mallanna;-inkscape-font-specification:'Mallanna, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect44);display:inline;fill:#0b1d1d;fill-opacity:1;stroke:#030303;stroke-width:0.494;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none;stroke-opacity:0.521053"><tspan
            x="357.29883"
            y="199.78568"
-           id="tspan19">ObjectPropertyBase&lt;T&gt;</tspan></text>
+           id="tspan7">ObjectPropertyBase&lt;T&gt;</tspan></text>
     </g>
     <g
        id="g26">
@@ -346,7 +364,7 @@
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;font-family:Mallanna;-inkscape-font-specification:'Mallanna, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect46);display:inline;fill:#0b1d1d;fill-opacity:1;stroke:#030303;stroke-width:0.494;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none;stroke-opacity:0.521053"><tspan
            x="357.29883"
            y="199.78568"
-           id="tspan20">SimpleObjectProperty&lt;T&gt;</tspan></text>
+           id="tspan8">SimpleObjectProperty&lt;T&gt;</tspan></text>
     </g>
     <g
        id="g83"
@@ -366,7 +384,7 @@
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;font-family:Mallanna;-inkscape-font-specification:'Mallanna, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect54);display:inline;fill:#0b1d1d;fill-opacity:1;stroke:#030303;stroke-width:0.494;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none;stroke-opacity:0.521053"><tspan
            x="357.29883"
            y="199.78568"
-           id="tspan21">ReadOnlyObjectProperty&lt;T&gt;</tspan></text>
+           id="tspan9">ReadOnlyObjectProperty&lt;T&gt;</tspan></text>
     </g>
     <g
        id="g56"
@@ -386,7 +404,7 @@
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;font-family:Mallanna;-inkscape-font-specification:'Mallanna, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect56);display:inline;fill:#0b1d1d;fill-opacity:1;stroke:#030303;stroke-width:0.494;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none;stroke-opacity:0.521053"><tspan
            x="357.29883"
            y="197.90193"
-           id="tspan22">ReadOnlyObjectPropertyBase&lt;T&gt;</tspan></text>
+           id="tspan10">ReadOnlyObjectPropertyBase&lt;T&gt;</tspan></text>
     </g>
     <g
        id="g27">
@@ -405,7 +423,7 @@
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;font-family:Mallanna;-inkscape-font-specification:'Mallanna, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect58);display:inline;fill:#0b1d1d;fill-opacity:1;stroke:#030303;stroke-width:0.494;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none;stroke-opacity:0.521053"><tspan
            x="357.29883"
            y="197.90193"
-           id="tspan23">ReadOnlyJavaBeanObjectProperty&lt;T&gt;</tspan></text>
+           id="tspan11">ReadOnlyJavaBeanObjectProperty&lt;T&gt;</tspan></text>
     </g>
     <path
        style="fill:#000000;fill-opacity:1;stroke:#060606;stroke-width:0.342371;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none;stroke-opacity:0.901961"
@@ -456,13 +474,9 @@
        d="M 104.91491,87.649577 V 79.063356"
        id="path73" />
     <path
-       style="fill:#000000;fill-opacity:1;stroke:#060606;stroke-width:0.342371;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none;stroke-opacity:0.901961"
-       d="m 134.23077,79.063356 h 95.51808"
+       style="fill:#000000;fill-opacity:1;stroke:#060606;stroke-width:0.19807;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none;stroke-opacity:0.901961"
+       d="m 134.23077,79.063356 h 31.96904"
        id="path74" />
-    <path
-       style="fill:#000000;fill-opacity:1;stroke:#060606;stroke-width:0.342371;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none;stroke-opacity:0.901961"
-       d="m 229.92004,87.666635 -0.17119,-8.603279"
-       id="path75" />
     <path
        style="fill:#000000;fill-opacity:1;stroke:#060606;stroke-width:0.342371;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none;stroke-opacity:0.901961"
        d="M 166.19981,87.666635 V 79.063356"
@@ -513,7 +527,7 @@
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.3333px;font-family:Mallanna;-inkscape-font-specification:'Mallanna, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect89);display:inline;fill:#0b1d1d;fill-opacity:1;stroke:#030303;stroke-width:0.494;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none;stroke-opacity:0.521053"><tspan
            x="357.29883"
            y="201.66935"
-           id="tspan24">ObservableObjectValue&lt;T&gt;</tspan></text>
+           id="tspan12">ObservableObjectValue&lt;T&gt;</tspan></text>
     </g>
     <path
        style="fill:#000000;fill-opacity:1;stroke:#060606;stroke-width:0.342371;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none;stroke-opacity:0.901961"
@@ -537,7 +551,7 @@
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26.6667px;font-family:Mallanna;-inkscape-font-specification:'Mallanna, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect4-7);display:inline;fill:#0b1d1d;fill-opacity:1;stroke:#030303;stroke-width:0.494;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none;stroke-opacity:0.521053"><tspan
            x="357.29883"
            y="205.43684"
-           id="tspan25">Binding&lt;T&gt;</tspan></text>
+           id="tspan13">Binding&lt;T&gt;</tspan></text>
     </g>
     <g
        id="g3"
@@ -557,7 +571,7 @@
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Mallanna;-inkscape-font-specification:'Mallanna, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect31-5);display:inline;fill:#0b1d1d;fill-opacity:1;stroke:#071a7a;stroke-width:0.494;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none;stroke-opacity:0.709804"><tspan
            x="357.29883"
            y="203.5531"
-           id="tspan26">ObjectBinding&lt;T&gt;</tspan></text>
+           id="tspan14">ObjectBinding&lt;T&gt;</tspan></text>
     </g>
     <g
        id="g1"
@@ -577,7 +591,7 @@
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Mallanna;-inkscape-font-specification:'Mallanna, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect12-9);display:inline;fill:#0b1d1d;fill-opacity:1;stroke:#030303;stroke-width:0.494;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none;stroke-opacity:0.521053"><tspan
            x="357.29883"
            y="203.5531"
-           id="tspan27">ObjectExpression&lt;T&gt;</tspan></text>
+           id="tspan15">ObjectExpression&lt;T&gt;</tspan></text>
     </g>
     <path
        style="fill:#000000;fill-opacity:1;stroke:#060606;stroke-width:0.342371;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none;stroke-opacity:0.901961"
@@ -615,7 +629,7 @@
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;font-family:Mallanna;-inkscape-font-specification:'Mallanna, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect19);display:inline;fill:#131f1c;fill-opacity:0.971631;stroke:#7f0404;stroke-width:0.394;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none;stroke-opacity:0.521569"><tspan
              x="38.300781"
              y="763.30326"
-             id="tspan28">Interface</tspan></text>
+             id="tspan16">Interface</tspan></text>
       </g>
       <g
          id="g23"
@@ -635,7 +649,7 @@
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;font-family:Mallanna;-inkscape-font-specification:'Mallanna, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect21);display:inline;fill:#131f1c;fill-opacity:0.971631;stroke:#7f0404;stroke-width:0.394;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none;stroke-opacity:0.521569"><tspan
              x="38.300781"
              y="763.30326"
-             id="tspan29">Abstract Class</tspan></text>
+             id="tspan17">Abstract Class</tspan></text>
       </g>
       <g
          id="g24"
@@ -655,8 +669,46 @@
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;font-family:Mallanna;-inkscape-font-specification:'Mallanna, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect22);display:inline;fill:#131f1c;fill-opacity:0.971631;stroke:#7f0404;stroke-width:0.394;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none;stroke-opacity:0.521569"><tspan
              x="38.300781"
              y="763.30326"
-             id="tspan30">Concrete Class</tspan></text>
+             id="tspan18">Concrete Class</tspan></text>
       </g>
     </g>
+    <g
+       id="g31"
+       transform="translate(-0.35933441,-53.143)">
+      <rect
+         style="fill:#bec2e0;fill-opacity:1;stroke:#fa0505;stroke-width:0.687145;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none;stroke-opacity:0.521569"
+         id="rect23"
+         width="48.905262"
+         height="14.895658"
+         x="211.12358"
+         y="98.924484"
+         ry="0.34489819" />
+      <text
+         xml:space="preserve"
+         transform="matrix(0.26458333,0,0,0.26458333,122.00228,54.580784)"
+         id="text31"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.3333px;font-family:Mallanna;-inkscape-font-specification:'Mallanna, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect33);display:inline;fill:#0b1d1d;fill-opacity:1;stroke:#030303;stroke-width:0.494;stroke-linejoin:round;stroke-miterlimit:4.9;stroke-dasharray:none;stroke-opacity:0.521053"><tspan
+           x="357.29883"
+           y="201.66935"
+           id="tspan19">WritableValue&lt;T&gt;</tspan></text>
+    </g>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 159.30361,40.939741 H 264.23582 V 40.548382"
+       id="path35"
+       inkscape:connector-type="orthogonal"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.34435px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 264.3124,41.083936 V 102.53431 H 244.84445"
+       id="path36"
+       inkscape:connector-type="orthogonal"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 220.46505,61.020713 h 0.26853 v 5.598385"
+       id="path37"
+       inkscape:connector-type="orthogonal"
+       inkscape:connector-curvature="0" />
   </g>
 </svg>
