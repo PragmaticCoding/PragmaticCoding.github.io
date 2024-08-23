@@ -1,6 +1,6 @@
 ---
 title:  "Guide To the Observable Classes - Part II"
-date:   2024-08-03 12:00:00 -0500
+date:   2024-08-22 12:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
 permalink: /javafx/elements/observable-classes-typed
@@ -92,7 +92,7 @@ Everything else on the chart is a class, let's take a look at them.
 
 ### StringExpression
 
-This is the root class for all of the `Property<String>` classes, even though the diagram goes diagonally down to `ObjectProperty<String>`.  Note that `StringExpression` is a drop-in replacement for `ObjectExpression` and does not extend or implement `ObjectExpression`
+This is the root class for all of the `Property<String>` classes, even though the diagram goes diagonally down to `ObjectProperty<String>`.  Note that `StringExpression` is a drop-in replacement for `ObjectExpression` from Part I and does not extend or implement `ObjectExpression`
 
 This is the only class in the chart that introduces new concrete methods that don't implement methods already defined by any of the interfaces in the chart.
 
@@ -123,14 +123,14 @@ The best way to think about `StringProperty` is an implementation of `Property<S
 This is, however, a great class to declare your instantiated `Properties` as.  Like this:
 
 ``` kotlin
-val someProperty : StringProperty= SimpleStringProperty("abc")
+val someProperty : StringProperty = SimpleStringProperty("abc")
 ```
 
 ### StringPropertyBase
 
 This class adds *almost* all the remaining methods defined in the various interfaces up hierarchy.  We get methods to bind and unbind, add and remove `Listeners` and a `get()` method.  
 
-The methods that are missing are the two silly Java Bean related methods.  This is the class that you probably want to extend from if you want to create your own `Property` classes, especially if you want to ignore Java Bean stuff as much you can.
+The methods that are missing are the two silly Java Bean related methods.  This is the class that you probably want to extend from if you want to create your own `StringProperty` classes, especially if you want to ignore Java Bean stuff as much you can.
 
 ### SimpleStringProperty
 
@@ -167,7 +167,9 @@ However, `ObjectProperty<String>` and `StringProperty` are **not** type compatib
 
 # Number Types
 
-This is the most confusing part of the entire discussion.  JavaFX have utilizes the standard Java class called `Number` to create a framework for all of the numeric `Observables`.  I'm not sure what this adds, other than a layer of complexity, but it's a layer that you can't ignore.  
+This is the most confusing part of the entire discussion.  JavaFX utilizes the standard Java class called `Number` to create a framework for all of the numeric `Observables`.  I'm not sure what this adds, other than a layer of complexity, but it's a layer that you can't ignore.  
+
+`Number` is an abstract class that is the super-class of all of the "boxed" number types in Java.  For intstance, `Integer` (as opposed to `int`) is a subclass of `Number`.  `Number` defines a set of methods that deal with conversion between the various subtypes of `Number`.
 
 The `Number` types of `Observables` share many of the same differences from the generic `Observables` as the `String` types do.  So in this section we're going to concentrate on the extra complexity that comes from using `Number` for all of these variants.
 
@@ -179,7 +181,7 @@ All four of the numeric types work the same way.  Let's look at the chart for `I
 
 The generic classes in this chart all resolve to `<Number>`, not `<Integer>`.  So `IntegerProperty` implements `Property<Number>`, not `Property<Integer>`.  This means that if you have an instance of `ObjectProperty<Integer>` it is not type compatible with `IntegerProperty`.  This can be a source of frustration.
 
-## ObservableNumberValue && ObservableIntegerValue
+## ObservableNumberValue & ObservableIntegerValue
 
 The `ObservableNumberValue` interface extends `ObservableValue<Number>`, which gives it the `Listener`, mapping and `Subscription` methods.  Its `getValue()` method returns `Number`.
 
@@ -190,8 +192,6 @@ Additionally, it has type specific `getValue()` equivalents: `doubleValue()`, `f
 This is very significant.
 
 This is the first example that we've seen where `get()` returns a different value from `getValue()`.  This suggests to me, that when you are retrieving the value from a numeric `Observable`, you can largely ignore their `<Number>` nature if you just use `get()` all the time instead `getValue()`.
-
-This is actually annoying with Kotlin because Kotlin creates "synthetic accessors" for Java fields that follow the Java Bean structure.  So this:
 
 Also, `ObservableBooleanValue.get()` returns `boolean` instead of `Boolean` returned from `ObseravbleBooleanValue.getValue()`.  It's a smaller change, but still a difference.
 
@@ -229,7 +229,7 @@ Also, this class has `asObject()` which returns a linked `ObjectExpression<Integ
 
 # Using this Information
 
-At this point you should have a handle on when and how to use both the generic and the type `Observable` classes.  What are the some of the factors you need to keep in mind when using both the generic and the typed `Obsevables`?
+At this point you should have a handle on when and how to use both the generic and the typed `Observable` classes.  What are the some of the factors you need to keep in mind when using both the generic and the typed `Obsevables`?
 
 ## Converting Between Generic and Typed Properties
 
@@ -239,7 +239,7 @@ And that means that you cannot pass `IntegerProperty` as a parameter when `Prope
 
 This quickly becomes frustrating.
 
-Fortunately all of the `Property<Number>` implementations have a function called `asObject()`.  For `IntegerProperty` this will pass you `Property<Integer>` that is bidirectionally bound to your `IntegerProperty`.  It's not the same object cast differently, but an actual new object that's bidirectionally bound to the original.
+Fortunately all of the `Property<Number>` implementations have a function called `asObject()`.  For `IntegerProperty` this will return you a `Property<Integer>` that is bidirectionally bound to your `IntegerProperty`.  It's not the same object cast differently, but an actual new object that's bidirectionally bound to the original.
 
 All of these typed classes also have a static method that does the reverse.  For instance, `DoubleProperty` has a method called `doubleProperty()`.  You pass it a `Property<Double>` and it gives you back a new `DoubleProperty` that is bidirectionally bound to the original `Property<Double>`.  This goes for `StringExpression` and `BooleanExpression`
 
@@ -249,9 +249,9 @@ Knowing about this makes any issues about whether or not to use typed or generic
 
 The Fluent API is delivered via the `{Type}Expression` classes, and is the main motivation to use typed `Observable` classes over the generic ones.
 
-Since the introduction of `ObservableValue.map()` in JFX 19, a lot of the utility in the Fluent API has become redundant, since because `map()` is simpler to use because the `Function` passed to it is just Java (or Kotlin) code.  What `ObservableValue.map()` cannot do, however, is to combine multiple `Observables` together as dependencies.
+Since the introduction of `ObservableValue.map()` in JFX 19, a lot of the utility in the Fluent API is a bit less compelling, since `map()` is simpler to use because the `Function` passed to it is just Java (or Kotlin) code.  What `ObservableValue.map()` cannot do, however, is to combine multiple `Observables` together as dependencies.
 
-I find the Fluent API to be fine when the transformations are fairly simple.  But when the operations start to get long and involved, then the Fluent API tends to less clear.  And if it's less clear, then it's more likely to be the source of a bug or cause headaches in maintenance.  In those cases, it can be better to use a static methods from the `Bindings` class, or to create a `Binding` by extending one of the `{Type}Binding` classes.
+I find the Fluent API to be fine when the transformations are fairly simple.  But when the operations start to get long and involved, then the Fluent API tends to become less clear.  And if it's less clear, then it's more likely to be the source of a bug or cause headaches in maintenance.  In those cases, it can be better to use a static methods from the `Bindings` class, or to create a `Binding` by extending one of the `{Type}Binding` classes.
 
 In my opinion, then, the use case for the Fluent API is fairly narrow: Simple transformations involving two or more `Observables`.  
 
@@ -316,7 +316,7 @@ You should be aware that virtually all of the JavaFX `Nodes` expose their `Prope
 
 This makes sense, since, as a general purpose API, they would want to provide the most "out of the box" functionality, and returning `Properties` that can be used in the Fluent API without any conversion seems like the way to go.  You'll have to decide for yourself if this would influence the way that you declare your own `Properties`.
 
-There are a few places in the JavaFX API where it's hard to avoid understanding some of the nuances about the typed classes versus the generic classes.  For instance, `TextFormatter<Integer>` has a method `valueProperty()` that return `ObjectProperty<Integer>`, which is going to give you issues if you try to bidirectionally bind it with an `IntegerProperty` in your Model.  
+There are a few places in the JavaFX API where it's hard to avoid understanding some of the nuances about the typed classes versus the generic classes.  For instance, `TextFormatter<Integer>` has a method `valueProperty()` that returns `ObjectProperty<Integer>`, which is going to give you issues if you try to bidirectionally bind it with an `IntegerProperty` in your Model.  
 
 ## When to Use ReadOnly{Type}Property
 
@@ -340,7 +340,7 @@ At some point I considered the typed `Properties` to be mostly convenience class
 
 I'm not a big user of the Fluent API, and I went through a period when I didn't really use the typed `Properties` at all.  But there are still those times when the API forces you to contend with the typed `Properties` as most of the `Node Properties` are defined this way.
 
-However, through years of changing my opinion and understanding about this, I've always used `StringProperty` and `BooleanProperty` over the generic `Properties`.  This is because you don't ever the encounter the issues created by `Property<Number>`.
+However, through years of learning more about this, I've always used `StringProperty` and `BooleanProperty` over the generic `Properties`.  This is because you don't ever the encounter the issues created by `Property<Number>`.
 
 Presently I lean towards just using the typed `Properties` unless there is a good reason not to.  Here's why:
 
