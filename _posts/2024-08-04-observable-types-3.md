@@ -27,7 +27,7 @@ This is a subject that always confused me.  Aren't `ObserableLists` already `Obs
 
 The whole thing, at first glance, seems very circular.  We have an `Observable` that wraps an `ObservableList` and supports these same methods as `ObservableList`.  What's the point?
 
-The point is that this turns out to be awesomely cool!  And not just cool, but super useful, too.  In this article we'll first look at how `ListProperty` behaves, then we'll look at how the various interfaces and classes go together, and then we'll take a look at some practical exapmles.
+The point is that this turns out to be awesomely cool!  And not just cool, but super useful, too.  In this article we'll first look at how `ListProperty` behaves, then we'll look at how the various interfaces and classes go together, and then we'll take a look at some practical examples.
 
 And, by the way, everything about `ListProperty` is also true for `MapProperty` and `SetProperty` too.
 
