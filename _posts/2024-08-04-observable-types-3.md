@@ -1,6 +1,6 @@
 ---
 title:  "Guide To the Observable Classes - Part III"
-date:   2024-08-03 12:00:00 -0500
+date:   2024-08-28 12:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
 permalink: /javafx/elements/observable-classes-lists
