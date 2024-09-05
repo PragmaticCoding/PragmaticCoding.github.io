@@ -21,7 +21,7 @@ master:
         children:
         - title: Set It and Forget It
           url: /javafx/elements/setitforgetit
-        - title: Nodes
+        - title: UI Classes
           url: /javafx/elements/nodes
         - title: Observables, Bindings and Listeners
           url: /javafx/elements/observables
@@ -29,8 +29,8 @@ master:
           url: /javafx/elements/events
         - title: The FXAT
           url: /javafx/elements/fxat-intro
-        - title: PseudoClasses
-          url: /javafx/elements/pseudo_classes
+        - title: Stylesheets
+          url: /javafx/elements/stylesheets_pseudoclasses
         - title: Custom Components
           url: /javafx/elements/custom_components_page
       - title: Absolute Beginners Guide to JavaFX

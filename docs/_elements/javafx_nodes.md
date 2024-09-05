@@ -1,6 +1,6 @@
 ---
 layout: single
-title: JavaFX Nodes
+title: JavaFX Nodes and UI Classes
 toc: false
 toc_label: "Contents"
 toc_icon: "brain"
@@ -13,6 +13,7 @@ sidebar:
     nav: "master"
 permalink: /javafx/elements/nodes
 skip_link: true
+
 feature_row_buttons:
   - image_path: /assets/elements/button-collections.png
     alt: "Buttons"
@@ -21,6 +22,16 @@ feature_row_buttons:
     url: "/javafx/elements/buttons"
     btn_label: "Read The Article"
     btn_class: "btn--primary"
+
+feature_row_combobox:
+  - image_path: /assets/elements/ComboBox8.png
+    alt: "ComboBoxes"
+    title: "Getting to Know ComboBoxes"
+    excerpt: "ComboBoxes are everywhere and they are super easy to use with just a list of Strings.  But it doesn`t take a lot to make ComboBoxes look slick and professional, and to do really interesting things with them."
+    url: "/javafx/elements/comboboxes"
+    btn_label: "Read The Article"
+    btn_class: "btn--primary"
+
 
 feature_row_textformatter:
   - image_path: /assets/elements/text-field.png
@@ -47,8 +58,8 @@ feature_row_layouts:
     excerpt: "A basic guide to the layout classes in JavaFX and how to use them effectively"
     url: "/javafx/elements/layout_classes"
     btn_label: "Read the Article"
-    btn_class: "btn--primary" 
-    
+    btn_class: "btn--primary"
+
 feature_row_tables:
   - image_path: /assets/elements/TableView2.png
     alt: "Tables and Lists"
@@ -74,6 +85,8 @@ All of these Nodes have a large number of methods and properties for controlling
 {% include feature_row id="feature_row_layouts" type="left" %}
 
 {% include feature_row id="feature_row_buttons" type="left" %}
+
+{% include feature_row id="feature_row_combobox" type="left" %}
 
 {% include feature_row id="feature_row_textformatter" type="left" %}
 

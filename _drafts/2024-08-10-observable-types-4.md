@@ -371,3 +371,5 @@ fun main() {
 We have two `CustomerImpl`, one that starts with "George Jones" and the other that starts with "Fred Smith".  Then we have a single `CustomerProperty` that we'll start off with holding `customer1`.  There are some `Labels` that show us the first names of `customer1` and `customer2` and the current occupant of our `CustomerProperty`.  We also have a `Label` that shows the `fullName()` from our `CustomerProperty`.
 
 Then we have two `Buttons`.  The first one swaps the contents of our `CustomerProperty` between `customer1` and `customer2`.  The second changes the `fName` of `CustomerModel` currently in our `CustomerProperty`.  
+
+## Binding Classes

@@ -1,6 +1,6 @@
 ---
 title:  "JavaFX: Understanding the ComboBox"
-date:   2024-03-08 12:00:00 -0500
+date:   2024-08-30 12:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
 permalink: /javafx/elements/comboboxes
@@ -19,6 +19,7 @@ ScreenSnap12: /assets/elements/ComboBox14.png
 ScreenSnap13: /assets/elements/ComboBox15.png
 ScreenSnap14: /assets/elements/ComboBox16.png
 ScreenSnap15: /assets/elements/ComboBox17.png
+ScreenSnap16: /assets/elements/ComboBox18.png
 
 excerpt: Taking a look at the structure of the JavaFX ComboBox, and how to do cool things with it.
 ---
@@ -26,6 +27,8 @@ excerpt: Taking a look at the structure of the JavaFX ComboBox, and how to do co
 # Introduction
 
 The [ComobBox](https://openjfx.io/javadoc/16/javafx.controls/javafx/scene/control/ComboBox.html)!  Everybody's go-to control for multiple choice input.  It's one of those elements that's dead simple to get started with, but has a lot of power that many people don't use.
+
+In this article we are going to cover the absolute basics, and then take a look at some slightly more involved situations that seem to come up all the time.  We'll also see how easy it is to massage the presentation of the selectable items in your `ComboBox` to make it more user-friendly.
 
 # Simple Implementation
 
@@ -161,7 +164,11 @@ children += ComboBox<Animal>().apply {
     }
 }
 ```
-This is an interesting approach.  Since we're not going to override `updateItem()` we don't have to create a custom `ListCell` class, not even an anonymous inner class.  We can just instantiate a plain vanilla `ListCell` and configure it from outside, using the methods already available from `ListCell`.
+This is an approach you don't see in most tutorials.  There's no custom class extending `ListCell` here.
+
+Remember that `ListCell` is a subclass of `Labeled`, which means that its presentation can work very much like a standard `Label`.  Specifically, we have both a `Graphic` and a `Text` element, and we have a `graphicProperty()` and a `textProperty()` method.  If we bind those properties to data in `item`, then they'll just show up on the screen and it will work.
+
+Since we're not going to override `updateItem()`, nor are we going to customize the layout of the `ListCells`, we don't have to create a custom `ListCell` class, not even an anonymous inner class.  We can just instantiate a plain vanilla `ListCell` and configure it from outside, using the methods already available from `ListCell`.
 
 And it looks like this:
 
@@ -186,7 +193,7 @@ private fun createCell() = ListCell<Animal>().apply {
     })
 }
 ```
-In order to keep with DRY (Don't Repeat Yourself), we've pulled the `ListCell` instantiation into its own method so that we can call if from the factory and directly to set the `Button`.  However, there was a problem when trying to bind the `Graphic` and `Text` properties to `Item` fields.  It turns out that the inner workings of the `ComboBox` skin actually set the values of `Graphic` and `Text` directly in some circumstances, and the binding causes grief with that.  So the bindings have been turned into a `Subscription` that can co-exist nicely without `ComboBox` skin code.
+In order to keep with DRY (Don't Repeat Yourself), we've pulled the `ListCell` instantiation into its own method so that we can call if from the factory, and then directly to set the `Button`.  However, there was a problem when trying to bind the `Graphic` and `Text` properties to `Item` fields.  It turns out that the inner workings of the `ComboBox` skin actually set the values of `Graphic` and `Text`  in the `Button` component directly in some circumstances, and the binding causes grief with that.  So the bindings have been turned into a `Subscription` that can co-exist nicely with `ComboBox` skin code.
 
 Now, it looks like this:
 
@@ -248,17 +255,82 @@ enum class Animal(val animalName: String, imageName: String) {
 
 fun main() = Application.launch(ComboBoxExample1::class.java)
 ```
-Now we have the `Animal` holding an `Image` which is not a `Node`, and then loading that `Image` into an `ImageView` that is associated with each `ListCell`.  
+Now we have the `Animal` holding an `Image`, which is not a `Node`, and then loading that `Image` into an `ImageView` that is associated with each `ListCell`.  
 
 And it looks like this:
 
 ![ComboBox with Animal Images]({{page.ScreenSnap6}})
 
+
+# Codes and Descriptions
+
+One situation that pops up all the time is where you have some sort of list of codes, and you want to display some descriptive text about the code instead of the code in your `ComboBox`.  But you still want to return the code from the `ComboBox` selection.  How do you do this?
+
+A lot of programmers try using a `Map<Code, Description>` to establish the relationship between the code and its description.  But then it's hard to go on from there.
+
+Honestly, using a `Map` instead of creating a class to hold a value pair is really not a great strategy to begin with.  JavaFX has a general purpose class called `Pair` that you can use for this purpose.  It has two fields, `key` and `value` and all the methods you might need with it.  So you could create a `List<Pair<Code, Description>>` just as easily as you could a `Map`.  
+
+So let's use `ObservableList<Pair>`...
+
+``` kotlin
+class ComboBoxExample3 : Application() {
+
+    private val comboBoxValue: ObjectProperty<Pair<String, String>> = SimpleObjectProperty()
+
+    override fun start(stage: Stage) {
+        val scene = Scene(createContent(), 280.0, 300.0).apply {
+            addWidgetStyles()
+        }
+        stage.scene = scene
+        stage.show()
+    }
+
+    private fun createContent(): Region = VBox(20.0).apply {
+        children += Label().apply {
+            textProperty().bind(comboBoxValue.map { "The selected value is: ${it.key}" }
+                .orElse("No value has been selected"))
+        }
+        children += ComboBox<Pair<String, String>>().apply {
+            items += listOf(
+                Pair("GB", "Great Britain"),
+                Pair("FR", "France"),
+                Pair("AU", "Australia"),
+                Pair("ES", "Spain")
+            )
+            comboBoxValue.bind(valueProperty())
+            setCellFactory {
+                ListCell<Pair<String, String>>().apply {
+                    textProperty().bind(itemProperty().map { it.value })
+                }
+            }
+            buttonCell = ListCell<Pair<String, String>>().apply {
+                itemProperty().subscribe(Consumer {
+                    text = it?.value
+                })
+            }
+        }
+        padding = Insets(40.0)
+    }
+}
+
+
+fun main() = Application.launch(ComboBoxExample3::class.java)
+```
+Which looks like this:
+
+![Screen Snap]({{page.ScreenSnap16}})
+
+The key point here is that it doesn't take a mountain of code to populate your `ComboBox` values with just the description, while still retaining the code in `ComboBox.value`.  All you need is a standard `ListCell` and binding its `textProperty()` to a `Binding` derived from its `itemProperty()` extracting the `Pair.value` field does the trick.
+
+This technique will work with much more complex objects, too.  Just set up a `Binding` that composes a `String` made up from whatever class you are putting into the `ComboBox`.  
+
+At the same time, you can still use `Map`, in which case you'll need to put the `Map.entrySet()` into an `ObservableList`.  `Map.Entry` has `key` and `value` as well.
+
 # Linking ComboBoxes
 
 Something that comes up fairly often is the idea of having two `ComboBoxes` that are somehow connected to each other.  Changing the selection in one `ComboBox` changes the list of items available in the second `ComboBox`.
 
-We'll keep on with our `Animal` based `ComboBox` and then add another that has names of individual animals making the screen a "Pick your favourite animal at the zoo" application.  Let's look at the code first, then see how it works:
+We'll go back to our `Animal` based `ComboBox` and then add another that has names of individual animals making the screen a "Pick your favourite animal at the zoo" application.  Let's look at the code first, then see how it works:
 
 ``` kotlin
 class ComboBoxExample2 : Application() {
@@ -380,3 +452,15 @@ If we change it to one of the items in the drop-down, then the `ComboBox` makes 
 ![Editable ComboBox]({{page.ScreenSnap15}})
 
 The connection isn't made until you commit the change by hitting \<Enter\> or taking the focus away from the `ComboBox`.  You're going to have to trust me on this, as I can't get a screenshot without taking focus away from `ComboBox`.
+
+# Conclusion
+
+And that's it for our tour of the basics of `ComboBoxes`.  With the information here you can probably handle the vast majority of `ComboBox` situations that come up when designing a JavaFX application.
+
+The main things to keep in mind:
+
+1. Grab the value from `ComboBox.valueProperty()`, don't go digging into the `SelectionModel` to get the selected item.  This is especially true if your `ComboBox` is editable.
+
+1. You can use the `Labeled` nature of `ListCell` to do a fair bit of manipulation of the presentation of your items without having to extend `ListCell` into a custom class.
+
+1. You can use a generic class like `Pair` to display human-friendly names for `items` that are codes.  Also, `Enum` can be really useful for this too.

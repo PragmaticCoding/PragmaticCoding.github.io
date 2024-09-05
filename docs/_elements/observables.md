@@ -13,12 +13,31 @@ sidebar:
     nav: "master"
 permalink: /javafx/elements/observables
 skip_link: true
+
+feature_row_observables_compleat:
+  - image_path: /assets/elements/Properties.png
+    alt: "Observables Guide"
+    title: "The Complete Guide to the Observable Types"
+    excerpt: 'The articles on this page comprise a comprehensive look at all of the interfaces and classes in the Observables hierarchy.  Look here if you want an in-depth understanding of how all of these types fit together and work together.'
+    url: "/javafx/elements/observables_guide"
+    btn_label: "Read The Articles"
+    btn_class: "btn--primary"
+
 feature_row_listeners:
   - image_path: /assets/logos/LittleBrain.jpg
     alt: "Listeners"
     title: "ChangeListeners and InvalidationListeners"
     excerpt: 'Which kind of Listener should you use, and when?'
     url: "/javafx/elements/listeners"
+    btn_label: "Read The Article"
+    btn_class: "btn--primary"
+
+feature_row_action_properties:
+  - image_path: /assets/logos/LittleBrain.jpg
+    alt: "Action Properties"
+    title: "Action Properties"
+    excerpt: "Properties don't just have to be observable wrappers for values.  You can use the `invalidated()` method to create a Property that takes an action whenever it's value changes."
+    url: "/javafx/action-properties"
     btn_label: "Read The Article"
     btn_class: "btn--primary"
 
@@ -57,13 +76,32 @@ feature_row_conditional_bindings:
     url: "/javafx/elements/conditional-binding"
     btn_label: "Read the Article"
     btn_class: "btn--primary"
+
+feature_row_listeners_bindings_events:
+  - image_path: /assets/logos/LittleBrain.jpg
+    alt: "Events, Listeners and Bindings"
+    title: "Listeners, Events and Bindings"
+    excerpt: "It can be confusing how to know where you should use a Listener, where you should use a Binding, or whether it might be better to implement an EventHandler.  This article looks at the differences between these things, and when it's best to use each one."
+    url: "/javafx/elements/events_and_listeners"
+    btn_label: "Read the Article"
+    btn_class: "btn--primary"
 ---
 
 # JavaFX Observables, Bindings and Listeners
 
-Observables, Bindings and Listeners are the key elements supplied by the JavaFX library to create Reactive applications in JavaFX.  This is incredibly complete toolkit, which means that it can also be complicated and difficult to understand.  These articles are designed to explain what each of these elements are, and how you can use them to create simple, easy to understand and maintain Reactive applications.
+Observables, Bindings and Listeners are the key elements supplied by the JavaFX library to create Reactive applications in JavaFX.  This is an incredibly complete toolkit, which means that it can also be complicated and difficult to understand.  These articles are designed to explain what each of these elements are, and how you can use them to create simple, easy to understand and maintain Reactive applications.
+
+# Observables and Properties
+
+{% include feature_row id="feature_row_observables_compleat" type="left" %}
+
+{% include feature_row id="feature_row_action_properties" type="left" %}
+
 
 {% include feature_row id="feature_row_new_methods" type="left" %}
+
+
+
 
 # Bindings:
 
@@ -78,3 +116,5 @@ Observables, Bindings and Listeners are the key elements supplied by the JavaFX 
 # Listeners:
 
 {% include feature_row id="feature_row_listeners" type="left" %}
+
+{% include feature_row id="feature_row_listeners_bindings_events" type="left" %}
