@@ -14,6 +14,15 @@ sidebar:
 permalink: /javafx/elements/observables
 skip_link: true
 
+feature_row_properties_intro:
+  - image_path: /assets/logos/LittleBrain.jpg
+    alt: "Introduction to Properties"
+    title: "The Beginners Guide to Properties, Listeners and Bindings"
+    excerpt: "The Observable elements of JavaFX can be overwhelming for beginners.  In this guide you'll find a overview of all of the Properties, Bindings and Listener types and see how to use them to create Reactive JavaFX applications"
+    url: "/javafx/elements/beginners-properties"
+    btn_label: "Read The Article"
+    btn_class: "btn--primary"
+
 feature_row_observables_compleat:
   - image_path: /assets/elements/Properties.png
     alt: "Observables Guide"
@@ -90,6 +99,8 @@ feature_row_listeners_bindings_events:
 # JavaFX Observables, Bindings and Listeners
 
 Observables, Bindings and Listeners are the key elements supplied by the JavaFX library to create Reactive applications in JavaFX.  This is an incredibly complete toolkit, which means that it can also be complicated and difficult to understand.  These articles are designed to explain what each of these elements are, and how you can use them to create simple, easy to understand and maintain Reactive applications.
+
+{% include feature_row id="feature_row_properties_intro" type="left" %}
 
 # Observables and Properties
 
