@@ -11,6 +11,7 @@ ScreenSnap4: /assets/elements/CssTransition4.png
 Diagram: /assets/elements/ListProperties.png
 part1: /javafx/elements/observable-classes-generics
 part2: /javafx/elements/observable-classes-typed
+kotlin: /kotlin/kotlin-examples
 
 excerpt: In JavaFX 23 we get a new feature - CSS Transitions!  Let's take a look at how this works and what you can do with it.
 ---
@@ -78,11 +79,13 @@ class CssTransitionExample : Application() {
 
 fun main() = Application.launch(CssTransitionExample::class.java)
 ```
+(This code is in Kotlin.  If you need help understanding it, please refer to this [article]({{page.kotlin}})).)
+
 That's all we need.  We're using a `Label` as the styled `Node` with the `PseudoClass`, and a `CheckBox` to turn the `PseudoClass` on and off.  It's pretty simple.
 
 Here's the really cool part.  For the rest of this example, we aren't going to touch this code at all...  
 
-Which is point of this feature.  The code just does the layout, and the necessary mechanics of handling the `PseudoClass`.  Once that's set up, everything else is done via the stylesheet.
+Which is point of this feature.  The code just does the layout and the necessary mechanics of handling the `PseudoClass`.  Once that's set up, everything else is done via the stylesheet.
 
 Use a transition, don't use a transition, style it this way or some other way...none of that changes the layout code at all.
 
@@ -131,9 +134,9 @@ This is a technical arcticle, but...
 
 If you're building applications to be used in a professional setting, as I did for decades, then there are some things you should keep in mind.
 
-Transitions and animations *can* make your application look slick and professional, but only if you employ them with restraint.  Screen elements that suddenly jump from colour to colour, pop in and, and suddenly change there appearance can look clumsy, and you improve this by using transitions.  But your users should never really be aware that these things are happening.
+Transitions and animations *can* make your application look slick and professional, but only if you employ them with restraint.  Screen elements that suddenly jump from colour to colour, pop in and, and suddenly change there appearance often look clumsy, and you *can* improve this by using transitions.  But your users should never really be aware that these things are happening.
 
-From my experience, users are conciously aware that they want functionality.  More functionality.  New functionality,  Better functionality.  If they think that you're spending time doing "fancy" stuff, they get annoyed because the perception is that the time to develop new functionality is becoming longer because of this.
+From my experience, users are conciously aware that they want *functionality*.  More functionality.  New functionality,  Better functionality.  If they think that you're spending time doing "fancy" stuff, they get annoyed because the perception is that the time to develop new functionality is becoming longer because of this.
 
 On the other hand, user confidence in your application is critical.  So it does help if your application looks like it was written by programmers who know what they are doing and can craft a quality product.  Transitions can help with that.
 
@@ -143,6 +146,7 @@ The 5 second transition in this example is ridiculous.  It makes the transition 
 
 {% include video id="Xu4KtckSjkc" provider="youtube" %}
 
+
 Now the transition makes the colour change look more professional.  It's just long enough that it isn't a sharp jump from one colour to the other.
 
 # Details About CSS Transitions
@@ -150,6 +154,16 @@ Now the transition makes the colour change look more professional.  It's just lo
 That's the basics, now let's look at some of the details:
 
 ## What Can You Transition?
+
+You can transition anything defined by a primitive type, and anything defined by a type that implements "Interpolatable".  Currently, the latter includes `Color`, `Point2D` and `Point3D`, but only `Color` is meaningfully used in stylesheets.
+
+I was curious about how `Boolean` would transition, since it's a primitive type, but it doesn't transition.  I couldn't find any meaningful uses of `String` in the CSS Reference Guide, either.  
+
+Unfortunately, anything defined by `<size>` in the stylesheet isn't able to transition, since it isn't a primitive.  So you cannot transition `-fx-border-width`, or `-fx-border-insets` or `-fx-padding`, or `-fx-font-size`, which is a shame.  However, the issue notes indicate that at least some of this will be imlemented in a future enhancement.
+
+Essentially, you can transition anything in the stylesheet which is defined by `<number>` or `<paint>`.
+
+Notably, things that you *can* transition are `-fx-opacity`, `-fx-rotate`, `-fx-scale-x`, `-fx-scale-y`, `-fx-translate-x`, and `-fx-translate-y`.  You can also transition anything defined by a single `<paint>`, which includes `-fx-fill`, `-fx-stroke`, and `-fx-text-fill`.
 
 
 ## Transitioning Multiple Attributes
@@ -351,3 +365,94 @@ I tried this:
 }
 ```
 And the results were as expected.  The `Label` transitioned to the 2x scaling and to `red`, but snapped back to black and 1x scaling when the `PseudoClass` was turned off again.
+
+# Missing Feature: Defined Colour Transitions
+
+A lot of CSS styling defined in Modena related to the standard `PseudoClasses` depends on changing the definitions of some pre-defined colours in the stylesheet.  Changing the definition of `-fx-color` in the context of a `PseudoClass` can change the appearance of that `Node` without having to recreate a lot of complicated styling.  
+
+So it would be nice to able to transition a `Node` based on a change to a color definition.  For instance, I hoped that the following would cause a transition to the background colour of the `Label`:
+
+``` css
+.transition-label {
+  -fx-font-size: 16px;
+  -fx-font-weight: bold;
+  -fx-text-fill: black;
+  -fx-scale-x: 1.0;
+  -fx-scale-y: 1.0;
+  -fx-background-color: -fx-color;
+  -fx-color: blue;
+  transition-property: all;
+  transition-timing-function: -fx-ease-both;
+  transition-duration: 2.0s;
+}
+
+.transition-label: activated {
+   -fx-text-fill: red;
+   -fx-color: green;
+   -fx-scale-x: 2.0;
+   -fx-scale-y: 2.0;
+}
+```
+But it did not.
+
+
+# Dealing With CSS Transitions Programatically
+
+There are circumstances in which you might want to cope with a CSS transition inside your layout code.  To enable this, a new `Event` type has been added, `TrasitionEvent`, which is fired when a CSS transition starts and ends.  This means that you can detect a CSS transition and have your layout respond to it.
+
+We'll modify our layout such that the `CheckBox` is disabled while the CSS transition is running:
+
+``` kotlin
+class CssTransitionExample : Application() {
+    private val activatedPC = PseudoClass.getPseudoClass("activated")
+    private val activated: BooleanProperty = SimpleBooleanProperty(false)
+    private val transitionRunning: BooleanProperty = SimpleBooleanProperty(false)
+    override fun start(stage: Stage) {
+        stage.scene = Scene(createContent(), 340.0, 200.0).apply {
+            CssTransitionExample::class.java.getResource("example.css")?.toString()?.let { stylesheets += it }
+        }
+        stage.show()
+    }
+
+    private fun createContent(): Region = BorderPane().apply {
+        center = Label("This is the Label").apply {
+            styleClass += "transition-label"
+            activated.subscribe { newVal -> pseudoClassStateChanged(activatedPC, newVal) }
+            this.addEventHandler(TransitionEvent.START) { evt ->
+                transitionRunning.value = true
+                println("Started: ${evt.property}")
+            }
+            this.addEventHandler(TransitionEvent.END) { transitionRunning.value = false }
+        }
+        bottom = CheckBox("Activate PseudoClass").apply {
+            selectedProperty().bindBidirectional(activated)
+            disableProperty().bind(transitionRunning)
+        }
+        padding = Insets(40.0)
+        val fred = PropertyValueFactory<String, String>("Abc")
+    }
+}
+
+fun main() = Application.launch(CssTransitionExample::class.java)
+```
+{% include video id="pWl5UOwOi_8" provider="youtube" %}
+
+I've also added some code to print some information about the `Event` to the console.  This is interesting, because it shows 3 transitions running:
+
+```
+Started: ObjectProperty [bean: Label@44abad90[styleClass=label transition-label]'This is the Label', name: textFill, value: 0x000000ff]
+Started: DoubleProperty [bean: Label@44abad90[styleClass=label transition-label]'This is the Label', name: scaleX, value: 1.0]
+Started: DoubleProperty [bean: Label@44abad90[styleClass=label transition-label]'This is the Label', name: scaleY, value: 1.0]
+Started: ObjectProperty [bean: Label@44abad90[styleClass=label transition-label]'This is the Label', name: textFill, value: 0xff0000ff]
+Started: DoubleProperty [bean: Label@44abad90[styleClass=label transition-label]'This is the Label', name: scaleX, value: 2.0]
+Started: DoubleProperty [bean: Label@44abad90[styleClass=label transition-label]'This is the Label', name: scaleY, value: 2.0]
+```
+The first three lines are when the `PseudoClass` is applied, and the last three are for when it is removed.
+
+This kind of monitoring is less useful when your transitions are strictly stylistic and fast, but if you're doing something that is more functional it could come in handy.
+
+# Conclusion
+
+This new feature makes it dead easy to add transitions to a useful set of styling properties that you might want to modify when applying `PseudoClasses`.  And it does it without requiring any changes to your layout code.  
+
+The issue notes clearly indicate that this new feature is still in its early stages and that we can expect enhancements in the future.
