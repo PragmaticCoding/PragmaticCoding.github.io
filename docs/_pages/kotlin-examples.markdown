@@ -19,7 +19,7 @@ intro: /kotlin/intro
 
 # Why Kotlin?
 
-Throughout the articles on this website, especially the later ones, you'll find that the example code is written in Kotlin.  There's a very good chance that you've never seen Kotlin before, and an even lesser chance that you've actually written any programs in Kotlin.
+Throughout many articles on this website, especially the later ones, you'll find that the example code is written in Kotlin.  There's a very good chance that you've never seen Kotlin before, and an even lesser chance that you've actually written any programs in Kotlin.
 
 So, why use Kotlin in the example code?
 
@@ -41,7 +41,7 @@ This section outlines the core elements of Kotlin so that you can understand the
 
 ## Variable and Field Declarations
 
-You'll often see things like this:
+You'll often see lines of code that look like this:
 
 ``` kotlin
 val someVariable : StringProperty = SimpleStringProperty("abc")
@@ -175,7 +175,7 @@ private fun someFunction(p1 : String, p2: Int) : String {
 }
 ```
 
-Alternatively:
+Alternatively, when the return type can be inferred:
 
 ``` kotlin
 fun formatName(fName : String, lName : String ) = lname + ", " + fName
