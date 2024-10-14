@@ -10,15 +10,18 @@ ScreenSnap3: /assets/elements/PropertyIntro3.png
 ScreenSnap4: /assets/elements/PropertyIntro4.png
 Diagram: /assets/elements/ListProperties.png
 guide: /javafx/elements/observables_guide
+kotlin: /kotlin/kotlin-examples
 
 excerpt: If you are a beginner with JavaFX and are wondering, "What are all these Property things anyway?", then this is the article for you.
 ---
 
-# Introduction
+# Introduction  
 
 One of the biggest advantages to JavaFX is it's seamlessly integrated support for the "Observer" Pattern. This can also be one of the biggest challenges to learning JavaFX, because the library is so extensive it can become overwhelming.  
 
 In this article, we're not going to go too deep into the details.  This is intended for beginners so that they can get started and create their JavaFX applications the right way, and to avoid a lot of the pitfalls that many beginners fall victim to.  By the end of this article you should have a good understanding of what JavaFX `Properties` are, how they work, and how you should use them.
+
+The examples in this article are written in Kotlin.  If you need some help understanding them, then refer to this [article]({{page.kotlin}}).
 
 # What is a Property?
 
