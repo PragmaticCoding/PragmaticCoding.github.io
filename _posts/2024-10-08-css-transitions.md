@@ -13,7 +13,7 @@ part1: /javafx/elements/observable-classes-generics
 part2: /javafx/elements/observable-classes-typed
 kotlin: /kotlin/kotlin-examples
 
-excerpt: In JavaFX 23 we get a new feature - CSS Transitions!  Let's take a look at how this works and what you can do with it.
+excerpt: JavaFX 23 delivers a new feature - CSS Transitions!  Let's take a look at how this works and what you can do with it.
 ---
 
 
@@ -206,7 +206,40 @@ But this will:
    -fx-scale-y: 2.0;
 }
 ```
-The implication of this is that you cannot have transitions with different durations defined.  
+However, if you do want different times, you can do this:
+``` css
+.transition-label {
+  -fx-font-size: 16px;
+  -fx-font-weight: bold;
+  -fx-text-fill: black;
+  transition-property: -fx-text-fill, -fx-scale-x, -fx-scale-y;
+  transition-duration: 3.0s, 10s, 10s;
+}
+
+.transition-label: activated {
+   -fx-text-fill: red;
+   -fx-scale-x: 2.0;
+   -fx-scale-y: 2.0;
+}
+```
+Which will transition the `-fx-text-fill` property over 3s and the other two over 10s.  The `transition-property` attribute is taken as the master, and if you have extra values for the other attributes, it will ignore them.  However, if the other lists are too short, it will repeat them.  So this:
+
+``` css
+.transition-label {
+  -fx-font-size: 16px;
+  -fx-font-weight: bold;
+  -fx-text-fill: black;
+  transition-property: -fx-text-fill, -fx-scale-x, -fx-scale-y;
+  transition-duration: 3.0s, 10s;
+}
+
+.transition-label: activated {
+   -fx-text-fill: red;
+   -fx-scale-x: 2.0;
+   -fx-scale-y: 2.0;
+}
+```
+Will result in the `-fx-text-fill` property transitioning over 3s, the `-fx-scale-x` over 10s and then the `-fx-scale-y` over 3s as the list of durations is repeated to satisfy all of the properties specified.
 
 Also, you cannot do this:
 
@@ -277,6 +310,30 @@ To implement one of these, use the `transition-timing-function` tag in the style
 }
 ```
 It's extremely easy to change the interpolator, and you really have to try them out to understand how they differ.
+
+## Transition Delay
+
+It is possible to delay the transition for any of the properties listed in `transition-property`.  Like this:
+
+``` css
+.transition-label {
+  -fx-font-size: 16px;
+  -fx-font-weight: bold;
+  -fx-text-fill: black;
+  -fx-scale-x: 1.0;
+  -fx-scale-y: 1.0;
+  transition-property: -fx-text-fill, -fx-scale-x, -fx-scale-y;
+  transition-duration: 0.4s, 10s, 10s;
+  transition-delay: 5s, 0s, 0s;
+}
+
+.transition-label: activated {
+   -fx-text-fill: red;
+   -fx-scale-x: 2.0;
+   -fx-scale-y: 2.0;
+}
+```
+This will cause the `-fx-text-fill` property to transition in 0.4s after as 5s delay, while the scaling properties transition over a 10s period with no delay.
 
 ## Some Quirks
 
