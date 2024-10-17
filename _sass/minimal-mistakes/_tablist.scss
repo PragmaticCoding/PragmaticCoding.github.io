@@ -1,0 +1,189 @@
+/* ==========================================================================
+   tablist
+   ========================================================================== */
+
+  .tablist-container {
+    border-bottom: 1px solid $border-color;
+  }
+
+  .tablist {
+    position: relative;
+    border-bottom: 1px solid $border-color;
+    -webkit-animation: $intro-transition;
+    animation: $intro-transition;
+    -webkit-animation-delay: 0.15s;
+    animation-delay: 0.15s;
+    z-index: 20;
+
+    &__inner-wrap {
+      @include clearfix;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 100%;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+      justify-content: space-between;
+      font-family: $sans-serif-narrow;
+
+      @include breakpoint($x-large) {
+        max-width: $max-width;
+      }
+
+      nav {
+        z-index: 10;
+      }
+
+      a {
+        text-decoration: none;
+      }
+    }
+  }
+
+  .tablist__menu {
+    float: left;
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+    clear: both;
+
+    .site-nav {
+      margin-left: 0;
+
+      @include breakpoint($small) {
+        float: right;
+      }
+    }
+
+    ul {
+      margin: 0;
+      padding: 0;
+      clear: both;
+      list-style-type: none;
+    }
+  }
+
+  .tablist__menu-item {
+    display: block;
+    list-style-type: none;
+    white-space: nowrap;
+
+    &--lg {
+      padding-right: 2em;
+      font-weight: 700;
+    }
+  }
+
+  .tablist-nav {
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    min-height: $nav-height;
+    background: $background-color;
+
+    a {
+      display: block;
+      margin: 0 1rem;
+      color: $masthead-link-color;
+      text-decoration: none;
+      -webkit-transition: none;
+      transition: none;
+
+      &:hover {
+        color: $masthead-link-color-hover;
+        text-decoration: none;
+      }
+    }
+
+    &__toggle {
+      -ms-flex-item-align: center;
+      align-self: center;
+      height: $nav-toggle-height;
+      border: 0;
+      outline: none;
+      background-color: transparent;
+      cursor: pointer;
+    }
+
+    .visible-links {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-pack: end;
+      -ms-flex-pack: end;
+      -webkit-box-flex: 1;
+      -ms-flex: 1;
+      flex: 1;
+      overflow: scroll;
+
+      li {
+        -webkit-box-flex: 0;
+        -ms-flex: none;
+        flex: none;
+      }
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      a {
+        position: relative;
+
+        &:before {
+          content: "";
+          position: absolute;
+          left: 0;
+          bottom: 0;
+          height: 4px;
+          background: $primary-color;
+          width: 100%;
+          -webkit-transition: $global-transition;
+          transition: $global-transition;
+          -webkit-transform: scale(0, 0.5) translate3d(0, 0, 0);
+          transform: scale(0, 0.5) translate3d(0, 0, 0); // hide
+        }
+
+        &:hover:before {
+          -webkit-transform: scale(1, 0.5);
+          -ms-transform: scale(1, 0.5);
+          transform: scale(1, 0.5); // reveal
+        }
+
+        &.active:before {
+          -webkit-transform: scale(1, 0.5);
+          -ms-transform: scale(1, 0.5);
+          transform: scale(1, 0.5); // reveal
+        }
+      }
+    }
+  }
+
+  .tablist-content {
+    padding: 15px;
+
+    & p {
+      margin: 0;
+    }
+  }
+
+  .no-js {
+    .tablist-nav {
+      .visible-links {
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        overflow: visible;
+      }
+    }
+  }
+
+  // need to override page contents underline
+  .page__content .tablist-nav a:not(.btn):hover {
+    text-decoration: none;
+  }
+  

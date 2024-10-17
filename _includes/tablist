@@ -1,0 +1,60 @@
+<!-- TABLIST CONTENT -->
+
+<div class="tablist-container">
+  <div class="tablist">
+    <div class="tablist__inner-wrap">
+      <div class="tablist__menu">
+        <nav class="tablist-nav">
+          <ul class="visible-links">
+            {% if include.id %}
+              {% assign tablist = page[include.id] %}
+            {% else %}
+              {% assign tablist = page.tablist %}
+            {% endif %}
+            {% for tab in tablist %}
+              <li class="tablist__menu-item">
+                <a
+                  class="
+                    {% if include.id %}
+                      tablist-{{ include.id }}-id-tab
+                      {% if tab == page[include.id].first %}active{% endif %}
+                    {% else %}
+                      tablist-id-tab
+                      {% if tab == page.tablist.first %}active{% endif %}
+                    {% endif %}
+                  "
+                  onClick="tablistClickHandle(
+                    event,
+                    'tablist{% if include.id %}-{{ include.id }}{% endif %}',
+                    '{{ tab.title }}'
+                  )"
+                >
+                {{tab.title}}
+                </a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+{% if include.id %}
+  {% for tab in page[include.id] %}
+    {% assign tablist_name = "tablist-" | append: include.id %}
+    {% assign display = "none" %}
+    {% if tab == page[include.id].first %}
+      {% assign display = "block" %}
+    {% endif %}
+    {% include tablist_content id=include.id tablist_name=tablist_name tab=tab display=display%}
+  {% endfor %}
+{% else %}
+  {% for tab in page.tablist %}
+    {% assign display = "none" %}
+    {% if tab == page.tablist.first %}
+      {% assign display = "block" %}
+    {% endif %}
+    {% include tablist_content id=include.id tablist_name="tablist" tab=tab display=display %}
+  {% endfor %}
+{% endif %}
+</div>

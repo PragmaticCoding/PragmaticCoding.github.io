@@ -46,6 +46,7 @@ You'll often see lines of code that look like this:
 ``` kotlin
 val someVariable : StringProperty = SimpleStringProperty("abc")
 ```
+
 This initializes `someVariable` as the type `StringProperty` by calling the constructor of `SimpleStringProperty`.  The `val` argument specifies that this is an immutable reference, equivalent to `final` in Java.  
 
 Kotlin does not terminate lines with ";", nor does it use `new` to invoke constructors.
