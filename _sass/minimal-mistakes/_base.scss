@@ -21,6 +21,11 @@ body {
   }
 }
 
+em {
+  font-weight: 500;
+  color: $italic-color
+}
+
 h1,
 h2,
 h3,

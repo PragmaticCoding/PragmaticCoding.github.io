@@ -8,6 +8,12 @@ ScreenSnap1: /assets/elements/CssTransition1.png
 ScreenSnap2: /assets/elements/CssTransition2.png
 ScreenSnap3: /assets/elements/CssTransition3.png
 ScreenSnap4: /assets/elements/CssTransition4.png
+Animation1: /assets/elements/CssTransition1.gif
+Animation2: /assets/elements/CssTransition2.gif
+Animation3: /assets/elements/CssTransition3.gif
+Animation4: /assets/elements/CssTransition4.gif
+Animation5: /assets/elements/CssTransition5.gif
+Animation6: /assets/elements/CssTransition6.gif
 Diagram: /assets/elements/ListProperties.png
 part1: /javafx/elements/observable-classes-generics
 part2: /javafx/elements/observable-classes-typed
@@ -21,7 +27,7 @@ excerpt: JavaFX 23 delivers a new feature - CSS Transitions!  Let's take a look 
 
 For me, this is the most exciting new feature added to JavaFX in version 23.  Putting transitions into the style-sheet means it will be dead simple to have `Nodes` gently fade in and fade out, resize, or change colours without writing any code at all to control it.  
 
-The stated goal of this enhancement was to implement [W3.org CSS Transitions](https://www.w3.org/TR/css-transitions-1/) in JavaFX.  We'll take a look at that specification and see how close they got with this new feature.  
+The stated goal of this enhancement was to implement [W3.org CSS Transitions](https://www.w3.org/TR/css-transitions-1/) in JavaFX.  From what I can see, they have come pretty close to the specification listed there.  
 
 # Why Use This?
 
@@ -34,7 +40,7 @@ and a bit later:
 > CSS Transitions makes it easy to define animated transitions and create rich and fluid user experiences. CSS Transitions also nicely complements control skins: while skins define the structure and semantics of a control, implicit transitions define its dynamic appearance.
 
 
-First off, since these are "transitions", this is clearly aimed at elements of styling that **change**.  Secondly, this feature only applies to styling that is defined in the style sheet.  This means that styling that is applied programatically will not transition unless you explicitly program the change inside some kind of `Transition` class.  
+First off, since these are "transitions", this is clearly aimed at elements of styling that **change**.  Secondly, this feature only applies to styling that is defined in the style sheet.  This means that styling that is applied programmatically will not transition unless you explicitly program the change inside some kind of `Transition` class.  
 
 To me, this means that this is a feature that works best with `PseudoClasses`.  As a matter of fact, the example from the JDK Issue uses the `hover PseudoClass`:
 
@@ -126,7 +132,7 @@ Now we want to turn the colour change into a transition.  All we have to do, is 
 ```
 That's it, we just added the line `transition: -fx-text-fill 5.0s;` and now the `PseudoClass` activation will trigger a transition that will take 5 seconds for it to change the text fill from `black` to `red`.  Like this:
 
-{% include video id="vYdvIieFuxs" provider="youtube" %}
+![Animation 1]({{page.Animation1}})
 
 ## Some Thoughs on Transitions
 
@@ -136,7 +142,7 @@ If you're building applications to be used in a professional setting, as I did f
 
 Transitions and animations *can* make your application look slick and professional, but only if you employ them with restraint.  Screen elements that suddenly jump from colour to colour, pop in and, and suddenly change there appearance often look clumsy, and you *can* improve this by using transitions.  But your users should never really be aware that these things are happening.
 
-From my experience, users are conciously aware that they want *functionality*.  More functionality.  New functionality,  Better functionality.  If they think that you're spending time doing "fancy" stuff, they get annoyed because the perception is that the time to develop new functionality is becoming longer because of this.
+From my experience, users are consciously aware that they want *functionality*.  More functionality.  New functionality,  Better functionality.  If they think that you're spending time doing "fancy" stuff, they get annoyed because the perception is that the time to develop new functionality is becoming longer because of this.
 
 On the other hand, user confidence in your application is critical.  So it does help if your application looks like it was written by programmers who know what they are doing and can craft a quality product.  Transitions can help with that.
 
@@ -144,7 +150,7 @@ This new feature can go a long way towards that.  How long does it take to add a
 
 The 5 second transition in this example is ridiculous.  It makes the transition starkly obvious and impossible to ignore.  However, if we shorten the transition to 0.4 seconds, it changes everything:
 
-{% include video id="Xu4KtckSjkc" provider="youtube" %}
+![Animation 2]({{page.Animation2}})
 
 
 Now the transition makes the colour change look more professional.  It's just long enough that it isn't a sharp jump from one colour to the other.
@@ -170,7 +176,7 @@ Notably, things that you *can* transition are `-fx-opacity`, `-fx-rotate`, `-fx-
 
 What if you want to transition more than a single property?  How do you do that?
 
-It looks like you can only have a single transition per CSS selector, but you can specify more than one property for that transition.
+You can only have a single transition definition per CSS selector, but you can specify more than one property for that transition.
 
 For example, this won't work:
 
@@ -195,7 +201,9 @@ But this will:
 .transition-label {
   -fx-font-size: 16px;
   -fx-font-weight: bold;
-  -fx-text-fill: black;
+  -fx-text-fill: darkgreen;
+  -fx-scale-x: 1.0;
+  -fx-scale-y: 1.0;
   transition-property: -fx-text-fill, -fx-scale-x, -fx-scale-y;
   transition-duration: 3.0s;
 }
@@ -206,12 +214,16 @@ But this will:
    -fx-scale-y: 2.0;
 }
 ```
+![Animation 3]({{page.Animation3}})
+
 However, if you do want different times, you can do this:
 ``` css
 .transition-label {
   -fx-font-size: 16px;
   -fx-font-weight: bold;
-  -fx-text-fill: black;
+  -fx-text-fill: darkgreen;
+  -fx-scale-x: 1.0;
+  -fx-scale-y: 1.0;
   transition-property: -fx-text-fill, -fx-scale-x, -fx-scale-y;
   transition-duration: 3.0s, 10s, 10s;
 }
@@ -222,13 +234,19 @@ However, if you do want different times, you can do this:
    -fx-scale-y: 2.0;
 }
 ```
-Which will transition the `-fx-text-fill` property over 3s and the other two over 10s.  The `transition-property` attribute is taken as the master, and if you have extra values for the other attributes, it will ignore them.  However, if the other lists are too short, it will repeat them.  So this:
+Which will transition the `-fx-text-fill` property over 3s and the other two over 10s.  
+
+![Animation 4]({{page.Animation4}})
+
+The `transition-property` attribute is taken as the master, and if you have extra values for the other attributes, it will ignore them.  However, if the other lists are too short, it will repeat them.  So this:
 
 ``` css
 .transition-label {
   -fx-font-size: 16px;
   -fx-font-weight: bold;
-  -fx-text-fill: black;
+  -fx-text-fill: darkgreen;
+  -fx-scale-x: 1.0;
+  -fx-scale-y: 1.0;
   transition-property: -fx-text-fill, -fx-scale-x, -fx-scale-y;
   transition-duration: 3.0s, 10s;
 }
@@ -247,7 +265,9 @@ Also, you cannot do this:
 .transition-label {
   -fx-font-size: 16px;
   -fx-font-weight: bold;
-  -fx-text-fill: black;
+  -fx-text-fill: darkgreen;
+  -fx-scale-x: 1.0;
+  -fx-scale-y: 1.0;
   transition: -fx-text-fill, -fx-scale-x, -fx-scale-y 2.5s;
 }
 
@@ -263,7 +283,9 @@ Which would be nice.  However, you can do this:
 .transition-label {
   -fx-font-size: 16px;
   -fx-font-weight: bold;
-  -fx-text-fill: black;
+  -fx-text-fill: darkgreen;
+  -fx-scale-x: 1.0;
+  -fx-scale-y: 1.0;
   transition: all 5.0s;
 }
 
@@ -295,7 +317,7 @@ To implement one of these, use the `transition-timing-function` tag in the style
 .transition-label {
   -fx-font-size: 16px;
   -fx-font-weight: bold;
-  -fx-text-fill: black;
+  -fx-text-fill: darkgreen;
   -fx-scale-x: 1.0;
   -fx-scale-y: 1.0;
   transition-property: all;
@@ -311,6 +333,28 @@ To implement one of these, use the `transition-timing-function` tag in the style
 ```
 It's extremely easy to change the interpolator, and you really have to try them out to understand how they differ.
 
+You can also have a different interpolator for each property being transitioned:
+
+``` css
+.transition-label {
+  -fx-font-size: 16px;
+  -fx-font-weight: bold;
+  -fx-text-fill: darkgreen;
+  -fx-scale-x: 1.0;
+  -fx-scale-y: 1.0;
+  transition-property: -fx-text-fill, -fx-scale-x, -fx-scale-y;
+  transition-duration: 4s, 10s, 10s;
+  transition-timing-function: -fx-ease-both, steps(12, jump-end), steps(12, jump-end);
+}
+
+.transition-label: activated {
+   -fx-text-fill: red;
+   -fx-scale-x: 2.0;
+   -fx-scale-y: 2.0;
+}
+```
+
+
 ## Transition Delay
 
 It is possible to delay the transition for any of the properties listed in `transition-property`.  Like this:
@@ -319,7 +363,7 @@ It is possible to delay the transition for any of the properties listed in `tran
 .transition-label {
   -fx-font-size: 16px;
   -fx-font-weight: bold;
-  -fx-text-fill: black;
+  -fx-text-fill: darkgreen;
   -fx-scale-x: 1.0;
   -fx-scale-y: 1.0;
   transition-property: -fx-text-fill, -fx-scale-x, -fx-scale-y;
@@ -343,7 +387,7 @@ The example from above:
 .transition-label {
   -fx-font-size: 16px;
   -fx-font-weight: bold;
-  -fx-text-fill: black;
+  -fx-text-fill: darkgreen;
   transition: all 5.0s;
 }
 
@@ -353,13 +397,13 @@ The example from above:
    -fx-scale-y: 2.0;
 }
 ```
-doesn't actually work.  It transitions the scaling and the colour when you turn *off* the `PseudoClass`, but when turning on the `PseudoClass` the scaling jumps immediately, and then the colour transitions.  You can fix this by changing the stylesheet to this:
+Doesn't actually work properly.  It transitions the scaling and the colour when you turn *off* the `PseudoClass`, but when turning on the `PseudoClass` the scaling jumps immediately, and then the colour transitions.  You can fix this by changing the stylesheet to this:
 
 ``` css
 .transition-label {
   -fx-font-size: 16px;
   -fx-font-weight: bold;
-  -fx-text-fill: black;
+  -fx-text-fill: darkgreen;
   -fx-scale-x: 1.0;
   -fx-scale-y: 1.0;
   transition: all 5.0s;
@@ -373,7 +417,7 @@ doesn't actually work.  It transitions the scaling and the colour when you turn 
 ```
 I suspect that this might be a bug.  But it's easy enough to work around.  
 
-I tried to get around the limitation of having only one transition per `Node` by adding a second selector to the `Label` called `growing-label` and then modify the stylesheet to use it:
+I tried to create multiple transitions for a `Node` by adding a second selector to the `Label` called `growing-label` and then modify the stylesheet to use it:
 
 ``` css
 .growing-label {
@@ -391,7 +435,7 @@ I tried to get around the limitation of having only one transition per `Node` by
 .transition-label {
   -fx-font-size: 16px;
   -fx-font-weight: bold;
-  -fx-text-fill: black;
+  -fx-text-fill: darkgreen;
   transition-property: -fx-text-fill;
   transition-duration: 5.0s;
 }
@@ -408,7 +452,7 @@ I tried this:
 .transition-label {
   -fx-font-size: 16px;
   -fx-font-weight: bold;
-  -fx-text-fill: black;
+  -fx-text-fill: darkgreen;
   -fx-scale-x: 1.0;
   -fx-scale-y: 1.0;
 }
@@ -421,7 +465,7 @@ I tried this:
     transition-duration: 5.0s;
 }
 ```
-And the results were as expected.  The `Label` transitioned to the 2x scaling and to `red`, but snapped back to black and 1x scaling when the `PseudoClass` was turned off again.
+And the results were as expected.  The `Label` transitioned to the 2x scaling and `red`, but snapped back to black and 1x scaling when the `PseudoClass` was turned off again.
 
 # Missing Feature: Defined Colour Transitions
 
@@ -433,7 +477,7 @@ So it would be nice to able to transition a `Node` based on a change to a color 
 .transition-label {
   -fx-font-size: 16px;
   -fx-font-weight: bold;
-  -fx-text-fill: black;
+  -fx-text-fill: darkgreen;
   -fx-scale-x: 1.0;
   -fx-scale-y: 1.0;
   -fx-background-color: -fx-color;
