@@ -14,6 +14,10 @@ Animation3: /assets/elements/CssTransition3.gif
 Animation4: /assets/elements/CssTransition4.gif
 Animation5: /assets/elements/CssTransition5.gif
 Animation6: /assets/elements/CssTransition6.gif
+Animation7: /assets/elements/CssTransition7.gif
+Animation8: /assets/elements/CssTransition8.gif
+Animation9: /assets/elements/CssTransition9.gif
+Animation10: /assets/elements/CssTransition10.gif
 Diagram: /assets/elements/ListProperties.png
 part1: /javafx/elements/observable-classes-generics
 part2: /javafx/elements/observable-classes-typed
@@ -89,7 +93,7 @@ fun main() = Application.launch(CssTransitionExample::class.java)
 
 That's all we need.  We're using a `Label` as the styled `Node` with the `PseudoClass`, and a `CheckBox` to turn the `PseudoClass` on and off.  It's pretty simple.
 
-Here's the really cool part.  For the rest of this example, we aren't going to touch this code at all...  
+Here's the really cool part.  For the rest of this article, we aren't going to touch this code at all...  
 
 Which is point of this feature.  The code just does the layout and the necessary mechanics of handling the `PseudoClass`.  Once that's set up, everything else is done via the stylesheet.
 
@@ -101,7 +105,7 @@ Let's look at the stylesheet without any transitions:
 .transition-label {
   -fx-font-size: 18px;
   -fx-font-weight: bold;
-  -fx-text-fill: black;
+  -fx-text-fill: darkgreen;
 }
 
 .transition-label: activated {
@@ -122,7 +126,7 @@ Now we want to turn the colour change into a transition.  All we have to do, is 
 .transition-label {
   -fx-font-size: 16px;
   -fx-font-weight: bold;
-  -fx-text-fill: black;
+  -fx-text-fill: darkgreen;
   transition: -fx-text-fill 5.0s;
 }
 
@@ -130,9 +134,11 @@ Now we want to turn the colour change into a transition.  All we have to do, is 
    -fx-text-fill: red;
 }
 ```
-That's it, we just added the line `transition: -fx-text-fill 5.0s;` and now the `PseudoClass` activation will trigger a transition that will take 5 seconds for it to change the text fill from `black` to `red`.  Like this:
+That's it, we just added the line `transition: -fx-text-fill 5.0s;` and now the `PseudoClass` activation will trigger a transition that will take 5 seconds for it to change the text fill from `darkgreen` to `red`.  Like this:
 
 ![Animation 1]({{page.Animation1}})
+
+I've changed the initial colour from `black` to `darkgreen` because it's opposite `red` on the colour wheel, and makes the transition a little bit easier to see when it starts.
 
 ## Some Thoughs on Transitions
 
@@ -142,7 +148,7 @@ If you're building applications to be used in a professional setting, as I did f
 
 Transitions and animations *can* make your application look slick and professional, but only if you employ them with restraint.  Screen elements that suddenly jump from colour to colour, pop in and, and suddenly change there appearance often look clumsy, and you *can* improve this by using transitions.  But your users should never really be aware that these things are happening.
 
-From my experience, users are consciously aware that they want *functionality*.  More functionality.  New functionality,  Better functionality.  If they think that you're spending time doing "fancy" stuff, they get annoyed because the perception is that the time to develop new functionality is becoming longer because of this.
+From my experience, users are consciously aware that they want *functionality*.  More functionality.  New functionality,  Better functionality.  If they think that you're spending time doing "fancy" stuff, they get annoyed because the perception is that the time that it takes to develop new functionality is becoming longer because of this "fancy" fluff.
 
 On the other hand, user confidence in your application is critical.  So it does help if your application looks like it was written by programmers who know what they are doing and can craft a quality product.  Transitions can help with that.
 
@@ -184,7 +190,7 @@ For example, this won't work:
 .transition-label {
   -fx-font-size: 16px;
   -fx-font-weight: bold;
-  -fx-text-fill: black;
+  -fx-text-fill: darkgreen;
   transition: -fx-text-fill 0.4s;
   transition: -fx-scale-x 2.5s;
   transition: -fx-scale-y 2.5s;
@@ -258,6 +264,8 @@ The `transition-property` attribute is taken as the master, and if you have extr
 }
 ```
 Will result in the `-fx-text-fill` property transitioning over 3s, the `-fx-scale-x` over 10s and then the `-fx-scale-y` over 3s as the list of durations is repeated to satisfy all of the properties specified.
+
+![Animation 5]({{page.Animation5}})
 
 Also, you cannot do this:
 
@@ -354,6 +362,7 @@ You can also have a different interpolator for each property being transitioned:
 }
 ```
 
+![Animation 6]({{page.Animation6}})
 
 ## Transition Delay
 
@@ -379,9 +388,11 @@ It is possible to delay the transition for any of the properties listed in `tran
 ```
 This will cause the `-fx-text-fill` property to transition in 0.4s after as 5s delay, while the scaling properties transition over a 10s period with no delay.
 
+![Animation 7]({{page.Animation7}})
+
 ## Some Quirks
 
-The example from above:
+If you don't include the starting values in the base styling, then the transition becomes a bit odd:
 
 ``` css
 .transition-label {
@@ -397,7 +408,11 @@ The example from above:
    -fx-scale-y: 2.0;
 }
 ```
-Doesn't actually work properly.  It transitions the scaling and the colour when you turn *off* the `PseudoClass`, but when turning on the `PseudoClass` the scaling jumps immediately, and then the colour transitions.  You can fix this by changing the stylesheet to this:
+This transitions the scaling and the colour when you turn *off* the `PseudoClass`, but when turning on the `PseudoClass` the scaling jumps immediately, and then the colour transitions.  
+
+![Animation 8]({{page.Animation8}})
+
+You can fix this by changing the stylesheet to this:
 
 ``` css
 .transition-label {
@@ -446,7 +461,7 @@ I tried to create multiple transitions for a `Node` by adding a second selector 
 ```
 But this didn't work.  In fact, it turned off the transition on the scaling and then did just the transition for the colour.  
 
-I tried this:
+What if you put the transition properties in the `PseudoClass` selector section?  I tried this:
 
 ``` css
 .transition-label {
@@ -458,14 +473,16 @@ I tried this:
 }
 
 .transition-label: activated {
-   -fx-text-fill: red;
-    -fx-scale-x: 2.0;
-    -fx-scale-y: 2.0;
-    transition-property: all;
-    transition-duration: 5.0s;
+  -fx-text-fill: red;
+  -fx-scale-x: 2.0;
+  -fx-scale-y: 2.0;
+  transition-property: all;
+  transition-duration: 5.0s;
 }
 ```
-And the results were as expected.  The `Label` transitioned to the 2x scaling and `red`, but snapped back to black and 1x scaling when the `PseudoClass` was turned off again.
+And the results were as I suspected.  The `Label` transitioned to the 2x scaling and `red`, but snapped back to black and 1x scaling when the `PseudoClass` was turned off again:
+
+![Animation 9]({{page.Animation9}})
 
 # Missing Feature: Defined Colour Transitions
 
@@ -483,7 +500,6 @@ So it would be nice to able to transition a `Node` based on a change to a color 
   -fx-background-color: -fx-color;
   -fx-color: blue;
   transition-property: all;
-  transition-timing-function: -fx-ease-both;
   transition-duration: 2.0s;
 }
 
@@ -494,10 +510,70 @@ So it would be nice to able to transition a `Node` based on a change to a color 
    -fx-scale-y: 2.0;
 }
 ```
-But it did not.
+But it did not work.
+
+Personally, I would really like to see the ability to transition named colours because that would open up a whole world of possibilities for animating standard `Nodes` with standard `PseudoClasses`.  Take a look at these styles for `PseudoClasses` from Modena:
+
+``` css
+.button:hover,
+.toggle-button:hover,
+.radio-button:hover > .radio,
+.check-box:hover > .box,
+.menu-button:hover,
+.split-menu-button > .label:hover,
+.split-menu-button > .arrow-button:hover,
+.slider .thumb:hover,
+.scroll-bar > .thumb:hover,
+.scroll-bar > .increment-button:hover,
+.scroll-bar > .decrement-button:hover,
+.choice-box:hover,
+.color-picker.split-button > .arrow-button:hover,
+.color-picker.split-button > .color-picker-label:hover,
+.combo-box-base:hover,
+.combo-box-base:editable > .arrow-button:hover,
+.spinner .increment-arrow-button:hover,
+.spinner .decrement-arrow-button:hover,
+.tab-pane > .tab-header-area > .control-buttons-tab > .container > .tab-down-button:hover {
+    -fx-color: -fx-hover-base;
+}
+.button:armed,
+.toggle-button:armed,
+.radio-button:armed > .radio,
+.check-box:armed .box,
+.menu-button:armed,
+.split-menu-button:armed > .label,
+.split-menu-button > .arrow-button:pressed,
+.split-menu-button:showing > .arrow-button,
+.slider .thumb:pressed,
+.scroll-bar > .thumb:pressed,
+.scroll-bar > .increment-button:pressed,
+.scroll-bar > .decrement-button:pressed,
+.choice-box:showing,
+.combo-box-base:showing,
+.combo-box-base:editable:showing > .arrow-button,
+.spinner .increment-arrow-button:pressed,
+.spinner .decrement-arrow-button:pressed,
+.tab-pane > .tab-header-area > .control-buttons-tab > .container > .tab-down-button:pressed {
+    -fx-color: -fx-pressed-base;
+}
+```
+All of these elements that support `hover` and `armed` and `pressed` change their styling for those `PseudoClasses` by simply redefining  `-fx-color` in those contexts.  Image if you wanted `Button` to transition on `hover` and `armed`, you could do this:
+
+``` css
+.transition-button {
+  transition-property -fx-color;
+  transition-duration: 0.7s;
+}
+```
+Then all you would have to do is:
+
+``` kotlin
+button.styleclass += "transition-button"
+```
+And you're done.  But, unfortunately, we cannot do that.
 
 
-# Dealing With CSS Transitions Programatically
+# Dealing With CSS Transitions Programmatically
 
 There are circumstances in which you might want to cope with a CSS transition inside your layout code.  To enable this, a new `Event` type has been added, `TrasitionEvent`, which is fired when a CSS transition starts and ends.  This means that you can detect a CSS transition and have your layout respond to it.
 
@@ -507,7 +583,7 @@ We'll modify our layout such that the `CheckBox` is disabled while the CSS trans
 class CssTransitionExample : Application() {
     private val activatedPC = PseudoClass.getPseudoClass("activated")
     private val activated: BooleanProperty = SimpleBooleanProperty(false)
-    private val transitionRunning: BooleanProperty = SimpleBooleanProperty(false)
+    private val transitionCounter: IntegerProperty = SimpleIntegerProperty(0)
     override fun start(stage: Stage) {
         stage.scene = Scene(createContent(), 340.0, 200.0).apply {
             CssTransitionExample::class.java.getResource("example.css")?.toString()?.let { stylesheets += it }
@@ -520,14 +596,14 @@ class CssTransitionExample : Application() {
             styleClass += "transition-label"
             activated.subscribe { newVal -> pseudoClassStateChanged(activatedPC, newVal) }
             this.addEventHandler(TransitionEvent.START) { evt ->
-                transitionRunning.value = true
+                transitionCounter.value += 1
                 println("Started: ${evt.property}")
             }
-            this.addEventHandler(TransitionEvent.END) { transitionRunning.value = false }
+            this.addEventHandler(TransitionEvent.END) { transitionCounter.value -= 1 }
         }
         bottom = CheckBox("Activate PseudoClass").apply {
             selectedProperty().bindBidirectional(activated)
-            disableProperty().bind(transitionRunning)
+            disableProperty().bind(transitionCounter.greaterThan(0))
         }
         padding = Insets(40.0)
         val fred = PropertyValueFactory<String, String>("Abc")
@@ -536,7 +612,7 @@ class CssTransitionExample : Application() {
 
 fun main() = Application.launch(CssTransitionExample::class.java)
 ```
-{% include video id="pWl5UOwOi_8" provider="youtube" %}
+![Animation 10]({{page.Animation10}})
 
 I've also added some code to print some information about the `Event` to the console.  This is interesting, because it shows 3 transitions running:
 
@@ -550,10 +626,14 @@ Started: DoubleProperty [bean: Label@44abad90[styleClass=label transition-label]
 ```
 The first three lines are when the `PseudoClass` is applied, and the last three are for when it is removed.
 
+This is why you need to use the counter approach, instead of just enabling and disabling the `Button` directly in the `EventHandlers`.  The `Button` is disabled the moment that the first transition starts, and sets the counter to "1", then is enabled when the final transition completes and sets the counter back to "0".
+
 This kind of monitoring is less useful when your transitions are strictly stylistic and fast, but if you're doing something that is more functional it could come in handy.
 
 # Conclusion
 
 This new feature makes it dead easy to add transitions to a useful set of styling properties that you might want to modify when applying `PseudoClasses`.  And it does it without requiring any changes to your layout code.  
 
-The issue notes clearly indicate that this new feature is still in its early stages and that we can expect enhancements in the future.
+All of the examples in this article except for the last one that shows how to integrate CSS Transitions with code differ only in the stylesheets.  All of the different techniques were demonstrated without changing anything in the layout code.  How cool is that?
+
+The issue notes clearly indicate that this new feature is still in its early stages and that we can expect enhancements in the future.  Hopefully, this will include the ability to perform transitions on named colours.
