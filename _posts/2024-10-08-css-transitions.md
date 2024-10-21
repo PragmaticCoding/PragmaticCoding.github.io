@@ -177,6 +177,27 @@ Essentially, you can transition anything in the stylesheet which is defined by `
 
 Notably, things that you *can* transition are `-fx-opacity`, `-fx-rotate`, `-fx-scale-x`, `-fx-scale-y`, `-fx-translate-x`, and `-fx-translate-y`.  You can also transition anything defined by a single `<paint>`, which includes `-fx-fill`, `-fx-stroke`, and `-fx-text-fill`.
 
+### New Transitions in JFX 24
+
+Issue [#83332895](https://github.com/openjdk/jfx/pull/1522#top), included in JFX release 24 has support for the following `Node Properties`:
+
+* Insets
+* Background
+* BackgroundFill
+* BackgroundImage
+* BackgroundPosition
+* BackgroundSize
+* Border
+* BorderImage
+* BorderStroke
+* BorderWidths
+* CornerRadii
+* Stop
+* Paint and all of its subclasses
+* Margins (internal type)
+* BorderImageSlices (internal type)
+
+At the time of writing this article, JFX 24 is only available in "early access".
 
 ## Transitioning Multiple Attributes
 
@@ -285,7 +306,49 @@ Also, you cannot do this:
    -fx-scale-y: 2.0;
 }
 ```
-Which would be nice.  However, you can do this:
+But you can specify
+
+``` css
+.transition-label {
+  -fx-font-size: 16px;
+  -fx-font-weight: bold;
+  -fx-text-fill: darkgreen;
+  -fx-scale-x: 1.0;
+  -fx-scale-y: 1.0;
+  transition: -fx-text-fill 2.5s,
+              -fx-scale-x 2.5s,
+              -fx-scale-y 2.5s;
+}
+
+.transition-label: activated {
+   -fx-text-fill: red;
+   -fx-scale-x: 2.0;
+   -fx-scale-y: 2.0;
+}
+```
+But you cannot do this:
+
+``` css
+.transition-label {
+  -fx-font-size: 16px;
+  -fx-font-weight: bold;
+  -fx-text-fill: darkgreen;
+  -fx-scale-x: 1.0;
+  -fx-scale-y: 1.0;
+  transition: -fx-text-fill 2.5s,
+              -fx-scale-x,
+              -fx-scale-y;
+}
+
+.transition-label: activated {
+   -fx-text-fill: red;
+   -fx-scale-x: 2.0;
+   -fx-scale-y: 2.0;
+}
+```
+You must specify the duration for each property because the default is `0s`.  
+
+However, you can do this:
 
 ``` css
 .transition-label {
@@ -295,6 +358,61 @@ Which would be nice.  However, you can do this:
   -fx-scale-x: 1.0;
   -fx-scale-y: 1.0;
   transition: all 5.0s;
+}
+
+.transition-label: activated {
+   -fx-text-fill: red;
+   -fx-scale-x: 2.0;
+   -fx-scale-y: 2.0;
+}
+```
+Finally, because the default for `transition-property` is all, you *can* do this:
+
+``` css
+.transition-label {
+  -fx-font-size: 16px;
+  -fx-font-weight: bold;
+  -fx-text-fill: darkgreen;
+  -fx-scale-x: 1.0;
+  -fx-scale-y: 1.0;
+  transition: 5.0s;
+}
+
+.transition-label: activated {
+   -fx-text-fill: red;
+   -fx-scale-x: 2.0;
+   -fx-scale-y: 2.0;
+}
+```
+But you cannot do this:
+
+``` css
+.transition-label {
+  -fx-font-size: 16px;
+  -fx-font-weight: bold;
+  -fx-text-fill: darkgreen;
+  -fx-scale-x: 1.0;
+  -fx-scale-y: 1.0;
+  transition-duration: 5.0s;
+}
+
+.transition-label: activated {
+   -fx-text-fill: red;
+   -fx-scale-x: 2.0;
+   -fx-scale-y: 2.0;
+}
+```
+While you can do this:
+
+``` css
+.transition-label {
+  -fx-font-size: 16px;
+  -fx-font-weight: bold;
+  -fx-text-fill: darkgreen;
+  -fx-scale-x: 1.0;
+  -fx-scale-y: 1.0;
+  transition-property: all;
+  transition-duration: 5.0s;
 }
 
 .transition-label: activated {
@@ -484,7 +602,7 @@ And the results were as I suspected.  The `Label` transitioned to the 2x scaling
 
 ![Animation 9]({{page.Animation9}})
 
-# Missing Feature: Defined Colour Transitions
+# Something That Won't Transition: Defined Colours
 
 A lot of CSS styling defined in Modena related to the standard `PseudoClasses` depends on changing the definitions of some pre-defined colours in the stylesheet.  Changing the definition of `-fx-color` in the context of a `PseudoClass` can change the appearance of that `Node` without having to recreate a lot of complicated styling.  
 
@@ -557,7 +675,7 @@ Personally, I would really like to see the ability to transition named colours b
     -fx-color: -fx-pressed-base;
 }
 ```
-All of these elements that support `hover` and `armed` and `pressed` change their styling for those `PseudoClasses` by simply redefining  `-fx-color` in those contexts.  Image if you wanted `Button` to transition on `hover` and `armed`, you could do this:
+All of these elements that support `hover` and `armed` and `pressed` change their styling for those `PseudoClasses` by simply redefining  `-fx-color` in those contexts.  Imagine that if you wanted `Button` to transition on `hover` and `armed`, you could do this:
 
 ``` css
 .transition-button {
@@ -575,7 +693,7 @@ And you're done.  But, unfortunately, we cannot do that.
 
 # Dealing With CSS Transitions Programmatically
 
-There are circumstances in which you might want to cope with a CSS transition inside your layout code.  To enable this, a new `Event` type has been added, `TrasitionEvent`, which is fired when a CSS transition starts and ends.  This means that you can detect a CSS transition and have your layout respond to it.
+There are circumstances in which you might want to cope with a CSS transition inside your layout code.  To enable this, a new `Event` type has been added, `TransitionEvent`, which is fired when a CSS transition starts and ends.  This means that you can detect a CSS transition and have your layout respond to it.
 
 We'll modify our layout such that the `CheckBox` is disabled while the CSS transition is running:
 
