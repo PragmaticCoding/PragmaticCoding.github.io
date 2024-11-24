@@ -1,6 +1,6 @@
 ---
 title:  "Why I Use Kotlin in My JavaFX Tutorials"
-date:   2024-03-17 00:00:00 -0500
+date:   2024-11-13 00:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
 permalink: /javafx/why_kotlin

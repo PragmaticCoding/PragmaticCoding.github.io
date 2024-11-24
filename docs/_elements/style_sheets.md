@@ -40,17 +40,20 @@ feature_row_enum_pseudoclass:
     url: "/javafx/nonbinary-pseudoclass"
     btn_label: "Read the Article"
     btn_class: "btn--primary"
+
+feature_row_modena:
+  - image_path: /assets/elements/Modena3.png
+    alt: "Modena"
+    title: "Dealing With Modena"
+    excerpt: 'Modena is the stylesheet that ships with modern versions of JavaFX.  This guide is an introduction to the structure of Modena and the techniques that you will need to understand in order to work with it.'
+    url: "/javafx/elements/modena"
+    btn_label: "Read the Article"
+    btn_class: "btn--primary"
 ---
 
-# JavaFX nodes
+# Styling in JavaFX
 
-There are large amount of classes in JavaFX arranged in a hierarchy starting with a top level class called, `Node`.  There are a number of layout classes that all work differently, such as `BorderPane`, `ScrollPane`, `HBox`, `VBox`, `GridPane` and `StackPane` which can all be embedded inside of each other to create exactly the layout you want.
-
-There are classes to display images, text or text and images together.  `ListView`, `TreeView` and `TableView` allow collections of data to be displayed on screen (and edited) in highly customizable ways.
-
-For user input, you can choose from `TextField`, `ComboBox`, `ChoiceBox`, `Spinner`, `Checkbox`, `RadioButton`, `Buttons` and `ToggleButtons`.
-
-All of these Nodes have a large number of methods and properties for controlling their presentation and how they act.  Learning how to use them and configure them can be a daunting task.  Luckily, most of the tutorials on the web seem to focus on this aspect of JavaFX, so help is easy to find.
+The preferred method of styling `Nodes` in JavaFx is to use CSS stylesheets.  In JavaFX, the stylesheets and the internal code for the various `Nodes` are tightly integrated, and it is important to understand how the two work together.  The articles on this page will give you the tools you need to get started with styling your own applications.
 
 # The Articles:
 
@@ -59,3 +62,5 @@ All of these Nodes have a large number of methods and properties for controlling
 {% include feature_row id="feature_row_pseudoclass_intro" type="left" %}
 
 {% include feature_row id="feature_row_enum_pseudoclass" type="left" %}
+
+{% include feature_row id="feature_row_modena" type="left" %}
