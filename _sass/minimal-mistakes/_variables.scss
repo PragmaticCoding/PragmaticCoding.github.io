@@ -23,7 +23,7 @@ $sans-serif-narrow: $sans-serif !default;
 $helvetica: Helvetica, "Helvetica Neue", Arial, sans-serif !default;
 
 /* serif typefaces */
-$georgia: Georgia, serif !default; 
+$georgia: Georgia, serif !default;
 $times: Times, serif !default;
 $bodoni: "Bodoni MT", serif !default;
 $calisto: "Calisto MT", serif !default;
@@ -56,10 +56,11 @@ $h-size-6: 1em !default; // ~16px
    ========================================================================== */
 
 $gray: #7a8288 !default;
+$theme: #a010a0;
 $dark-gray: mix(#000, $gray, 50%) !default;
 $darker-gray: mix(#000, $gray, 60%) !default;
 $light-gray: mix(#fff, $gray, 50%) !default;
-$lighter-gray: mix(#fff, $gray, 90%) !default;
+$lighter-gray: mix(#fff, $theme, 90%) !default;
 
 $background-color: #fff !default;
 $code-background-color: #fafafa !default;

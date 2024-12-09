@@ -1,19 +1,811 @@
 ---
-title:  "EdenCoding's Guide to TableView Styling"
-date:   2024-08-03 12:00:00 -0500
+title:  "JavaFX Styling Guide: TableView"
+date:   2024-12-08 12:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
-permalink: /javafx/elements/eden-tableView
-ScreenSnap1: /assets/elements/ListObservables1.png
-ScreenSnap2: /assets/elements/ListObservables2.png
-ScreenSnap3: /assets/elements/ListObservables3.png
-ScreenSnap4: /assets/elements/ListObservables4.png
-Diagram: /assets/elements/ListProperties.png
-part1: /javafx/elements/observable-classes-generics
-part2: /javafx/elements/observable-classes-typed
-
-excerpt: A look at the Observable classes that wrap ObservableList
+articles: /javafx/elements/tableview_listview
+style_articles: /javafx/elements/stylesheets_pseudoclasses
+kotlin: /kotlin/intro
+permalink: /javafx/elements/styling-tableView
+ScreenSnap0: /assets/elements/TableStyle0.png
+ScreenSnap1: /assets/elements/TableStyle1.png
+ScreenSnap2: /assets/elements/TableStyle2.png
+ScreenSnap3: /assets/elements/TableStyle3.png
+ScreenSnap4: /assets/elements/TableStyle4.png
+ScreenSnap5: /assets/elements/TableStyle5.png
+ScreenSnap6: /assets/elements/TableStyle6.png
+ScreenSnap7: /assets/elements/TableStyle7.png
+ScreenSnap8: /assets/elements/TableStyle8.png
+ScreenSnap9: /assets/elements/TableStyle9.png
+ScreenSnap10: /assets/elements/TableStyle10.png
+ScreenSnap11: /assets/elements/TableStyle11.png
+ScreenSnap12: /assets/elements/TableStyle12.png
+ScreenSnap13: /assets/elements/TableStyle13.png
+ScreenSnap14: /assets/elements/TableStyle14.png
+ScreenSnap15: /assets/elements/TableStyle15.png
+ScreenSnap16: /assets/elements/TableStyle16.png
+ScreenSnap17: /assets/elements/TableStyle17.png
+ScreenSnap18: /assets/elements/TableStyle18.png
+ScreenSnap19: /assets/elements/TableStyle19.png
+ScreenSnap20 : /assets/elements/TableStyle20.png
+ScreenSnap21 : /assets/elements/TableStyle21.png
+ScreenSnap22 : /assets/elements/TableStyle22.png
+ScreenSnap23 : /assets/elements/TableStyle23.png
+ScreenSnap24 : /assets/elements/TableStyle24.png
+ScreenSnap25 : /assets/elements/TableStyle25.png
+ScreenSnap26 : /assets/elements/TableStyle26.png
+ScreenSnap27 : /assets/elements/TableStyle27.png
+ScreenSnap28 : /assets/elements/TableStyle28.png
+excerpt: A deep look at the styling of TableView
 ---
+# Introduction
+
+`TableView` is an extremely popular control, but it's also probably the most complex and least understood.  This article is about to manage the styling aspects of `TableView` but it would help if you understood the basics.  This [page]({{page.articles}}) has several articles that explain how to create and customize `TableViews` in your layouts.  If you are not comfortable with CSS in JavaFX and the Modena stylesheet, [this page]({{page.style_articles}}) has articles that can help you.
+
+`TableView` is composed of a large number of components nested into several layers.  Most of these components have their own styling elements, so understanding how to style `TableView` really means understanding how to style all of these components, and how they interact.  The approach in this article is to look at virtually *all* of the style class selectors of all of the components and to examine how they are used.
+
+This article is broken down into two main sections.  The first is a tutorial section that explains some techniques that you can use to exploit the structure of `TableView` and the style class selectors that are available.  The second is a reference section that lists every style class selector in every component element that I could track down.  This should give you all the information you need to customize `TableView`.
+
+There's not much code in the article, but what code there is, is written in [Kotlin]({{page.kotlin}}).
+
+## A Note on Selectors in the Article
+
+In order to keep all of the examples as simple and as generic as possible, any references to style class selectors that might be ambiguous with other classes supported by Modena have been prefixed with `.table-view`.  
+
+In practice, it is probably better to add a custom style class selector to your `TableView` and then use that as the root of your selectors.  For instance, the `column-header` selector is used with both `TreeView` and `TableView`.  Let's say that you want to style the `TableColumnHeaders` for a `TableView` in your layout...
+
+Start by assigning a selector to the `TableView`, let's say `my-table`.  Then you would use:
+
+``` css
+.my-table .column-header {}
+```
+instead of:
+``` css
+.table-view .column-header {}
+```
+However, in this article you will only see the second form used.
+
+# Tutorials
+
+One of the biggest challenges with styling `TableView`, apart from the fact that it's quite complicated, is that many of the internal components are not exposed to the programming API.  This means that you cannot extend them, modify them or change their implementation.  All you can do is add styling for them via CSS.  
+
+The overall structure of `TableView` is that it is composed of two main parts:  The header row, and the `VirtualFlow` which contains everything else.  Inside the `VirtualFlow` there are the `ScrollBars` if required, and a clipping rectangle holding a `Group` called `sheet`.  Inside `sheet` are the `TableRows` which in turn hold the `TableCells`.  
+
+Every component, from `TableView`, through `VirtualFlow` down to `TableCell` has style class selectors.  Often they have several selectors, and they may be shared with other components.
+
+## TableRow and TableCell Styling
+
+We'll start by looking at the body of `TableView`, which are the elements contained inside `sheet`.
+
+### Standard Styling
+
+The structure of the body of a `TableView` is a set of `TableRows`, each of which contains a number of `TableCells`.  This means that the `TableRow` is the enclosing layout component for all of the `TableCells`.  In standard Modena, the `TableCells` are normally transparent with a thin border on the right, resulting in much of the colour of the `TableCells` coming from the underlying `TableRow`:
+
+``` css
+.table-cell {
+    -fx-padding: 0.166667em; /* 2px, plus border adds 1px */
+    -fx-background-color: null;
+    -fx-border-color: transparent -fx-table-cell-border-color transparent transparent;
+    -fx-cell-size: 2.0em; /* 24 */
+    -fx-text-fill: -fx-text-background-color;
+}
+```
+The main selector for `TableRow` is `.table-row-cell` and supports the `odd` and `even` Pseudo-classes from `IndexedCell`:
+
+```css
+.table-row-cell {
+    -fx-background: -fx-control-inner-background;
+    -fx-background-color: -fx-table-cell-border-color, -fx-background;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0;
+    -fx-text-fill: -fx-text-background-color;
+}
+.table-row-cell:odd {
+    -fx-background: -fx-control-inner-background-alt;
+}
+```
+Where:
+``` css
+-fx-control-inner-background-alt: derive(-fx-control-inner-background,-2%)
+```
+And this is what you see in an otherwise unstyled `TableView`, the cell text sitting on alternating rows of grey and slightly-darker-grey.
+
+Primarily, in Modena you'll see styling for `TableRows` that have the Pseudo-class `selected` (often combined with `filled`):
+
+``` css
+..table-view:focused > .virtual-flow > .clipped-container > .sheet > .table-row-cell:filled:selected {
+  -fx-background: -fx-selection-bar;
+  -fx-table-cell-border-color: derive(-fx-selection-bar, 20%);
+}
+```
+Which is the bluish colour you're familiar with:
+
+![Focused TableView with Selection]({{page.ScreenSnap22}})
+
+With the focus somewhere else, it looks like this:
+
+![Unfocused TableView with Selection]({{page.ScreenSnap23}})
+
+### Custom Cell Styling
+
+For sure, you can create a `CellFactory` for any column, and in your custom code you can assign whatever selectors that you want and do all kinds of things.  But there are good reasons to style the `TableCells` in a particular column without doing all that.  Primarily, that you don't have to create a custom `CellFactory` to do it.  
+
+Also, it's probably a good practice to set up a bunch of re-usable custom `TableColumns` that deal with particular data types that you commonly encounter.  For instance, you might want to create a `DateTableColumn` that handles date display in a standardized way, or a `MoneyTableColumn` or `IntegerTableColumn`.
+
+In these cases, assign a style class selector to the cells in a `TableColumn` and all of the cells in that column will get that selector.  This includes the `TabelColumnHeader` as well.  You can exclude the `TableColumnHeader` in your style sheet by specifying your selector as a sub-component of `.table-row-cell`.  This would typically be one of these forms:
+
+``` css
+.table-row-cell .my-selector {}
+.table-view .table-row-cell .my-selector {}
+.table-view > .virtual-flow > .clipped-container > .sheet > .table-row-cell .my-selector {}
+.my-table-selector .table-row-cell .my-selector {}
+```
+
+You can use it like this:
+
+``` kotlin
+columns += TableColumn<TableData1, String>("Column A").apply {
+    setCellValueFactory { it.value.value1 }
+    styleClass += "a-column"
+}
+```
+and
+``` css
+.table-row-cell > .a-column {
+  -fx-background-color: red;
+  -fx-background-insets: 0 0 1 0px;
+}
+```
+Which looks like this:
+
+![Screen Snap 18]({{page.ScreenSnap18}})
+
+If you don't specify `.table-row-cell` as the parent, you'll get this:
+
+![Screen Snap 21]({{page.ScreenSnap21}})
+
+Which is probably not what you want.
+
+Once you apply this kind of styling to a `TableCell`, you'll have to contend with the fact that its non-transparency will mess with the `TableRow` styling underneath, particularly with selected `TableRows`:
+
+![Screen Snap 24]({{page.ScreenSnap24}})
+
+One way to deal with this is to add a custom styling for `a-column` as a child of a `TableRow` with the `selected` Pseudo-class applied:
+
+``` css
+.table-row-cell:selected > .a-column {
+  -fx-background-color: #ee000070;
+}
+```
+Here, the background colour has had its opacity reduced:
+
+![Screen Snap 25]({{page.ScreenSnap25}})
+
+### Row Styling Based on Data Values
+
+`TableRow` inherits from `Cell` through `IndexedCell`, which means that it supports customization just like `TableCell`.  However, while you are not meant to mess about with the layout of `TableRow`, you can add other custom features like Pseudo-classes and behaviours based on data in the `TableRow`.
+
+Just like `TableCell`, enough `TableRows` are created to fill the viewport of the `TableView` and then they are recycled and reloaded with data as the user scrolls through the `TableView`.  The key method here is `Cell.updateItem()` which you can customize as required.  Let's look at how to add a `PseudoClass` to the `TableRow` and then link it to an element in the `TableRow` data:
+
+``` kotlin
+class CustomTableRow : TableRow<TableData1>() {
+    companion object PseudoClasses {
+        val specialPC = PseudoClass.getPseudoClass("special")
+    }
+
+    override fun updateItem(newValue: TableData1?, empty: Boolean) {
+        super.updateItem(newValue, empty)
+        if (empty || newValue == null) {
+            pseudoClassStateChanged(specialPC, false)
+        } else {
+            pseudoClassStateChanged(specialPC, newValue.value4.value)
+        }
+    }
+}
+```
+The only customization that we've done here is to create a `PseudoClass` as a static member of the `CustomTableRow` and then used `CustomTableRow.updateItem()` to call `pseudoClassStateChanged()` according to the new data being loaded.
+
+If we apply the following styling:
+
+``` css
+.table-row-cell:special {
+  -fx-background-color: red;
+}
+```
+We get the following result:
+
+![Screen Snap 19]({{page.ScreenSnap19}})
+
+We don't just have to style the entire row.  We can apply styling to a specific cell if we've added a style class selector to its `TableColumn` by doing this:
+
+``` css
+.table-row-cell:special > .a-column {
+   -fx-background-color: red;
+   -fx-background-insets: 0 0 1 0px;
+ }
+```
+Note that this is exactly the same as the example in the previous section except that we've applied the `special` Pseudo-class to `.table-row-cell` instead of `selected`:
+
+![Screen Snap 20]({{page.ScreenSnap20}})
+
+But also note that we have the same problem as before:
+
+![Screen Snap 26]({{page.ScreenSnap26}})
+
+But we can fix it by adding a new selector for `TableRow` with *both* Pseudo-classes applied and reducing the opacity again:
+
+``` css
+.table-row-cell:selected:special > .a-column {
+  -fx-background-color: #ee000070;
+}
+```
+
+![Screen Snap 27]({{page.ScreenSnap27}})
+
+And you can see that the rows without the `special` Pseudo-class continue to work as normal:
+
+![Screen Snap 28]({{page.ScreenSnap28}})
+
+## Accessing Specific Column Headers
+
+Instances of `TableColumnHeader` are not going to be programmatically accessible to you, since they are purely internal to the `TableView`.  The only elements that you can add style class selectors to are the one that you normally access when defining the table.  This is mostly `TableColumn`, `TableRow` and `TableCell`.
+
+Fortunately, a `TableColumnHeader` will automatically be assigned any style class selectors added to their associated `TableColumn`.  So the following code will add the selector, "a-column" to the `TabelColumnHeader` associated with this column.
+
+``` kotlin
+columns += TableColumn<TableData, String>("Column A").apply {
+    setCellFactory { CustomTableCell() }
+    setCellValueFactory { it.value.value1 }
+    styleClass += "a-column"
+}
+```
+If we try to style this column directly using something like this:
+
+``` css
+.a-column .text {
+  -fx-fill: red;
+}
+```
+We get this:
+
+![Screen Snap 12]({{page.ScreenSnap12}})
+
+You can see that it's styled all the `Text` in the column, and not just the column header.  However, if we use the fact that the column header is enclosed in the `TableHeaderRow`, which has the selector, ".column-header-background", then we can isolate the column header:
+
+``` css
+.table-view .column-header-background .a-column .text {
+  -fx-fill: red;
+}
+```
+Which looks like this:
+
+![Screen Snap 11]({{page.ScreenSnap11}})
+
+## Nested Column Headers
+
+In `TableView` all `TableColumns` are potentially parents of nested columns.  The entire header row is actually styled as a single nested column, and then using the `TableColumn.getColumns().add()` method on any `TableColumn` will generate another nested column inside the main nested column.  Rinse and repeat if you want nested nested columns.
+
+The JavaFX terminology is that the parent column gets the term "Nested" even though the it's the child columns that are nested.  The class for the parent column header is `NestedTableColumnHeader`, and it has a style sheet selector of `nested-column-header`.  Unfortunately, you can't really get to any of the header row components directly through programming without cheating and you have to do your customization through the TableColumn itself.
+
+This presents a problem if you want to style the header for different nested columns differently, especially since JavaFX CSS doesn't support sibling selectors.  Let's look at this code:
+
+``` kotlin
+TableView<TableData>().apply {
+   columns += TableColumn<TableData, String>("Column A").apply {
+      setCellFactory { CustomTableCell() }
+      setCellValueFactory { it.value.value1 }
+  }
+  columns += TableColumn<TableData, String>("B and C").apply {
+      styleClass += "bc-nested-column"
+      columns += TableColumn<TableData, String>("Column B").apply {
+          setCellFactory { CustomTableCell() }
+          setCellValueFactory { it.value.value2 }
+          styleClass += "bc-column"
+      }
+      columns += TableColumn<TableData, String>("Column C").apply {
+          setCellFactory { CustomTableCell() }
+          setCellValueFactory { it.value.value3 }
+          styleClass += "bc-column"
+      }
+   }
+}
+```
+Columns "B" and "C" are inside a nested column with the title "B and C".  The nested column gets the selector `bc-nested-column` and the two inner columns get the selector `bc-column`.  Since we don't have sibling combinators to allow us to use `.nested-column-header ~ bc-nested-column` as a selector, our options for styling are limited.  However, we can do this:
+
+``` css
+.root {
+  -wfx-header-background: linear-gradient(to right, #1dbbdd, #9310b9)
+}
+
+.table-view .column-header-background {
+   -fx-background-color: -wfx-header-background;
+}
+
+.table-view .column-header {
+  -fx-background-color: transparent;
+}
+
+.filler {
+  -fx-background-color: transparent;
+}
+
+.nested-column-header {
+   -fx-background-color: -wfx-header-background;
+   -wfx-header-background: transparent;
+}
+
+.bc-nested-column {
+  -wfx-header-background: linear-gradient(to bottom, #0dffee, #9310b9);
+}
+```
+Here, we have a custom colour defined as a blue to purple gradient to the right in the `.root` section.  The gradients are ugly, but they make it easy to see the continuity of the background behind other elements.  Then we set the global header background to this colour.  Then we set all of the column headers to transparent, including the filler column at the far right.  Next, we set `-fx-background-color` for the nested column headers to our custom colour and redefine it to be transparent in this context.  Finally, for our nested "B and C" column, we redefine our custom colour to be the same gradient, but going down instead of to the right.  
+
+It looks like this:
+
+![Screen Snap 7]({{page.ScreenSnap7}})
+
+The biggest issue here is the filler column at the right.  This is defined **outside** the nested column header that covers all of the other parts of the header row.  This means that we have to apply the custom colour to the header background, and then make the main nested column header transparent.  If we get rid of the filler by setting a constrained `ColumnResizePolicy`, and then adding a fourth column just to have something at the right, then we can simplify the style sheet:
+
+``` css
+.root {
+  -wfx-header-background: linear-gradient(to right, #1dbbdd, #9310b9)
+}
+
+.table-view .column-header {
+  -fx-background-color: transparent;
+}
+
+.nested-column-header {
+   -fx-background-color: -wfx-header-background;
+}
+
+.bc-nested-column {
+  -wfx-header-background: linear-gradient(to bottom, #0dffee, #9310b9);
+}
+```
+Which looks like this:
+
+![Screen Snap 8]({{page.ScreenSnap8}})
+
+Now we don't need to worry about the header background or the filler, and we can set the initial gradient on the main nested column header.  
+
+Unfortunately, JavaFX only supports name elements for colours, so we cannot use this technique for other attributes, like background radii or insets.
+
+## Alternate Approaches
+
+We can use the fact that the main wrapper class for the header row is a `NestedTableColumnHeader` and specify further children of that selector:
+
+``` css
+.nested-column-header {
+   -fx-background-color: linear-gradient(to right, red, blue);
+}
+
+.nested-column-header > .nested-column-header {
+   -fx-background-color: linear-gradient(to bottom, lightgreen, pink);
+   -fx-background-radius: 10 10 3 3px;
+}
+
+.column-header {
+  -fx-background-color: transparent;
+}
+```
+Which looks like this:
+
+![Screen Snap 9]({{page.ScreenSnap9}})
+
+As you can see, this would allow you to specify more attributes than just colour - like background radius in this case.  However, you still cannot style siblings differently.  It is good if you want to style the wrapper columns for all nested columns the same.
+
+Finally, you can also assign a style class to the `TableColumn` that corresponds to the `NestedTableColumnHeader` and use the technique outlined in the "Accessing Specific Column Headers" section above.  That technique works just as well for `NestedTableColumnHeaders`.  The following style sheet:
+
+``` css
+.nested-column-header {
+   -fx-background-color: linear-gradient(to right, red, blue);
+}
+
+.bc-nested-column {
+   -fx-background-color: linear-gradient(to bottom, lightgreen, pink);
+   -fx-background-radius: 10 10 3 3px;
+}
+
+.column-header {
+  -fx-background-color: transparent;
+}
+```
+Also yields:
+
+![Screen Snap 9]({{page.ScreenSnap9}})
+
+# Styled Components of TableView
+
+This section contains as complete a listing as I could compose of the styleable elements of `TableView`.  It's organized top-down, with subsections for components that are contained within other components.  This means that the table of contents for this section should let you see at a hierarchy of the various styled components.  
+
+For each entry, I've given the individual style class selector, the actual class of the element, a description of what it is and some hints about how to use it, and then a complete listing of every entry in Modena that has that selector as the final child element.  When it seemed appropriate, I've also included images that highlight the component in action.
+
+At the top of the hierarchy is `TableView` itself, which has a single selector:
+
+| **CSS Selector:** | `table-view` |
+|  ---: | :---  |
+| **Type:** | StackPane |
+| **Description:** |  This is the `TableView` itself.  It supports a number of Pseudo-classes that are also used as selectors for child elements.  |
+| **Modena:** | `.table-view`<br>`.table-view:disabled`<br>`.table-view:focused` |
+| **Pseudo-classes | 'constrained-resize'<br>`unconstrained-resize`<br>`cell-selection`<br>`row-selection` |
+
+Note that there are two entries for `.table-view` in Modena.  One, in the section called "Box-like Things" sets styling like background colours and insets.  The other, in the section called "TableView" defines some colours.  
+
+## TableHeaderRow
+
+This is the wrapper class for the entire header row.
+
+| **CSS Selector:** | `column-header-background` |
+|  ---: | :---  |
+| **Type:** | StackPane |
+| **Description:** |  This is the area at the top of the `TableView` that holds the column headings and the related controls.  Don't let "background" confuse you, this is the entire header row. |
+| **Modena:** | `.table-view .column-header-background` |
+
+![Screen Snap 1]({{page.ScreenSnap1}})
+
+### NestedTableColumnHeader
+
+Every `TableColumnHeader` can act as a `NestedTableColumnHeader` by adding `TableColumns` to its associated `TableColumn`.  Technically, every `TableColumnHeader` is the child of a `NestedTableColumnHeader` because the `TableHeaderRow` contains a single, main, `NestedTableColumnHeader` to which all of the other `TableColumnHeaders` (or `NestedTableColumnHeaders`) are added.
+
+It's impossible to add style class selectors to the top-level `NestedTableColumnHeader` because it's not exposed programmatically, and all `NestedTableColumnHeaders` have the some selector.  You can access this specific, top-level, `NestedTableColumnHeader` via: `.table-view .column-header-background > .nested-column-header`.
+
+Other `NestedTableColumnHeaders` can be given custom style class selectors by adding one to the corresponding `TableColumn`.
+
+| **CSS Selector:** | `nested-column-header` |
+|  ---: | :---  |
+| **Type:** | StackPane |
+| **Description:** |  This is the area at the top of the `TableView` that holds the column headings and the related controls.  |
+| **Modena:** | `.table-view .column-header-background` |
+
+You can access the other `NestedTableColumnHeaders` via: `.table-view .column-header-background > .nested-column-header .nested-column-header`.
+
+#### TableColumnHeader
+
+For each `NestedTableColumnHeader` in the `TableView` there will be some number of `TableColumnHeaders` that have the following CSS structure:
+
+| **CSS Selector:** | `column-header` |
+|  ---: | :---  |
+| **Type:** | TableColumnHeader (extends Region) |
+| **Description:** | The header for a TableColumn.  This inherits any style classes added to its associated `TableColumn`  |
+| **Modena:** | `.table-view .column-header` |
+
+This also supports the `last-visible` Pseudo-class.
+
+Additionally, the column header inherits any style classes applied to its associated `TableColumn`.  Initially, this is just `table-column`:
+
+| **CSS Selector:** | `table-column` |
+|  ---: | :---  |
+| **Type:** | TableColumnHeader (extends Region) |
+| **Description:** | This is the standard inherited styleclass from the `TableColumn`.  This is also shared with all of the `TableCells` in the column.  |
+| **Modena:** | None |
+
+This also supports the `last-visible` Pseudo-class.
+
+##### Column Label
+
+`TableColumnHeader` holds a `Label` to hold the column title:
+
+| CSS Selector: | `label` |
+|  ---: | :---  |
+| **Type:** | Label |
+| **Description:** | This is just a standard `Label`  |
+| **Modena:** | `.table-view .column-header .label` |
+
+| CSS Selector: | `text` |
+|  ---: | :---  |
+| **Type:** | LabeledText |
+| **Description:** | This is the `Text` element inside the `Label` in the column header.   |
+| **Modena:** | None |
+
+![Screen Snap 4]({{page.ScreenSnap4}})
+
+##### Column Context Menu
+
+| CSS Selector: | `context-menu` |
+|  ---: | :---  |
+| **Type:** | ContextMenu |
+| **Description:** | If a `ContextMenu` has been established for the related `TableColumn` then a right click in the `TableColumnHeader` will invoke the context menu.  This is the default selector for this.  However, since the `ContextMenu` is established in the application code, it is possible to style it directly from the application code.  This will also have all of the styling elements of a `ContextMenu`.   |
+| **Modena:** | None |
+
+##### Column Sort Indicators
+
+`TableColumns` can be sorted by clicking on the column headers.  Secondary and tertiary sort columns can be specified.  The `TableColumns` contain a `GridPane` holding an arrow, sort number dots and pontentially a `Label` if more than 3 columns are selected for sorting.  The elements in the GridPane are moved around programmatically depending on a number of factors and this connot be controlled via CSS.
+
+![Screen Snap 5]({{page.ScreenSnap5}})
+
+| CSS Selector: | `arrow` |
+|  ---: | :---  |
+| **Type:** | Region |
+| **Description:** | In Modena, this is an SVG shape of a triangle pointed down.  If the column sort is ascending, then it is rotated 180 degrees. |
+| **Modena:** | `table-view .arrow` |
+
+
+| CSS Selector: | `sort-order` |
+|  ---: | :---  |
+| **Type:** | Label |
+| **Description:** | If there are more than 3 columns with sorting applied, then the fourth and later columns will show a number beside the arrow instead of a series of dots above/below the arrow.  Otherwise this element is not visible. |
+| **Modena:** | `.table-view .column-header .sort-order` |
+
+![Screen Snap 10]({{page.ScreenSnap10}})
+
+| CSS Selector: | `sort-order-dots-container` |
+|  ---: | :---  |
+| **Type:** | HBox |
+| **Description:** | This is just an `HBox` that holds the sort order dots. |
+| **Modena:** | `.table-view .column-header .sort-order-dots-container` |
+
+The next two selectors are applied to the actual "dots":
+
+| CSS Selector: | `sort-order-dot` |
+|  ---: | :---  |
+| **Type:** | Region |
+| **Description:** |  This is just a small `Region` with a background colour and curved corners that looks like a "dot".  |
+| **Modena:** | `.table-view .column-header .sort-order-dot` |
+
+| CSS Selector: | `ascending` or `descending` |
+|  ---: | :---  |
+| **Type:** | Region |
+| **Description:** | You can style the dots differently for ascending vs decsending sort orders.  These selectors are not used in Modena itself.  |
+| **Modena:** | `` |
+
+![Screen Snap 6]({{page.ScreenSnap6}})
+
+### Column Drag
+
+In case you didn't know, you can drag the column headings around to change their order in the `TableView`.  These elements style the drag action:
+
+| CSS Selector: | `column-drag-header` |
+|  ---: | :---  |
+| **Type:** | StackPane  |
+| **Description:** | When a column is being 'dragged' to be placed in a different position, this is a region that follows along the column header area to indicate where the column will be dropped. |
+| **Modena:** | `.table-view .column-drag-header` |
+
+![Screen Snap 13]({{page.ScreenSnap13}})
+
+
+| CSS Selector: | `column-overlay` |
+|  ---: | :---  |
+| **Type:** | StackPane  |
+| **Description:** | This semi-transparent overlay to indicate the column that is currently being moved.  |
+| **Modena:** | `.table-view .column-overlay` |
+
+![Screen Snap 14]({{page.ScreenSnap14}})
+
+| CSS Selector: | `column-resize-line` |
+|  ---: | :---  |
+| **Type:** | Region |
+| **Description:** | This is the line that runs down between the columns to indicate where a column will be placed when it is dropped.  Oddly, resizing a column does not make this line appear.  |
+| **Modena:** | `.table-view .column-resize-line` |
+
+![Screen Snap 17]({{page.ScreenSnap17}})
+
+### Filler Column
+
+| CSS Selector: | `filler` |
+|  ---: | :---  |
+| **Type:** | Region |
+| **Description:** |  If you haven't set the `TableView.columnResizePolicyProperty()` to one of the "constrained" policies, then there might be a phantom column at the far rght of your table.  This element is the column header for that last, phantom column.  |
+| **Modena:** | `.table-view .filler` |
+
+![Screen Snap 3]({{page.ScreenSnap2}})
+
+### Show/Hide Column Button
+
+| CSS Selector: | `show-hide-columns-button` |
+|  ---: | :---  |
+| **Type:** | Pane |
+| **Description:** |  The space at the top right corner, above the vertical scrollbar is a "Button" (but not a `Button`) that opens a menu allowing you to show or hide various columns.  By default this is not visible, but can be turned on.  This is the styling for this "Button".  |
+| **Modena:** | `.table-view > .column-header-background > .show-hide-columns-button` |
+
+![Screen Snap 4]({{page.ScreenSnap3}})
+
+| CSS Selector: | `show-hide-column-image` |
+|  ---: | :---  |
+| **Type:** | StackPane  |
+| **Description:** | This is the "+" that appears in the column show/hide `Button`.  It is a `StackPane` with an SVG shape applied.   |
+| **Modena:** | `.table-view .show-hide-column-image` |
+
+| CSS Selector: | `context-menu` |
+|  ---: | :---  |
+| **Type:** | ContextMenu  |
+| **Description:** | When you click on the "button" this is the context menu appears showing all of the table columns and allowing you to pick which ones to show or hide.  This will also have all of the styling elements of a `ContextMenu`. |
+| **Modena:** | `.table-view > .column-header-background > .show-hide-columns-button .context-menu` |
+
+![Screen Snap 15]({{page.ScreenSnap15}})
+
+## VirtualFlow
+
+`TableView` is one of the controls that uses `VirtualFlow` which enables it to have a descrete set of screen `Nodes` to support a limitless number of elements in a `List`.  This set of `Nodes` is recycled as they scroll on/off the viewport of the `TableView`.
+
+| CSS Selector: | `virtual-flow` |
+|  ---: | :---  |
+| **Type:** | VirtualFlow (extends Region) |
+| **Description:** | `VirtualFlow` is the container for all of the `TableView` elements except those in the `TableHeaderRow`.  This includes the rows and columns and the scrollbars.  |
+| **Modena:** | No direct uses, but it is specified as the parent of other elements. |
+
+### ClippedContainer
+
+| CSS Selector: | `clipped-container` |
+|  ---: | :---  |
+| **Type:** | VirtualFlow.ClippedContainer (extends Region) |
+| **Description:** |  This is simple just a `Region` with a clipping rectangle specified.  It acts as a wrapper around `sheet` to limit the visibility of the contents of the `TableView` so that it will fit within the space allocated.  |
+| **Modena:** | No direct uses, but it is specified as the parent of other elements. |
+
+### ClippedContainer -> Sheet
+
+| CSS Selector: | `sheet` |
+|  ---: | :---  |
+| **Type:** | Group |
+| **Description:** |  This is the element that contains all of the individual `TableCells`  |
+| **Modena:** | No direct uses, but it is specified as the parent of other elements. |
+
+#### TableRow
+
+`TableRow` is itself a `Cell` and it has three selectors.  Since you can specify a `RowFactory` for a `TableView` it *is* possible to apply your own selectors to a customized `TableRow`.  However, if you just want to change the styling of the `TableRow` without create a `RowFactory`, you can use these selectors.
+
+| CSS Selector: | `cell` |
+|  ---: | :---  |
+| **Type:** | TableRow |
+| **Description:** |  This selector is applied to all of the `Cell` subclass elements in the `TableView` including the individual `TableCells`, so any styling here will also apply to all of the `TableCells`.  This is inherited from the standard implementation of `Cell`  |
+| **Modena:** | No direct uses, but it is specified as the parent of other elements. |
+
+
+| CSS Selector: | `indexed-cell` |
+|  ---: | :---  |
+| **Type:** | TableRow |
+| **Description:** | This selector is applied to all of the `Cell` subclass elements in the `TableView` including the individual `TableCells`, so any styling here will also apply to all of the `TableCells`.  This is inherited from the standard implementation of `IndexedCell`. |
+| **Modena:** | None |
+
+
+| CSS Selector: | `table-row-cell` |
+|  ---: | :---  |
+| **Type:** | TableRow |
+| **Description:** | This is the only selector which is specific to `TableRow`.  Use this for styling that you don't want applied to individual `TableCells`.   |
+| **Modena:** | `` |
+
+#### TableColumn
+
+While you do create `TableColumns` and add them to the `TableView`, `TableColumn` doesn't appear as an actual element in the skin of `TableView`.  Instead it is used to create `TableCells` and the `TableColumnHeaders`, both of which will inherit any style sheet selectors applied to the related `TableView`.  As a default, all `TableColumns` have the following selector applied:
+
+| CSS Selector: | `table-column` |
+|  ---: | :---  |
+| **Type:** | Various  |
+| **Description:** |  The default style sheet selector added to all elements that derive from `TableColumn`.  |
+| **Modena:** | None |
+
+##### TableCell
+
+Since you can specify a `CellFactory` for a `TableColumn` it *is* possible to add a custom style class selector to your custom `TableCells`.  However, if you wish to style all of the `TableCells` in a `TableView`, then you an use one of the selectors listed here.
+
+| CSS Selector: | `cell` |
+|  ---: | :---  |
+| **Type:** | TableCell |
+| **Description:** | This selector is applied to all of the `Cell` subclass elements in the `TableView` including the individual `TableRows`, so any styling here will also apply to all of the `TableRows`.  This is inherited from the standard implementation of `Cell`.   |
+| **Modena:** | No direct uses, but it is specified as the parent of other elements. |
+
+
+| CSS Selector: | `table-cell` |
+|  ---: | :---  |
+| **Type:** | TableCell |
+| **Description:** |  This is the sole standard style class selector related only to `TableCell` and comes from the standard implementation of `TableCell`.  |
+| **Modena:** | `.table-cell`<br>`.table-cell:selected:disabled`<br>`.table-row-cell:filled > .table-cell:selected`<br>`.table-view:focused:cell-selection > .virtual-flow > .clipped-container > .sheet > .table-row-cell > .table-cell:focused`<br>`.table-view > .virtual-flow > .clipped-container > .sheet > .table-row-cell .table-cell:selected`<br>`.table-view:constrained-resize > .virtual-flow > .clipped-container > .sheet > .table-row-cell > .table-cell:last-visible` |
+
+
+| CSS Selector: | `indexed-cell` |
+|  ---: | :---  |
+| **Type:** | TableCell |
+| **Description:** | This selector is applied to all of the `IndexedCell` subclass elements in the `TableView` including the individual `TableRows`, so any styling here will also apply to all of the `TableRows`.  This is inherited from the standard implementation of `IndexedCell`.   |
+| **Modena:** | None |
+
+
+| CSS Selector: | `table-column` |
+|  ---: | :---  |
+| **Type:** | TableCell |
+| **Description:** | This is the standard inherited styleclass from the `TableColumn`.  This is also shared with the `TableColumnHeader` for the column.   |
+| **Modena:** | None |
+
+
+| CSS Selector: | `text` |
+|  ---: | :---  |
+| **Type:** | LabeledText |
+| **Description:** | Since `TableCell` inherits from `Labeled`, it also inherits this standard style class selector from `Labeled` that is associated with the `LabeledText` element in `Labeled`. |
+| **Modena:** | `.text` |
+
+### ScrollBars
+The scrollbars in `TableView` are an instance of `VirtualScrollBar` which extends `ScrollBar` and is intended to work with `VirtualFlow`.  `ScrollBar` itself is skinned, also.  All of the selectors come from the `ScrollBar` class itself, and there's nothing added from the `TableView`.
+
+The standard `ScrollBar` has and arrow "Button" at each end of a track that has an indicator called a "thumb" that runs up and down it.  
+
+The orientation of a `ScrollBar` is indicated by a Pseudo-classes applied to the `ScrollBar` itself and will be either `horizontal` or `vertical`.
+
+| CSS Selector: | `scroll-bar` |
+|  ---: | :---  |
+| **Type:** | VirtualScrollBar |
+| **Description:** |  This is the selector for the entire ScrollBar. The `horizontal` and `vertical` Pseudo-classes are applied to this selector. |
+| **Modena:** | `.table-view > .virtual-flow > .scroll-bar:vertical`<br>`.table-view > .virtual-flow > .scroll-bar:horizontal` |
+
+
+| CSS Selector: | `track-background` |
+|  ---: | :---  |
+| **Type:** | StackPane |
+| **Description:** | The track background covers the entire space of the `ScrollBar` minus any padding set on the `ScrollBar` itself.  All of the other components sit on top of the track background.  |
+| **Modena:** | None |
+
+
+| CSS Selector: | `track` |
+|  ---: | :---  |
+| **Type:** | StackPane |
+| **Description:** | The track is the space between the end buttons that the thumb runs up and down.  |
+| **Modena:** | None |
+
+
+| CSS Selector: | `increment-button` |
+|  ---: | :---  |
+| **Type:** | Region |
+| **Description:** |  This is one of the two end "Buttons" in the `ScrollBar`, and is at the bottom of a vertical `ScrollBar` and the right of a horizontal `ScrollBar`.  Not this this is not an actual `Button` but just a `Region`. |
+| **Modena:** | `.scroll-bar > .increment-button`<br>`.scroll-bar:horizontal > .increment-button`<br>`.scroll-bar:vertical > .increment-button` |
+
+
+| CSS Selector: | `increment-arrow` |
+|  ---: | :---  |
+| **Type:** | Region  |
+| **Description:** |  This is the actual "arrow" that is drawn in the increment "Button".  In Modena, it is styled by appling an SVG shape to the `Region`. |
+| **Modena:** | `.scroll-bar > .increment-button > .increment-arrow`<br>`.scroll-bar > .increment-button:hover > .increment-arrow`<br>`.scroll-bar > .increment-button:pressed > .increment-arrow`<br>`.scroll-bar:horizontal > .increment-button > .increment-arrow `<br>`.scroll-bar:vertical > .increment-button > .increment-arrow ` |
+
+
+| CSS Selector: | `decrement-button` |
+|  ---: | :---  |
+| **Type:** | Region |
+| **Description:** |  This is one of the two end "Buttons" in the `ScrollBar`, and is at the top of a vertical `ScrollBar` and the left of a horizontal `ScrollBar`.  Not this this is not an actual `Button` but just a `Region`.  |
+| **Modena:** | `.scroll-bar > .decrement-button`<br>`.scroll-bar:horizontal > .decrement-button`<br>`.scroll-bar:vertical > .decrement-button` |
+
+
+| CSS Selector: | `decrement-arrow` |
+|  ---: | :---  |
+| **Type:** | Region |
+| **Description:** |  This is the actual "arrow" that is drawn in the decrement "Button".  In Modena, it is styled by appling an SVG shape to the `Region`.  |
+| **Modena:** | `.scroll-bar > .decrement-button > .decrement-arrow `<br>`.scroll-bar > .decrement-button:hover > .decrement-arrow`<br>`.scroll-bar > .decrement-button:pressed > .decrement-arrow `<br>`.scroll-bar:horizontal > .decrement-button > .decrement-arrow`<br>`.scroll-bar:vertical > .decrement-button > .decrement-arrow` |
+
+| CSS Selector: | `thumb` |
+|  ---: | :---  |
+| **Type:** | StackPane |
+| **Description:** | This is the indicator/control that sits in the track and slides along the track as the `ScrollBar` scrolls.  |
+| **Modena:** | `.scroll-bar > .thumb `<br>`.scroll-bar:vertical > .thumb`<br>`.scroll-bar > .thumb:hover`<br>`.scroll-bar > .thumb:pressed` |
+
+### Corner
+
+| CSS Selector: | `corner` |
+|  ---: | :---  |
+| **Type:** | StackPane |
+| **Description:** |  This is the little square that appears at the bottom right corner where the two scrollbars meet, if they are both visible.  |
+| **Modena:** | `.table-view > .virtual-flow > .corner` |
+
+![Screen Snap 16]({{page.ScreenSnap16}})
+
+### PlaceHolder
+
+There is a `Node` that will be displayed if the `TableView` is empty which is called "placeholder".  `TableView` has a `Property` called `placeholder` that you can use to set your own, custom, `Node` and set your own style class selectors.  In the event that you use the default placeholder, which is a `StackPane` holding a `Label`, these are the selectors:
+
+| CSS Selector: | `placeholder` |
+|  ---: | :---  |
+| **Type:** | StackPane |
+| **Description:** | When the `TableView` is empty, or if it contains no column, then a "placeholder" `StackPane` containing a `Label` will be shown instead of the usual rows and columns.   |
+| **Modena:** | None |
+
+| CSS Selector: | `empty-table` |
+|  ---: | :---  |
+| **Type:** |  |
+| **Description:** | When the `TableView` is empty, or if it contains no column, then a "placeholder" `StackPane` containing a `Label` will be shown instead of the usual rows and columns.   |
+| **Modena:** | None |
+
+| CSS Selector: | `label` |
+|  ---: | :---  |
+| **Type:** | Label |
+| **Description:** |  This is the selector inherited from the standard implementation of `Label`. |
+| **Modena:** | None |
+
+
 
 # What we’ll achieve in this tutorial
 
@@ -43,9 +835,11 @@ Selectors in the JavaFX TableView can be broken down into three basic groups –
 
 The TableView itself has a selector – .table-view, which is rendered right at the bottom underneath everything else. This is a Region, and so can have background colour or image, border colour, border stroke types, and a whole lot more. To see all the options for styling a Region, check out the CSS style guide for Region.
 
+``` css
 .table-view {
     -fx-background-color: transparent;
 }
+```
 
 Before we jump into the rest of the table, we’ll just cover two awkward selectors that most people find really hard to style.
 
@@ -60,9 +854,11 @@ The top right corner of the header section above the scroll bars can be styled w
 
 Again, this is a Region, so it can have a lot of customisation. Because I was looking for quite a minimal styling when I designed this table, I chose to make this transparent, but you can access a world of possibilities.
 
+``` css
 .table-view .column-header-background .filler {
     -fx-background-color: transparent;
 }
+```
 
 ## The bottom right corner between the scrollbars
 
@@ -72,188 +868,39 @@ Again, also a Region. In fact, most of the selectors across JavaFX tend to be a 
 
 You could even make one of them a particular shape using the -fx-shape selector if you wanted some custom iconography on your table. But, for now, I’ll make it transparent.
 
+``` css
 .table-view .corner {
     -fx-background-color: transparent;
 }
+```
 
-# Headers
+# Conclusion
 
-The header of a TableView has two main sections:
+If you are interested in doing this kind of investigation into other JavaFX controls, these are the techniques that I used:
 
-    The Global header section, which is rendered underneath all of the other headers and extends across the entire header area
-    The header of each column itself
+Node.lookupAll("*")
 
-# Global header background
+: This command will give you a list of all of the elements with style class selectors in the `Node` to which it is applied.
 
-For a smooth appearance, we’re going to give the entire header bar a consistent colour (a slight gradient), using the Global header section selector .table-view .column-header-background.
+: However, it will not show items that are not on the SceneGraph, and will not show parent -> child relationships.  So further investigation will almost always be required.  It is a good start to get a handle on the scope of the elements involved.
 
-This area is also a Region, which comes with all the customisation options available to a Region. In this case, we’ll use four selectors to style the background area:
+Searching the Source Code
 
-    -fx-background-color
-    -fx-background-radius
-    -fx-background-insets
-    -fx-padding
+: At some point you'll need to look at the source code to discover how the elements are related to each other and whether there are additional style class selectors that you didn't see with `Node.lookupAll("*")` - and there *will* be some of those.
 
-This will allow us to create a coloured background, with rounded corners at the top left and top right. We will inset the background by the width of the scrollbar, so that the right edge of the header is flush with the table. Finally, we’ll use some padding to make the bottom headers a little further from the table contents.
 
-.table-view .column-header-background{
-    -fx-background-color: linear-gradient(to bottom, #1dbbdd44, #93f9b944);
-    -fx-background-radius: 7px 7px 0px 0px;
-    -fx-background-insets: 0 11px 0 0;
-    -fx-padding: 0 0 5px 0;
-}
+: A good starting point is to search through the source code for "getStyleClass", or just "StyleClass" because that is the only way to add style class selectors.
 
-# Individual Column Headers
+: Remember that some selectors are created at the "control" level, and more might be added in the skin.  Many components of `TableView` are themselves skinned.
 
-Individual column headers are rendered on top of the column background, and so we need to either style them consistently or make them transparent.We can access them using the.table-view .column-header selector.
+: Finally, you need to find the components, and the components of the components.  Look for `Node` subclasses that are declared as fields.  Search for "getChildren" and "layoutChildren" in the source code.
 
-Giving headers a vertical gradient won’t stretch across a nested column. So in Location -> State and Location -> City, we’d have one gradient going vertically in the Location header, and one in the State/City header. I don’t particularly like that effect, so I’ve opted to make them transparent.
+Searching Through Modena
 
-.table-view .column-header {
-    -fx-background-color: transparent;
-}
+: After all of that, you still might/probably missed something.  Search through Modena for the style class selectors that you *have* found and pay attention to any parent or child elements listed in the selectors.  Also, look for Pseudo-classes that are used and then go back to the source code to find out how they are used.
 
-By setting this, we can give the header section a clean, linear gradient. We’ve set the background radius to give the top corners a curved look, leaving the bottom flush with the table. The background insets ensure the right of the header is flush with the right of the table. Ordinarily, the header will extend to the outside of the scrollbar.
-EdenCode simple UI with a TableView where the column headers have been styled using CSS
+I remain convinced that all of this sleuthing is something that should be completely unnecessary, and it should all be readily available in the documentation for the JavaFX library.  After all, all of this part of the public API and, as such, should be documented.  
 
-# Cells and Rows
+For instance the `TableView` Pseudo-class `unconstrained-resize` is defined in `TableView` but isn't used anywhere in Modena and won't appear in `Node.lookupAll("*")` since it is a Pseudo-class.  The only way to find it is to infer its existence from Modena's use of `constrained-resize` and then go looking for it in the source code.   Even then it's not directly used, but comes from the `toString()` of the `UNCONSTRAINED_RESIZE_POLICY Callback`.  And if you are looking to see if `constrained-resize` is a special case of one of the other policies (it isn't) you need to drill down into `ConstrainedColumnResizeBase` to find its `toString()` method.  
 
-Next, we’ll style the rows so they have a similar style and a semi-transparent fill. We can access separate styles for odd and even rows with pseudo-classes, and we can greater improve readability by highlighting cells as the mouse hovers over them.
-
-.table-view .table-cell{
-    -fx-border-color: transparent;
-    -fx-padding: 2 0 2 10px;
-}
-.table-row-cell: hover {
-    -fx-background-color: #93f9b911;
-    -fx-text-background-color: red;
-}
-.table-row-cell: odd{
-    -fx-background-color: #93f9b911;
-    -fx-background-insets: 0, 0 0 1 0;
-    -fx-padding: 0.0em;
-}
-.table-row-cell: even{
-    -fx-background-color: #1dbbdd11;
-    -fx-background-insets: 0, 0 0 1 0;
-    -fx-padding: 0.0em;
-}
-
-EdenCode simple UI with a TableView where the column headers, cells and scrollpanes have been styled using CSS
-
-The table is almost complete, but as we add more orders, JavaFX tries to compensate by adding scrollbars – horizontal and vertical.
-
-# Scrollbars
-
-To style these, we need to access them through the .virtual-flow .scroll-bar selector. The .track and .track-background selectors correspond to the space along which the scrollbar moves. We’ll set these to transparent, because we want to keep the same consistent, clean feel.
-
-.table-view .virtual-flow .scroll-bar:vertical,
-.table-view .virtual-flow .scroll-bar:vertical .track,
-.table-view .virtual-flow .scroll-bar:vertical .track-background,
-.table-view .virtual-flow .scroll-bar:horizontal,
-.table-view .virtual-flow .scroll-bar:horizontal .track,
-.table-view .virtual-flow .scroll-bar:horizontal .track-background {
-    -fx-background-color: transparent;
-}
-
-The arrows on either side of the scrollbar are accessed through .increment-button and .decrement-button. As with any node, they can be customized using the -fx-shape attribute, which gives you complete control over their shape. For a clean look, we’ll make them transparent by setting their opacity to zero.
-
-.table-view .virtual-flow .scroll-bar .increment-button,
-.table-view .virtual-flow .scroll-bar .decrement-button {
-    -fx-opacity: 0;
-    -fx-padding: 2;
-}
-
-The scrollbar itself is referred to using the .thumb selector. Because we’re setting a gradient, and we want the look to be consistent, we’ll set the vertical bar’s gradient from top to bottom, and the horizontal bar’s gradient from left to right.
-
-.table-view .virtual-flow .scroll-bar:vertical .thumb{
-    -fx-background-color:  linear-gradient(to bottom, #1dbbdd44, #93f9b944);
-}
-.table-view .virtual-flow .scroll-bar:horizontal .thumb {
-    -fx-background-color:  linear-gradient(to right, #1dbbdd44, #93f9b944);
-}
-
-EdenCode simple UI with a TableView that has been styled using CSS
-
-We’ve now set all of the default styles for the TableView. For even more customisation we’ll explore how to set custom pseudo-classes, similar to ‘odd’ and ‘even’ above. With these in hand, we can use them to trigger custom styling based on the contents of a row.
-# Value-specific Styling
-
-JavaFX provides plenty of functionality for predicates, that is styling something based on a condition. Here, we might want to highlight important orders – those we’ll deliver to the biggest cities. Maybe our marketing specialists have told us that we’ll increase revenue if we send promotional material to the people in densely populated areas. So, we duly implement it in the code.
-
-To start, we need to define a special case for a table row, which we’ll call highlighted. This is called a pseudo-class, because highlighted cannot exist without another selector. Just like odd and even before, which wouldn’t have made sense on their own.
-
-Because they’re represent an important demographic, we’ll color them green using the hex code #81c483, and we’ll round the corners to increase the effect.
-
-.table-row-cell: highlighted {
-    -fx-background-color: #81c483;
-    -fx-background-radius: 15px;
-}
-
-To determine which rows get highlighted, we can specify a condition based on the attributes of the Order class. To do that, we need to understand a little about how JavaFX reads our Orders into rows.
-# Cell Values
-
-You may have noticed that when we defined the TableView, we parameterised it with the type Order.
-
-public TableView<Order> exampleTable;
-
-Then, when we define how to populate a column, we define it through a CellValueFactory.
-
-stateColumn.setCellValueFactory(cellData -> cellData.getValue().stateProperty());
-
-To populaye the table, we pass an ObservableList of Orders into the TableView. Then, for every Order in the ObservableList, JavaFX finds the State property and uses it to get generate the data for that cell in the stateColumn.
-
-As well as defining how JavaFX generates the values relative to the columns, we can do the same thing for rows, which it generates using a RowFactory.
-# Row Factories
-
-For each Order in the ObservableList, JavaFX uses the RowFactory to create a TableRow. We can hook into that process to change the styling on the row, depending on the value of the Order we’re currently at.
-
-exampleTable.setRowFactory(tableView -> {
-    TableRow<Order> row = new TableRow<>();
-    return row;
-});
-
-So, assuming an Order has access to the population of the city to which it’s delivered, in between defining our row and returning it, we test whether that number is greater than 4 million. In the case of a positive result, we set the pseudo-class for additional styling.
-
-row.pseudoClassStateChanged(PseudoClass.getPseudoClass("highlighted"),
-                    newOrder.getCityPopulation() > 4e6));
-
-EdenCode simple UI with a TableView that has not been styled using CSS. Row highlighting has been completed with pseudoclasses
-
-And that’s it!
-# Conclusions
-
-So, we can customise the JavaFX TableView by identifying and styling each of the TableView’s CSS selectors. These fell into three main groups:
-
-    Headers
-    Cells / Rows
-    Scrollbars
-
-In cases where we need to highlight rows to improve the user experience, we can do so by creating and applying pseudo-classes.
-
-The benefit of achieving this with CSS is that, once we’ve set the style, it can be used throughout our program. There’s no need to repeat code or create TableViewFactory classes to churn out pre-styled content.
-
-As always, you’re welcome to use the code to dig around in and help you design your own user interfaces. It can be found in the edencoding GitHub repo here.
-cssstyling
-You may also like
-Interacting with nodes in a GridPane layout – JavaFX
-December 11, 2020
-How to use JavaFX Layouts
-September 17, 2020
-How to add an image to a button (and position it) in JavaFX
-July 2, 2021
-
-    Privacy Policy
-
-2020 © EdenCoding
-Back to top
-Close
-
-    Home
-    JavaFX
-        Core JavaFX Tips
-        Animations
-        UI Elements
-        Game Development
-    Resources (new)
-    Latest Posts!
-    About Me
+What can you use these Pseudo-class for?  In Modena, `constrained-resize` is used turn the right-hand side border of the last visible column's `TableCells` transparent.   With an unconstrained policy, you would have a filler column to the right of the last visible column, and you would need to see that border.  
