@@ -103,3 +103,7 @@
 .notice--danger {
   @include notice($danger-color);
 }
+
+.notice--kotlin {
+  @include notice($kotlin-color);
+}

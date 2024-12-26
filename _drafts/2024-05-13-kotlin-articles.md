@@ -43,9 +43,7 @@ private val label = Label(labelText).apply {
     layoutX = 10.0
     styleClass += "pane-label"
     widthProperty().addListener(InvalidationListener { setClipping() })
-    heightProperty().addListener(InvalidationListener {
-        setClipping()
-    })
+    heightProperty().addListener(InvalidationListener { setClipping() })
     maxWidthProperty().bind(this@LabelledPane.widthProperty().subtract(24.0))
     isWrapText = true
 }
@@ -65,6 +63,7 @@ becomes
 ``` kotlin
 styleClass += "pane-label"
 ```
+When it also uses the standard "operator overload" of `+=` for list to replace `List.add()`.
 
 In my opinion, the block of code above is super easy to read. At a glance, you can see that we are creating a field called label, and we're moving it, styling it, putting Listeners on the width and height and wrapping the text.
 
@@ -72,7 +71,7 @@ Is it hard for Java only coders to understand? I don't think it should be. IMHO 
 
 I mean, you don't have to understand about field accessors to intuitively understand that `layoutX = 10.0` is somehow the same as `label.setLayoutX(10.0)`. The important point is that `layoutX` is getting set. And these articles are supposed to be about understanding how to deal with concepts in JavaFX, not about being a source for copy/paste into your own projects (which I'm totally fine with people doing, BTW).
 
-I'll also point out that I avoid using the full toolset of utilities that I've written for my own personal projects that really, really squeeze the rubbish boilerplate out of layout code. Something like this:
+I'll also point out that in these articles I avoid using the full toolset of utilities that I've written for my own personal projects that really, really squeeze the rubbish boilerplate out of layout code. Something like this:
 
 ``` kotlin
 children += promptOf(set.setNum.asString()) setSize setNumSize aligned Pos.CENTER
@@ -88,13 +87,17 @@ In Kotlin, all that code is so much cleaner with a Scope Function like `apply{}`
 
 Oh!  The tedium of `pane.getChildren().addAll()`!  In Kotlin, inside `.apply{}` it's just `children += `.
 
-Writing a builder/helper method for a `Node` is simple too.  All it takes is `fun buildNode():Node = SomeNode().apply{}`.
+Writing a builder/helper method for a `Node` is simple too.  All it takes is
+
+``` kotlin
+fun buildNode():Node = SomeNode().apply{}`.
+```
 
 The result, in my opinion, is example code where the central ideas are much more clear than they would be with Java.
 
 # Kotlin Fixes Stuff
 
-The easiest example to think about here is "Null Safety".  Theoretically, this dealt with in Java - to a large extent - with the introduction of `Optional`.  But how many people actually use `Optional`.  In Kotlin, variables **CANNOT** be null unless you specify them as "nullable".  This means putting a "?" at the end of the type.  
+The easiest example to think about here is "Null Safety".  Theoretically, this dealt with in Java - to a large extent - with the introduction of `Optional`.  But how many people actually use `Optional`?  In Kotlin, variables **CANNOT** be null unless you specify them as "nullable".  This means putting a "?" at the end of the type.  
 
 For instance, `Int` cannot have a null value, but `Int?` can.  Take a look at this invalid code:
 
