@@ -32,6 +32,15 @@ feature_row_cell_data:
     btn_label: "Read the Article"
     btn_class: "btn--primary"
 
+feature_row_table_styling:
+  - image_path: /assets/elements/TableStyle27.png
+    alt: "TableView Styling"
+    title: "TableView Styling"
+    excerpt: 'This is the definitive guide to styling TableView.  Every aspect of styling a TableView is explained in this article, which also contains a complete listing of all of the style class selectors and hidden features of TableView.'
+    url: "/javafx/elements/styling-guide-tableView"
+    btn_label: "Read the Article"
+    btn_class: "btn--primary"
+
 feature_row_listview_basics:
   - image_path: /assets/elements/ListView2.png
     alt: "ListView Basics"
@@ -62,6 +71,8 @@ For some reason, beginner programmers love tables, and they rush to start using 
 {% include feature_row id="feature_row_table_basics" type="left" %}
 
 {% include feature_row id="feature_row_cell_data" type="left" %}
+
+{% include feature_row id="feature_row_table_styling" type="left" %}
 
 # ListView
 

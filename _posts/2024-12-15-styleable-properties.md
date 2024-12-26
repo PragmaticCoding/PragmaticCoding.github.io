@@ -20,7 +20,7 @@ Diagram: /assets/elements/ListProperties.png
 part1: /javafx/elements/observable-classes-generics
 part2: /javafx/elements/observable-classes-typed
 
-excerpt: A guide to creating custom CSS attributes for your layouts.
+excerpt: With CSS you can control fonts, sizes, borders, alignment, padding an lots of other standard Properties of your layouts.  This allows you to control the styling from outside your code.  But what if there's some aspect of your layout that isn't available through the standard CSS attributes?  This article will show you how to create StyleableProperties and then how to link them back to your Style Sheets via CssMetaData.
 ---
 
 # Introduction

@@ -49,6 +49,15 @@ feature_row_modena:
     url: "/javafx/elements/modena"
     btn_label: "Read the Article"
     btn_class: "btn--primary"
+
+feature_row_styleable_properties:
+  - image_path: /assets/elements/StyleableProperties9.png
+    alt: "Styleable Properties"
+    title: "Custom Styleable Properties"
+    excerpt: 'JavaFX comes configured, "out-of-box" with tons of Properties that you can configure via Style Sheets.  But what if you want to control some other aspect of your layout via CSS?  This article will show you everything you need to know to get started.'
+    url: "/javafx/elements/styleable-properties"
+    btn_label: "Read the Article"
+    btn_class: "btn--primary"
 ---
 
 # Styling in JavaFX
@@ -64,3 +73,5 @@ The preferred method of styling `Nodes` in JavaFx is to use CSS stylesheets.  In
 {% include feature_row id="feature_row_enum_pseudoclass" type="left" %}
 
 {% include feature_row id="feature_row_modena" type="left" %}
+
+{% include feature_row id="feature_row_styleable_properties" type="left" %}
