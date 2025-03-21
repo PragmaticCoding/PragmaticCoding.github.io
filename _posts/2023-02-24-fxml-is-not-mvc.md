@@ -12,7 +12,7 @@ ScreenSnap5: /assets/elements/FxmlIsNotMVC5.png
 ScreenSnap6: /assets/elements/FxmlIsNotMVC6.png
 diagram: /assets/elements/model-view-controller-light-blue.png
 
-excerpt: Lot's of programmers think that FXML instantly gives them as step up on Model-View-Controller, with the FXML File yielding the View and the FXML Controller acting as the Controller.  We'll look at why this isn't correct, and how you should implement FXML in the context of MVC.
+excerpt: Lot's of programmers think that FXML instantly gives them a step up on Model-View-Controller, with the FXML File yielding the View and the FXML Controller acting as the Controller.  We'll look at why this isn't correct, and how you should implement FXML in the context of MVC.
 ---
 
 # Introduction

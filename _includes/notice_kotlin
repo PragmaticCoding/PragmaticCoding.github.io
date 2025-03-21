@@ -1,8 +1,8 @@
 <div class="notice--kotlin">
- <img src="/assets/logos/Kotlin.png" alt="Kotlin" style="float:left;margin-right: 10px;margin-top: 10px;" >
+ <img src="/assets/logos/Kotlin.png" alt="Kotlin" style="float:left;margin-right: 10px;margin-top: 8px;" >
  <p style="overflow:auto; float:none">
    While code is this article is written in Kotlin, all of the JavaFX concepts are exactly the same.
    Most of the Kotlin should be intuitively obvious to Java programmers,
-   but if you need help understanding it, refer to this page:<br> http://www.pragmaticcoding.ca/kotlin/kotlin-examples
+   but if you need help understanding it, refer to this <a href="/kotlin/kotlin-examples/" title="Read the article" target="_blank" >page</a>.
  </p>
 </div>

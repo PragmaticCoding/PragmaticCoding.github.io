@@ -301,7 +301,7 @@ class TemperatureTableCell<T>(val outputUnits: StyleableObjectProperty<Temperatu
 ```
 Now, this is a little bit complicated.  We've turned `outputUnits` into a `StyleableObjectProperty` which will enable us to connect it to a style sheet.  This is done via something called `CssMetaData`, which really should be defined statically.  However, since it's static, the `CssMetaData` doesn't need to be defined in the class that uses it.  In this case, we are going to be using the same `Property` for each `TableCell` in the `TableColumn`, so we can define it in the custom `TableColumn` and then include it in the `CssMetaDataList` for the `TemperatureTableCell`.
 
-One more twist on this is that `getCssMetaData()` is final in `TableCell`, but we have 
+One more twist on this is that `getCssMetaData()` is final in `TableCell`, but we have `getControlCssMetaData()` that we can use instead.
 
 And now we can do this in the style sheet:
 
@@ -310,3 +310,5 @@ And now we can do this in the style sheet:
   -wfx-temperature-unit: "k";
 }
 ```
+
+## Adding More Styleable Properties
