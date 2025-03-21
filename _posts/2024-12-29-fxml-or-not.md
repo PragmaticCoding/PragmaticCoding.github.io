@@ -78,6 +78,7 @@ Now, let's go back to "Separation of Concerns".  What separation do we have?
 In some cases, we have separation of *most* of the details of the actual layout, and the styling and configuration.  For instance, the FXML file might be the only component that knows that a couple of `Labels` are displayed in a `VBox` or an `HBox`, but if those `Labels` have dynamic content, then the FXML Controller needs to know that they are `Labels` and what data needs to be stuffed into them.  
 
 I highly doubt that this is the level of "separation" that programmers are looking for when they expect "Separation of Concerns".  
+{: .notice--info}
 
 But that Oracle tutorial doesn't even seem to be talking about this, it says:
 
@@ -112,7 +113,8 @@ Once you look at it this way, everything else makes much more sense and you don'
 
 But you don't automatically get an MVC Controller, you'll have to deliberately create one.  We'll look at this later.
 
-This is actually the most dangerous of all of the false claims about FXML.  That's because, if you buy into this then you'll actually architect your system incorrectly
+This is the most dangerous of all of the false claims about FXML.  That's because, if you buy into this then you'll actually architect your system incorrectly
+{: .notice--warning}
 
 ## Multiple Layouts With One Controller
 
@@ -142,7 +144,468 @@ Let's see if this is true...
 
 While I would prefer not to include a huge FXML file, I think we need to look at one to understand this issue.  So here's the FXML file from [Trinity on GitHub](https://github.com/trinity-xai/Trinity/blob/v2024.12.13/src/main/resources/edu/jhuapl/trinity/fxml/ManifoldControl.fxml):
 
+``` xml
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
+<AnchorPane fx:id="root" style="-fx-background-color: #00000000;" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="edu.jhuapl.trinity.javafx.controllers.ManifoldControlController">
+    <children>
+        <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE">
+            <tabs>
+                <Tab closable="false" text="UMAP">
+                    <content>
+                        <BorderPane fx:id="majorPane" minHeight="200.0" minWidth="400.0">
+                            <children>
+                            </children>
+                            <top>
+                            </top>
+                            <center>
+                                <GridPane hgap="10.0" vgap="5.0" BorderPane.alignment="CENTER">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="288.0" minWidth="10.0" prefWidth="206.0"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="380.0" minWidth="10.0" prefWidth="380.0"/>
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                    </rowConstraints>
+                                    <children>
+                                        <Label text="Number of Components"/>
+                                        <Spinner fx:id="numComponentsSpinner" editable="true" prefWidth="100.0" GridPane.rowIndex="1"/>
+                                        <Label text="Number of Epochs" GridPane.rowIndex="2"/>
+                                        <Spinner fx:id="numEpochsSpinner" editable="true" prefWidth="100.0" GridPane.rowIndex="3"/>
+                                        <Label text="Nearest Neighbors" GridPane.rowIndex="4"/>
+                                        <Label text="Negative Sample Rate" GridPane.rowIndex="6"/>
+                                        <Label text="Local Connectivity" GridPane.rowIndex="8"/>
+                                        <Spinner fx:id="nearestNeighborsSpinner" editable="true" prefWidth="100.0" GridPane.rowIndex="5"/>
+                                        <Spinner fx:id="negativeSampleRateSpinner" editable="true" prefWidth="100.0" GridPane.rowIndex="7"/>
+                                        <Spinner fx:id="localConnectivitySpinner" editable="true" prefWidth="100.0" GridPane.rowIndex="9"/>
+                                        <HBox spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="10" GridPane.rowSpan="2">
+                                            <children>
+                                                <VBox alignment="CENTER_LEFT" spacing="10.0">
+                                                    <children>
+                                                        <Label text="Distance Metric"/>
+                                                        <ChoiceBox fx:id="metricChoiceBox" prefWidth="200.0"/>
+                                                    </children>
+                                                </VBox>
+                                                <VBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" spacing="10.0">
+                                                    <children>
+                                                        <Label text="Threshold (if applicable)"/>
+                                                        <Spinner fx:id="thresholdSpinner" prefWidth="150.0">
+                                                            <editable>true</editable>
+                                                            <valueFactory>
+                                                                <SpinnerValueFactory.DoubleSpinnerValueFactory min="0.01" max="1.0" initialValue="0.1"
+                                                                                                               amountToStepBy="0.01"/>
+                                                            </valueFactory>
+                                                        </Spinner>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                            <padding>
+                                                <Insets top="5.0"/>
+                                            </padding>
+                                        </HBox>
+                                        <Label text="Repulsion Strength" GridPane.columnIndex="1"/>
+                                        <Label text="Minimum Distance" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                                        <Label text="Spread" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                                        <Label text="Op Mix Ratio" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+                                        <Slider fx:id="repulsionSlider" blockIncrement="0.1" majorTickUnit="0.1" max="2.0" showTickLabels="true"
+                                                showTickMarks="true" snapToTicks="true" value="1.0" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                                        <Slider fx:id="minDistanceSlider" blockIncrement="0.1" majorTickUnit="0.1" max="0.6" showTickLabels="true"
+                                                showTickMarks="true" snapToTicks="true" value="0.1" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                                        <Slider fx:id="spreadSlider" blockIncrement="0.1" majorTickUnit="0.1" max="1.5" min="0.5" showTickLabels="true"
+                                                showTickMarks="true" snapToTicks="true" value="1.0" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                                        <Slider fx:id="opMixSlider" blockIncrement="0.1" majorTickUnit="0.1" max="1.0" showTickLabels="true"
+                                                showTickMarks="true" snapToTicks="true" value="0.5" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+                                        <HBox alignment="CENTER" spacing="15.0" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER"
+                                              GridPane.rowIndex="12" GridPane.rowSpan="2" GridPane.valignment="CENTER">
+                                            <children>
+                                                <VBox alignment="CENTER" spacing="10.0">
+                                                    <children>
+                                                        <Button mnemonicParsing="false" onAction="#loadUmapConfig" prefWidth="200.0" text="Load New Config"/>
+                                                        <Button mnemonicParsing="false" onAction="#saveUmapConfig" prefWidth="200.0"
+                                                                text="Save Current Config"/>
+                                                    </children>
+                                                </VBox>
+                                                <VBox alignment="CENTER_LEFT" spacing="10.0">
+                                                    <children>
+                                                        <RadioButton fx:id="useHypersurfaceButton" mnemonicParsing="false" text="Use Hypersurface"/>
+                                                        <RadioButton fx:id="useHyperspaceButton" mnemonicParsing="false" selected="true" text="Use Hyperspace"/>
+                                                        <CheckBox fx:id="verboseCheckBox" mnemonicParsing="false" selected="true" text="Progress Output"/>
+                                                    </children>
+                                                    <padding>
+                                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                                    </padding>
+                                                </VBox>
+                                                <VBox alignment="CENTER" spacing="10.0">
+                                                    <children>
+                                                        <Button defaultButton="true" mnemonicParsing="false" onAction="#project" prefWidth="200.0"
+                                                                text="Run UMAP"/>
+                                                        <Button mnemonicParsing="false" onAction="#exportMatrix" prefWidth="200.0" text="Export TMatrix"/>
+                                                        <Button mnemonicParsing="false" onAction="#saveProjections" prefWidth="200.0"
+                                                                text="Export Projections"/>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                            <padding>
+                                                <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
+                                            </padding>
+                                        </HBox>
+                                        <Label text="Target Weight" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+                                        <Slider fx:id="targetWeightSlider" blockIncrement="0.1" majorTickUnit="0.1" max="1.0" showTickLabels="true"
+                                                showTickMarks="true" snapToTicks="true" value="0.5" GridPane.columnIndex="1" GridPane.rowIndex="9"/>
+                                    </children>
+                                    <padding>
+                                        <Insets bottom="25.0" left="25.0" right="25.0" top="25.0"/>
+                                    </padding>
+                                </GridPane>
+                            </center>
+                        </BorderPane>
+                    </content>
+                </Tab>
+                <Tab closable="false" text="PCA">
+                    <content>
+                        <BorderPane fx:id="majorPane" minHeight="200.0" minWidth="400.0">
+                            <children>
+                            </children>
+                            <top>
+                            </top>
+                            <center>
+                                <GridPane hgap="10.0" vgap="5.0" BorderPane.alignment="CENTER">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="288.0" minWidth="10.0" prefWidth="200.0"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="380.0" minWidth="10.0" prefWidth="200.0"/>
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                    </rowConstraints>
+                                    <children>
+                                        <Label text="Number of Components"/>
+                                        <Spinner fx:id="numPcaComponentsSpinner" editable="true" prefWidth="100.0" GridPane.rowIndex="1"/>
+                                        <HBox spacing="20.0" GridPane.rowIndex="3" GridPane.rowSpan="2">
+                                            <children>
+                                                <VBox spacing="15.0">
+                                                    <children>
+                                                        <Label text="Fit Start Index"/>
+                                                        <Spinner fx:id="fitStartIndexSpinner" editable="true" prefWidth="100.0"/>
+                                                    </children>
+                                                </VBox>
+                                                <VBox spacing="15.0">
+                                                    <children>
+                                                        <Label text="Fit End Index"/>
+                                                        <Spinner fx:id="fitEndIndexSpinner" editable="true" prefWidth="100.0"/>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </HBox>
+                                        <RadioButton fx:id="pcaRadioButton" mnemonicParsing="false" selected="true" text="PCA (EigenValue)"
+                                                     GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                                        <Label text="Component Analysis Type" GridPane.columnIndex="1"/>
+                                        <RadioButton fx:id="svdRadioButton" mnemonicParsing="false" text="Singular Value Decomposition" GridPane.columnIndex="1"
+                                                     GridPane.rowIndex="2"/>
+                                        <RadioButton fx:id="pcaUseHypersurfaceButton" mnemonicParsing="false" text="Use Hypersurface" GridPane.columnIndex="1"
+                                                     GridPane.rowIndex="4"/>
+                                        <RadioButton fx:id="pcaUseHyperspaceButton" mnemonicParsing="false" selected="true" text="Use Hyperspace"
+                                                     GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                                        <Label text="Output Scaling Factor" GridPane.rowIndex="5"/>
+                                        <Spinner fx:id="pcaScalingSpinner" editable="true" prefWidth="100.0" GridPane.rowIndex="6"/>
+                                        <HBox alignment="CENTER" spacing="10.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="8">
+                                            <children>
+                                                <Button defaultButton="true" mnemonicParsing="false" onAction="#runPCA" prefWidth="175.0" text="Project Data"/>
+                                                <Button mnemonicParsing="false" onAction="#saveProjections" prefWidth="175.0" text="Export Projections"/>
+                                            </children>
+                                            <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                            </padding>
+                                        </HBox>
+                                        <Label text="Input Data Source" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                                        <CheckBox fx:id="rangedFittingCheckBox" mnemonicParsing="false" text="Enabled Ranged Fitting (Experimental)"
+                                                  GridPane.rowIndex="2"/>
+                                    </children>
+                                    <padding>
+                                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
+                                    </padding>
+                                </GridPane>
+                            </center>
+                        </BorderPane>
+                    </content>
+                </Tab>
+                <Tab closable="false" text="Distances">
+                    <content>
+                        <BorderPane fx:id="majorPane" minHeight="200.0" minWidth="400.0">
+                            <children>
+                            </children>
+                            <top>
+                            </top>
+                            <center>
+                                <GridPane hgap="10.0" vgap="5.0" BorderPane.alignment="CENTER">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="288.0" minWidth="10.0" prefWidth="206.0"/>
+                                        <ColumnConstraints fillWidth="false" hgrow="NEVER"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="380.0" minWidth="10.0" prefWidth="380.0"/>
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                    </rowConstraints>
+                                    <children>
+                                        <Label text="Connector Thickness" GridPane.rowIndex="5"/>
+                                        <VBox alignment="CENTER_LEFT" spacing="5.0" GridPane.rowIndex="7" GridPane.rowSpan="2">
+                                            <children>
+                                                <Label text="Connector Color"/>
+                                                <ColorPicker fx:id="connectorColorPicker" editable="true" minHeight="40.0" prefWidth="200.0"
+                                                             promptText="Change the color of the 3D connector"/>
+                                            </children>
+                                            <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                            </padding>
+                                        </VBox>
+                                        <Spinner fx:id="connectorThicknessSpinner" editable="true" prefWidth="100.0" GridPane.rowIndex="6"/>
+                                        <HBox alignment="CENTER" spacing="20.0" GridPane.columnIndex="2">
+                                            <children>
+                                                <Label text="Collected Distances"/>
+                                                <Button mnemonicParsing="false" onAction="#clearAllDistances" prefWidth="150.0" text="Clear All"/>
+                                            </children>
+                                        </HBox>
+                                        <VBox spacing="5.0" GridPane.rowSpan="2">
+                                            <children>
+                                                <Label text="Distance Metric"/>
+                                                <TextField fx:id="distanceMetricTextField" minHeight="40.0" promptText="Select Distance From ListView"/>
+                                            </children>
+                                            <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                            </padding>
+                                        </VBox>
+                                        <ScrollPane fitToHeight="true" fitToWidth="true" pannable="true" GridPane.columnIndex="2" GridPane.rowIndex="1"
+                                                    GridPane.rowSpan="2147483647">
+                                            <content>
+                                                <ListView fx:id="distancesListView" prefHeight="200.0" prefWidth="200.0">
+                                                    <padding>
+                                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                                    </padding>
+                                                </ListView>
+                                            </content>
+                                        </ScrollPane>
+                                        <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="1" GridPane.rowSpan="2147483647"/>
+                                        <RadioButton fx:id="pointToGroupRadioButton" disable="true" mnemonicParsing="false" text="Point to Group"
+                                                     GridPane.rowIndex="3"/>
+                                        <RadioButton fx:id="pointToPointRadioButton" mnemonicParsing="false" selected="true" text="Point to Point"
+                                                     GridPane.rowIndex="2"/>
+                                    </children>
+                                    <padding>
+                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                                    </padding>
+                                </GridPane>
+                            </center>
+                        </BorderPane>
+                    </content>
+                </Tab>
+                <Tab closable="false" text="Hull Geometry">
+                    <content>
+                        <BorderPane>
+                            <center>
+                                <VBox spacing="5.0" BorderPane.alignment="CENTER">
+                                    <children>
+                                        <HBox alignment="CENTER_LEFT" spacing="20.0">
+                                            <children>
+                                                <Label text="Generated Manifolds"/>
+                                            </children>
+                                        </HBox>
+                                        <HBox alignment="CENTER" layoutX="15.0" layoutY="15.0" spacing="20.0">
+                                            <children>
+                                                <Button mnemonicParsing="false" onAction="#clearAll" prefWidth="125.0" text="Clear All"/>
+                                                <Button layoutX="100.0" layoutY="10.0" mnemonicParsing="false" onAction="#exportAll" prefWidth="125.0"
+                                                        text="Export All"/>
+                                            </children>
+                                        </HBox>
+                                        <ScrollPane fitToHeight="true" fitToWidth="true" pannable="true">
+                                            <content>
+                                                <ListView fx:id="manifoldsListView">
+                                                    <padding>
+                                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                                    </padding>
+                                                </ListView>
+                                            </content>
+                                        </ScrollPane>
+                                    </children>
+                                    <padding>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                    </padding>
+                                </VBox>
+                            </center>
+                            <top>
+                                <HBox alignment="CENTER" BorderPane.alignment="CENTER">
+                                    <children>
+                                        <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                                            <columnConstraints>
+                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="-Infinity" minWidth="10.0" prefWidth="150.0"/>
+                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="216.0" minWidth="10.0" prefWidth="214.0"/>
+                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="145.0" minWidth="10.0" prefWidth="118.0"/>
+                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="145.0" minWidth="10.0" prefWidth="118.0"/>
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS"/>
+                                                <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="ALWAYS"/>
+                                                <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="ALWAYS"/>
+                                                <RowConstraints minHeight="10.0" vgrow="ALWAYS"/>
+                                            </rowConstraints>
+                                            <children>
+                                                <Label layoutX="15.0" layoutY="62.0" text="Point Set"/>
+                                                <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.valignment="CENTER">
+                                                    <children>
+                                                        <RadioButton fx:id="useVisibleRadioButton" mnemonicParsing="false" prefWidth="75.0" selected="true"
+                                                                     text="Visible"/>
+                                                        <RadioButton fx:id="useAllRadioButton" mnemonicParsing="false" prefWidth="75.0" text="All"/>
+                                                    </children>
+                                                </HBox>
+                                                <Label text="Distance Tolerance" textAlignment="CENTER" GridPane.rowIndex="1"/>
+                                                <HBox alignment="CENTER" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                    <children>
+                                                        <CheckBox fx:id="automaticCheckBox" mnemonicParsing="false" selected="true" text="Auto"/>
+                                                        <Spinner fx:id="manualSpinner" editable="true" prefWidth="75.0"/>
+                                                    </children>
+                                                </HBox>
+                                                <Label text="Find by Label" GridPane.rowIndex="2"/>
+                                                <ChoiceBox fx:id="labelChoiceBox" maxWidth="200.0" prefWidth="150.0" GridPane.columnIndex="1"
+                                                           GridPane.rowIndex="2"/>
+                                                <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="3"/>
+                                                <VBox alignment="CENTER" spacing="20.0" GridPane.columnIndex="2" GridPane.columnSpan="2"
+                                                      GridPane.halignment="CENTER" GridPane.rowSpan="3" GridPane.valignment="CENTER">
+                                                    <children>
+                                                        <Button mnemonicParsing="false" onAction="#generate" prefWidth="175.0" text="Generate"/>
+                                                        <Button mnemonicParsing="false" onAction="#clusterBuilder" prefWidth="175.0" text="Cluster Tools"/>
+                                                    </children>
+                                                    <padding>
+                                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                                                    </padding>
+                                                </VBox>
+                                            </children>
+                                        </GridPane>
+                                    </children>
+                                </HBox>
+                            </top>
+                            <left>
+                                <VBox spacing="10.0" BorderPane.alignment="CENTER">
+                                    <children>
+                                        <Label text="Selected Manifold Properties"/>
+                                        <TitledPane collapsible="false" text="Material" VBox.vgrow="ALWAYS">
+                                            <content>
+                                                <VBox spacing="5.0">
+                                                    <children>
+                                                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                            <children>
+                                                                <Label prefWidth="125.0" text="Diffuse Color"/>
+                                                                <ColorPicker fx:id="manifoldDiffuseColorPicker" editable="true" prefHeight="50.0"
+                                                                             prefWidth="150.0"/>
+                                                            </children>
+                                                        </HBox>
+                                                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                            <children>
+                                                                <Label prefWidth="125.0" text="Wire Mesh Color"/>
+                                                                <ColorPicker fx:id="manifoldWireMeshColorPicker" editable="true" prefHeight="50.0"
+                                                                             prefWidth="150.0"/>
+                                                            </children>
+                                                        </HBox>
+                                                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                            <children>
+                                                                <Label prefWidth="125.0" text="Specular Color"/>
+                                                                <ColorPicker fx:id="manifoldSpecularColorPicker" editable="true" prefHeight="50.0"
+                                                                             prefWidth="150.0"/>
+                                                            </children>
+                                                        </HBox>
+                                                    </children>
+                                                </VBox>
+                                            </content>
+                                        </TitledPane>
+                                        <TitledPane collapsible="false" layoutX="10.0" layoutY="396.0" text="MeshView" VBox.vgrow="ALWAYS">
+                                            <content>
+                                                <GridPane>
+                                                    <columnConstraints>
+                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="300.0"/>
+                                                    </columnConstraints>
+                                                    <rowConstraints>
+                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                                    </rowConstraints>
+                                                    <children>
+                                                        <HBox alignment="CENTER_LEFT" spacing="15.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                            <children>
+                                                                <Label prefWidth="75.0" text="Cull Face"/>
+                                                                <RadioButton fx:id="frontCullFaceRadioButton" mnemonicParsing="false" prefWidth="70.0"
+                                                                             selected="true" text="Front"/>
+                                                                <RadioButton fx:id="backCullFaceRadioButton" mnemonicParsing="false" text="Back"/>
+                                                                <RadioButton fx:id="noneCullFaceRadioButton" mnemonicParsing="false" text="None"/>
+                                                            </children>
+                                                        </HBox>
+                                                        <HBox alignment="CENTER_LEFT" spacing="15.0" GridPane.halignment="CENTER" GridPane.rowIndex="1"
+                                                              GridPane.valignment="CENTER">
+                                                            <children>
+                                                                <Label prefWidth="75.0" text="Draw Mode"/>
+                                                                <RadioButton fx:id="fillDrawModeRadioButton" mnemonicParsing="false" prefWidth="70.0"
+                                                                             selected="true" text="Fill"/>
+                                                                <RadioButton fx:id="linesDrawModeRadioButton" mnemonicParsing="false" text="Lines"/>
+                                                            </children>
+                                                        </HBox>
+                                                        <HBox alignment="CENTER" spacing="10.0" GridPane.rowIndex="2">
+                                                            <children>
+                                                                <CheckBox fx:id="showWireframeCheckBox" mnemonicParsing="false" selected="true"
+                                                                          text="Show Wire Frame"/>
+                                                                <CheckBox fx:id="showControlPointsCheckBox" mnemonicParsing="false" selected="true"
+                                                                          text="Show Control Points"/>
+                                                            </children>
+                                                        </HBox>
+                                                    </children>
+                                                </GridPane>
+                                            </content>
+                                        </TitledPane>
+                                    </children>
+                                    <padding>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                    </padding>
+                                </VBox>
+                            </left>
+                        </BorderPane>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+
+    </children>
+</AnchorPane>
+```
 All right, maybe if you're an FXML expert user you can look at these 462 lines of FXML and make some sense out of it at a glance...but I can't.  
 
 I don't really know anything about the project this came from.  I don't know if it would be considered "good" FXML or not.  I don't know if the author was an expert or a beginner.  My sense is that it is fairly typical, and is probably what came out of SceneBuilder.
