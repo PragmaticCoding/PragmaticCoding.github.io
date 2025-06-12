@@ -122,7 +122,9 @@ public class CustomerDAO {
 
 ```
 
-Now our production code runs with a delay, and our test code completes in less than 1 second.  Which means that we've simulated the problem.
+Now our production code runs with a delay, and our test code completes in less than 1 second.  
+
+I'll admit that this is a bit of a cheat.  In a real world example you don't have the luxury of simulating a database without latency for your automated testing.  But in the real world, you never run automated tests against an actual database.  What you would have to do is create `Mocking` classes for the database connections that can respond instantly and in exactly the way that you want - every time.  But that is way beyond the scope of this tuturial.
 
 # The Solution: A Background Thread
 
@@ -161,7 +163,21 @@ public class CustomerController {
     }
 }
 ```
-Amongst other things, `Task` implements `Runnable`, so we can put it into a `Thread` and call `Thread.start()`, which is what we do here.  Really, at this point, all we've done is take the call to `CustomerInteractor.saveCustomer()` and run it in another thread.  We don't need Task to do *that*, do we?
+## Some Information About Task
+
+`Task` is a utility class that is designed to run some code in a background thread.  `Task` itself is abstract, and has 1 abstract method: `call()`.  The most common way to use `Task` is to instantiate an anonymous inner class that extends `Task` and supply the implementation of `call()`.  That's what we've done in this example.  `Task` extends classes that implement `Runnable`, so that when we supply it to a `Thread` in it's constructor and then invoke `Thread.start()` it will invoke `Task.call()` in that `Thread`.  
+
+This means that any code that we put into `Task.call()` will be run on a background thread.
+
+When you start dealing with threads, you need to wrap your mind around the idea that pieces of your code will run simultanously, and you can no longer expect your code to run in a linear fashion.  The code that instantiates the `Task`, defines `Task.call()` and starts the `Task` running on a background thread all runs on the FXAT.  Whatever code that comes after `Thread.start()` will happen immediately, and will not depend on the completion of `Task.call()`.  You **cannot** wait for it on the FXAT, because then your GUI would freeze.
+
+In our example, `saveThread.start()` is the last line of code in `CustomerController.saveCustomer()` and is probably the last line of code in the job that the FXAT is running when it executes it.  So the FXAT is going to going to go on and handle the next job in its queue.
+
+You may also notice that `Task` is generic, and that `Task.call()` returns a value of whatever type we declare our instance of `Task` as.  In our case, we don't have a value to return, and so we are just using `Void`.
+
+## Back to Our Example
+
+Really, at this point, all we've done is take the call to `CustomerInteractor.saveCustomer()` and run it in another thread.  We don't need Task to do *that*, do we?
 
 Let's take a look at what happens when this runs.  There's nothing much to see, but the GUI isn't dead any more.  I can interact with it while I'm waiting for the database call to complete, and it works.
 
@@ -202,7 +218,7 @@ Since changes to the GUI are "live" changes to State, whenever we need to use St
 1.  Copy the elements of State to some place private to the background thread.
 1.  Lock the GUI so that it cannot update State.
 
-Let's do the first here:
+Let's do the first here (this code is in the Interactor):
 
 ``` java
 public void saveCustomer() {
@@ -226,15 +242,34 @@ That's way better.  It's probably a safe bet that the background thread is going
 
 But it's still disturbing that you could click on that Button three times before it finished processing.  That's something that we should deal with.
 
-## Task Completion
+## More About Task - Completion Events
 
-One of the things that makes `Task` better than just a `Runnable` is that it fires an `Event` on completion.  You can set up an `EventHandler` (which will run on the FXAT, as all `EventHandlers` do) to catch that `Event` and do something with your GUI.
+You may have been wondering, "Why bother with `Task`?  Why not put a `Runnable` in a `Thread`?".
 
-Generally, the process is like this:
+`Task` is specifically designed to allow you to co-ordinate code on the FXAT with background code, which is a crucial ability.  One of the ways that it does this is with a set of `Events` that are fired when the background job ends.  These are defined in the `Task` as `ObjectProperty<EventHandler>` and you can put `EventHandlers` in them.
 
-1. Put the GUI in the state that you want it while the `Task` runs.
-1. Execute the `Task`.
-1. Put the GUI back into its "normal" state when the `Task` completes.
+There are three ways that a `Task` can end:
+
+Completed
+: This is fired when the code in `Task.call()` completes normally.
+
+Failed
+: This happens only when the code in `Task.call()` terminates with an uncaught, unhandled `Exception` of any type.
+
+Cancelled
+: This fires when some code calls `Task.cancel()`.  If you don't have any code that does this, then you don't have to worry about it.
+
+You can set up these event handlers by calling `Task.setOnCompleted()`, `Task.setOnFailed()` or `Task.setOnCancelled()`.  
+
+The key idea behind this is that all `EventHandlers` run on the FXAT!  This means that you can write some code, in an `EventHandler`, that will be executed on the FXAT when the `Task` completes its job.  This turns out to be very, very powerful...
+
+## Back to Our Example (Again)
+
+One of the ways that you can utilize this power is to create a "workflow" for creating and running a `Task`. Generally, that workflow is something like this:
+
+1. [FXAT] Put the GUI in the state that you want it while the `Task` runs.
+1. [Background] Execute the `Task`.
+1. [FXAT] Put the GUI back into its "normal" state when the `Task` completes.
 
 The first and last steps are performed on the FXAT, the `Task` executes on the background thread.
 
@@ -267,8 +302,11 @@ public CustomerViewBuilder(CustomerModel model, Consumer<Runnable> saveHandler) 
    this.saveHandler = saveHandler;
 }
 ```
+You can see here that we've changed the type of `saveHandler` from a `Runnable` to a `Consumer<Runnable>`.  Let's take a look at that a little closer.  A `Consumer` is a "Functional Interface" that accepts a single parameter and returns nothing.  It "consumes" the value that it is passed.  In this case, it will be consuming a `Runnable`, which is just a snippet of executable code.  
 
-Next, the code for the Button:
+Remember that this `saveHandler` is passed **in** to the View.  The View isn't going to *define* it, it is going to *invoke* it.  But the View is going to define the `Runnable` that it passes to `saveHandler`.
+
+Let's look at how that works in the code for the Button:
 
 ``` java
 private Node createButtons() {
@@ -282,17 +320,44 @@ private Node createButtons() {
     return results;
 }
 ```
+The `Runnable` that is passed to `saveHandler` is the single command, `saveButton.setDisable(false)`.  This is passed to the `Consumer` via `Consumer.accept()`, and is the code that is then passed back to the Controller as a `Runnable` and then gets put into the `onCompleted EventHandler` of the `Task`.  So it's actually passed around twice.
 
 Now, when the `Button` is clicked, the first thing that happens is that it is disabled.  Then the `saveHandler` is invoked, passing it a `Runnable` that re-enables the `Button`.  Like this:
 
 ![Disabled Button Screenshot]({{page.screenshot_2}})
 
-
+The `Button` will remain disabled until the `Task` completes, and the `onCompleted EventHandler` is executed.  That `EventHandler` will call `Runnable.run()` which will execute `saveButton.setDisable(false)` and the `Button` will be re-enabled.
 
 In this way, we keep the GUI code in the ViewBuilder, and the control over the threading in the Controller.
+
+# Keeping Secrets
+
+Let's look at what the elements of our MVCI framework "know", and "don't know" about each other.
+
+1. The Controller knows that it needs to supply the View with a Consumer that it can call to pass back a `Runnable` that is associated with the completion saving a customer record.  Invocation of this `Consumer` should trigger the customer record save.
+
+1. The Controller has no knowledge of what that `Runnable` does.
+
+1. The Controller has no knowledge of how the `Consumer` will be invoked.
+
+1. The View knows that it will get a `Consumer` from whatever class instantiates it.  It knows that this `Consumer` is related to saving a customer and needs to be invoked (via `Consumer.accept()`) to execute the save.
+
+1. The View does not know what the `Consumer` does.  
+
+1. The View does not know how the `Runnable` that it supplies will be invoked.
+
+1. The Controller knows that it has to call `Interactor.saveCustomer()` via a `Task` in response to invocation of the `Consumer` by the View.
+
+1. The Controller has no knowledge of what `Interactor.saveCustomer()` does.
+
+1. The Interactor has no knowledge of any external components except the Model.  
+
+1. The Interactor is NOT aware that `saveCustomer()` will be run on a background thread.
+
+This last item is a bit fluid.  There may be occasions when an Interactor method is designed to run on either the FXAT or a background thread and you'll need to keep away from doing certain things in either case.
 
 # Conclusion
 
 Connecting your application to the real world means that you have to cope with blocking API calls, and that means you have to use background threads to handle these connections.  But multi-threading means concurrency and concurrency brings its own issues.  This is unavoidable, as the GUI needs to remain active while external access is running, and just something you'll need to learn how to handle.
 
-Programmers are used to imperative programmer, where programs execute in a linear fashion and you always know how you got somewhere and the state of your application when you get there.  Reactive programming breaks this paradigm, and multi-threaded programming complicates it even more.  It's not really difficult to cope with, but it takes some time to get used to the new way of thinking.
+Programmers are used to imperative programming, where programs execute in a linear fashion and you always know how you got somewhere and the state of your application when you get there.  Reactive programming breaks this paradigm, and multi-threaded programming complicates it even more.  It's not really difficult to cope with, but it takes some time to get used to the new way of thinking.
