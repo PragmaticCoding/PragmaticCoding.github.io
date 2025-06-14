@@ -66,6 +66,29 @@ This means that whenever either of those `Properties` change, the `Binding` will
 
 This is how we inject a business rule into the Model without putting the code in the Model.  Now it's available for the View to use.
 
+## Is This the Best Approach?
+
+There is a school of thought that the Interactor should never treat the elements of the Model as `ObservabaleValues` - which we are clearly doing here.  Instead you should treat your `Observable` fields in the Model as generic containers for values.  
+
+There are some who believe that it should be possible to have an Interactor without any `javafx.*` imports at all.  Here, we have:
+
+``` java
+import javafx.beans.binding.Bindings;
+```
+because we have that call to `Bindings.createBooleanBinding()`.
+
+How can you create the binding without having the code to do so in the Interactor?
+
+The only way you can do this is to move the binding creation into the Model itself.  You *can* do this, but, if you want to keep the business logic in the Interactor, you'll have to leave `isDataValid()` in the Interactor.  
+
+This would be fine, except that you'll now have a reference to the Interactor in the Model.  Something that we didn't need before.
+
+I feel that this would be a mistake.  As it stands, the Model is *the* central dependency that all of the other components share, but it has zero dependencies of its own.  All of the dependencies are *to* the Model, and none of them are *from* the Model.  I wouldn't change this just to remove the JavaFX nature of the Model from the Interactor.
+
+Alternatively, you could move the binding code into the Controller.  The Controller already knows about methods in the Interactor, so it could call `Interactor.isDataValid()` without creating onerous new dependencies between the Controller and the Interactor.  Additionally, if I was to implement a `ChangeListener` on some field in the Model, I'd probably implement it in the Controller.  Setting up a binding is just a small step from that.
+
+I feel that there's a benefit to having both the binding code and the business logic that supports it in the same class.  Why spread it around and make it harder to keep track of?  Additionally, I feel that the Interactor isn't really supposed to be agnostic towards the GUI environment.  This *is* a JavaFX construct, and it can be acknowledged inside the Interactor without any real practical implications. 
+
 # Adding the Validation to the View
 
 We are going to control the ability to save by disabling the "Save" `Button` when the data is not valid.  We are going to do this with a `Binding`.
