@@ -15,6 +15,7 @@ ScreenSnap7: /assets/elements/TableColumn7.png
 ScreenSnap8: /assets/elements/TableColumn8.png
 ScreenSnap9: /assets/elements/TableColumn9.png
 ScreenSnap10: /assets/elements/TableColumn10.png
+ScreenSnap11: /assets/elements/TableColumn11.png
 
 Diagram: /assets/elements/ListProperties.png
 StyleableProperties: /javafx/elements/styleable-properties
@@ -35,7 +36,9 @@ In this article, we are going to look at how to create custom `TableColumns` to 
 
 `TableColumns` are easy to set up when the data in the column is just a simple `String`.  But what about numbers?  What about dates and money?  
 
-Once you get into these questions, then you're suddenly looking at custom `TableCells` to handle the presentation and the difference between adding a `TableColumn` with nothing more than a `CellValueFactory` and doing it right seems huge.  
+Once you get into these questions, then you're suddenly looking at custom `TableCells` to handle the presentation.  The difference between adding a `TableColumn` with nothing more than a `CellValueFactory` and doing it right can seem huge.  But it doesn't have to be, and if you approach it properly then you can put your work into a personal library that you can use over and over.  
+
+Let's start by looking at a `TableView` configured with the bare minimum:
 
 ``` kotlin
 class Example1 : Application() {
@@ -127,7 +130,9 @@ class TemperatureColumn<T>(extractor: (data: T) -> DoubleProperty) : TableColumn
     }
 }
 ```
-All of the `apply{}` code from before has been moved into `init{}` in our custom class.  In the `TableView` setup code we invoke our `TemperatureColumn` like this:
+All of the `apply{}` code from before has been moved into `init{}` in our custom class.  We don't need a column heading parameter in the constructor, because we are just going to use our graphic.  But we are now taking a constructor parameter that specifies how to extract our column data from the table data.
+
+In the `TableView` setup code we invoke our `TemperatureColumn` like this:
 
 ``` kotlin
 columns += TemperatureColumn<TableData1> { it.value4 }
@@ -177,7 +182,7 @@ You may have guessed, given the formula, that this column is intended to display
 
 ## Styling the Units
 
-The first thing we need to do is to move the rounding feature out of the `TemperatureColumn` itself, and into the `TemperatureTableCell` because we don't want to be doing any conversions on previously rounded numbers.  Then we can introduce an `Enum` called `TemperatureUnit` and an `ObjectBinding<Double>` to convert between Celsius input and Fahrenheit and Kelvin output.
+The first thing we need to do is to move the rounding feature out of the `TemperatureColumn` itself, and into the `TemperatureTableCell` because we don't want to be doing any conversions on previously rounded numbers.  Then we can introduce an `Enum` called `TemperatureUnit` and an `ObjectBinding<Double>` to convert between Celsius input and Fahrenheit, Celsius and Kelvin output.
 
 ``` kotlin
 class TemperatureColumn<T>(extractor: (data: T) -> DoubleProperty) : TableColumn<T, Double>() {
@@ -485,7 +490,7 @@ It can be cleaner to just use red and green dots:
 
 ![Image Boolean Column]({{page.ScreenSnap9}})
 
-This can be especially effective if you only show the `true` circles:
+This can be especially effective if you only show the dots for `true` values:
 
 ![Image Boolean Column]({{page.ScreenSnap10}})
 
@@ -667,9 +672,9 @@ and the CSS file:
 ```
 We have 3 `StyleableProperties` here.  One to control the image/circle display, one to control the size of the circles (if used), and one to determine if anything will be displayed when the value is `false`.  These `StyleableProperties` are all passed to the `BooleanTableCell` as constructor parameters.
 
-The `BooleanTableCell` has a `graphic` that is just a `StackPane` with 2 `ImageViews` and 2 `Circles` in it. The visibility of each of those elements is bound to dependencies on `showFalse`, `useCircles` and the `item` value, such that one and only one of them will ever be visible.  Note that the `item Property` is of type `ObjectProperty<Boolean>`, so you don't have the Fluent API for `BooleanProperty`.  To get around this, the variable `booleanItem` is instantiated using `BooleanProperty.booleanProperty()` which is automatically bound to `item` but is of type `BooleanProperty`.  Then the Fluent API can be used in the visibility bindings.
+The `BooleanTableCell` has a `graphic` that is just a `StackPane` with 2 `ImageViews` and 2 `Circles` in it. The visibility of each of those elements is bound to dependencies on `showFalse`, `useCircles` and the `item` value, such that only one of them (or maybe none of them) will ever be visible.  Note that the `item Property` is of type `ObjectProperty<Boolean>`, so you don't have the Fluent API for `BooleanProperty`.  To get around this, the variable `booleanItem` is instantiated using `BooleanProperty.booleanProperty()` which is automatically bound to `item` but is of type `BooleanProperty`.  Then the Fluent API can be used in the visibility bindings.
 
-There are default values for the `ImageView` images and the `Circle` colours.  However, no provision has been made to allow them to be modified from the layout.  This means that the `BooleanTableCell` will work without any Style Sheet configuration at all, but you cannot
+There are default values for the `ImageView` images and the `Circle` colours.  However, no provision has been made to allow them to be modified from the layout.  This means that the `BooleanTableCell` will work without any Style Sheet configuration at all, but you cannot change the colours without using a style sheet.
 
 ## Accessing the BooleanTableCell Programmatically
 
@@ -695,10 +700,63 @@ This is why all four of these elements have unique styleclass selectors.  This a
 
 Once again, if you do want to programatically configure them, you'll have to do it through the `BooleanColumn` and then pass the values to the `BooleanTableCell` in it's constructor.  
 
+# JavaDocs
+
+My experience has been that most people find that understanding layout code is the most difficult aspect of enhancing and doing maintenance of a JavaFX application.  Because of this, **anything** that you can do to reduce and simplify your layout code is going to be a big win.
+
+If you can define a `TableView` with 10 columns with 10-15 lines of code, and if 10 of those lines are just simple constructor calls for custom `TableColumns` you can go a long way towards simplifying to layout code.  This is especially true if you use good, descriptive names for your custom `TableColumns`.
+
+Look at our `BooleanColumn`, it can be instantiated like this:
+
+``` kotlin
+columns += BooleanColumn("Some Heading"){item -> item.someBooleanProperty()}
+```
+But, if the maintenance programmer has to click through into `BooleanColumn` to see how it works and how to configure some aspect of its display, then it gets harder, not easier, for them.  
+
+It's really important to make that information readily available without forcing maintenance programmers to read the source code.  JavaDocs can be crucial here.  Let's take a look at some JavaDocs (KDocs actually, because it's Kotlin) for `BooleanColumn`
+
+``` kotlin
+/**
+ * TableColumn for the display of Boolean values.
+ *
+ * ## Infix Decorator Methods
+ * Values can be displayed as either ImageViewss or Circles, with ImageViews as the default behaviour.  Use
+ * `BooleanColumn.withCircles(true)` to change to Circles.
+ *
+ * Graphics may be shown for both true and false values, or for only true values.  The default is to
+ * display graphics for both.  Use `BooleanColumn.withFalseValues(false)` to suppress graphics for
+ * false values.
+ *
+ * If Circles are used, the radius of the Circles may be specified with through `BooleanColurm.withCircleSize(Double)`.
+ * The default Circle radius is 7.0px.
+ *
+ * ## StyleSheet Selectors
+ * - Column: `boolean-column`
+ * - TableCell: `boolean-table-cell`
+ * - ImageViews: `true-image` and `false-image`
+ * - Circles: `true-circle` and `false-circle`
+ *
+ * ## Styleable Properties
+ * - Show false values: `-wfx-show-false`
+ * - Use Circles: `-wfx-use-circles`
+ * - Circle size: `-wfx-circle-size`
+ *
+ * @param title Column heading title
+ * @param extractor Function that will return a Boolean property give an item of the TableView type.
+ */
+ ```
+We have the standard stuff that explains the constructor parameters, of course.  But equally important is all the information that they'd need to do configuration in the layout, or to tailor the StyleSheet.  
+
+ It looks like this in my IDE:
+
+ ![KDocs in Action]({{page.ScreenSnap11}})
+
+ There's probably more that I should add in, but you get the idea.
+
 # Conclusion
 
-This is another one of the cases where JavaFX gives you all the raw tools that you need to build things exactly the way that you want without cluttering up the library with classes that do things the way that *they* want.  Even more, `TableColumns` and `TableCells` are extremely generic and almost impossible to use out-of-the-box without doing some kind of customization.  So why not do that customization "right", do it completely and then just re-use it over and over again?
+This is another one of the cases where JavaFX gives you all the raw tools that you need to build things exactly the way that you want without cluttering up the library with classes that do things the way that *they* want.  Even more, `TableColumns` and `TableCells` are extremely generic and almost impossible to use out-of-the-box without doing some kind of customization.  So why not do that customization "right", do it *completely*, and then just re-use it over and over again?
 
 A key concept here is recognizing that `TableCells` that go with a certain kind of data go with `TableColumns` of the same kind of data.  The two are a matched pair.  Once you think of it this way, it's fairly clear how to design a `TableColumn` such that it supports a matched `TableCell`.  And then, in your layout code, you simply don't have to think about the `TableCells` at all because they just work.
 
-The difference in your layout code between using a pre-built, custom, `TableColumn` and doing the configuration on the fly is huge.  I don't think you can overestimate how much baggage that in-line configuration brings with it.  Using a custom `TableColumn` eliminates all of that baggage and can make your `TableView` configuration absolutely trivial.
+The difference in your layout code between using a pre-built, custom, `TableColumn` and doing the configuration on the fly is huge.  I don't think you can overestimate how much baggage that in-layout configuration brings with it.  Using a custom `TableColumn` eliminates all of that baggage and can make your `TableView` configuration absolutely trivial.

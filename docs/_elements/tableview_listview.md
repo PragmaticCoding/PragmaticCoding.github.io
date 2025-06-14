@@ -41,6 +41,15 @@ feature_row_table_styling:
     btn_label: "Read the Article"
     btn_class: "btn--primary"
 
+feature_row_custom_columns:
+  - image_path: /assets/elements/TableColumn5.png
+    alt: "Custom TableView Columns"
+    title: "Custom TableColumns"
+    excerpt: 'Generally, certain kinds of data need to be displayed in TableViews in certain, specific ways. This article will show you how to create custom TableColumns, along with matching custom TableCells, that you can use over and over in every application that you build. '
+    url: "/javafx/elements/custom-table-columns"
+    btn_label: "Read the Article"
+    btn_class: "btn--primary"
+
 feature_row_listview_basics:
   - image_path: /assets/elements/ListView2.png
     alt: "ListView Basics"
@@ -73,6 +82,8 @@ For some reason, beginner programmers love tables, and they rush to start using 
 {% include feature_row id="feature_row_cell_data" type="left" %}
 
 {% include feature_row id="feature_row_table_styling" type="left" %}
+
+{% include feature_row id="feature_row_custom_columns" type="left" %}
 
 # ListView
 
