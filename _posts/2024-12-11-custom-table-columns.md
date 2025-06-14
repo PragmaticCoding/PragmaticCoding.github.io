@@ -1,6 +1,6 @@
 ---
 title:  "Type Specific TableColumns"
-date:   2024-12-10 12:00:00 -0500
+date:   2025-06-10 12:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
 permalink: /javafx/elements/custom-table-columns
@@ -21,7 +21,7 @@ Diagram: /assets/elements/ListProperties.png
 StyleableProperties: /javafx/elements/styleable-properties
 part2: /javafx/elements/observable-classes-typed
 
-excerpt: How to create custom TableColumns to handle specific data types the way that you want.
+excerpt: Generally, certain kinds of data need to be displayed in TableViews in certain, specific ways.  This article will show you how to create custom TableColumns, along with matching custom TableCells, that you can use over and over in every application that you build.
 ---
 
 # Introduction
@@ -31,6 +31,8 @@ If you rigorously follow DRY (Don't Repeat Yourself), and you should, then you'l
 If you are one of those programmers that likes to use `TableView` - and there are lots of you out there - then one of the ways you might be repeating yourself without thinking about it is your `TableColumns`.  Or, and this is even more likely, you're avoiding properly configuring some kinds of `TableColumns` because it's just too much tedious work to do every time.
 
 In this article, we are going to look at how to create custom `TableColumns` to handle and display various kinds of data the way that you want to deal with them and that you can re-use over and over.  We are also going to look at how custom `TableViewCells` work hand-in-glove with custom `TableColumns` and how you can create them to work together seemlessly.
+
+{% include notice_kotlin %}
 
 ## Different Data Types Should be Presented Differently
 
