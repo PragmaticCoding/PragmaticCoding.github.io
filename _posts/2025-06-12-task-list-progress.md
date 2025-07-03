@@ -1,6 +1,6 @@
 ---
 title:  "Task Partial Results: Lists"
-date:   2025-06-12 12:00:00 -0500
+date:   2025-07-02 12:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
 permalink: /javafx/elements/task-list-progress
@@ -633,7 +633,7 @@ var counter = 0
 while (!threadPool.awaitTermination(4, TimeUnit.SECONDS))
     messageUpdater("Still Waiting ${counter++}")
 ```
-That `while{}` statement is important.  More correctly, the `ThreadPool.awaitTermination()` is very important.  This ensures that our method, running on the main background thread, doesn't return until after all of the jobs running on all of the threads has completed and the `ThreadPool` has shutdown.  
+That `while{}` statement is important.  More correctly, the `ThreadPool.awaitTermination()` is very important.  This ensures that our method, running on the main background thread, doesn't return until after all of the jobs running on all of the threads have completed and the `ThreadPool` has shutdown.  
 
 So, when we return from `handleProcessing3()`, we know that there are no more updates coming to `Task.dataList` from any background threads.  
 
@@ -717,7 +717,7 @@ So use it.  Use it every time!
 
 ## Look at the JavaFX Source Code
 
-Sometimes there are hints about interesting things in the JavaDocs that you just cannot appreciate until you look "under-the-hood" and see how it is done.  Check out the JavaDocs for `Task.updateMessage()`:
+Sometimes, in the JavaDocs there are hints about interesting things that you simply cannot appreciate until you look "under-the-hood" and see how it is done.  Check out the JavaDocs for `Task.updateMessage()`:
 
 > Updates the message property. Calls to updateMessage are coalesced and run later on the FX application thread, so calls to updateMessage, even from the FX Application thread, may not necessarily result in immediate updates to this property, and intermediate message values may be coalesced to save on event notifications.
 
