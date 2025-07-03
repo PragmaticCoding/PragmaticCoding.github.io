@@ -31,32 +31,14 @@ feature_row_task_progress:
     btn_label: "Read the Article"
     btn_class: "btn--primary"
 
-feature_row_imageview:
-  - image_path: /assets/elements/ImageViewDemo1.png
+feature_row_list_progress:
+  - image_path: /assets/elements/TaskProgress10.png
     alt: "ImageView"
-    title: "All About Image and ImageView"
-    excerpt: "Image and ImageView are the two classes you'll need to know in order to be able to put images into your layouts."
-    url: "/javafx/elements/images"
-    btn_label: "Read the Articles"
-    btn_class: "btn--primary"    
-
-feature_row_layouts:
-  - image_path: /assets/elements/VBoxHBox.png
-    alt: "Layouts"
-    title: "Introduction to Layout Classes"
-    excerpt: "A basic guide to the layout classes in JavaFX and how to use them effectively"
-    url: "/javafx/elements/layout_classes"
+    title: "Tracking Task List Building Progress"
+    excerpt: "Sometimes you need a Task to return not just a single value, but a List of values.  This article explores how to monitor the progress of your Task as it accumulates data into a List, and to see that List as it grows from your GUI."
+    url: "/javafx/elements/task-list-progress"
     btn_label: "Read the Article"
-    btn_class: "btn--primary"
-
-feature_row_tables:
-  - image_path: /assets/elements/TableView2.png
-    alt: "Tables and Lists"
-    title: "Introduction to TableView and ListView"
-    excerpt: "A set of articles about how to use the JavaFX tools to create lists and tables in your layouts."
-    url: "/javafx/elements/tableview_listview"
-    btn_label: "Read the Articles"
-    btn_class: "btn--primary"       
+    btn_class: "btn--primary"    
 ---
 
 # What is the FXAT?
@@ -64,6 +46,15 @@ feature_row_tables:
 When a library is "Thread-Safe" it means that it has been designed such that multiple processes, or multiple threads, can access the same objects at the same time (or at least seem to access them at the same time).  This introduces a massive amount of complexity into the library, as there need to be controls to ensure that one thread doesn't update a field while another thread is depending on it still having the same value that it did 1ms ago.  
 
 The JavaFX library is NOT thread-safe, and this greatly simplifies its structure and makes it easier to work with.  However, this means that the objects used on the SceneGraph need to be accessed by only one single thread.  And that thread is the "FX Application Thread" or "FXAT".  
+
+Everything that deals with the GUI has to run on the FXAT.  This includes any code that you write that updates `Properties` of `Nodes` on the screen, as well as all of the internal JavaFX code that runs the screen updates, moves the cursor, responds to mouse clicks, window resizing and anything else you can think of.  All of these actions need to run on that single FX Application Thread.  
+
+But if you monopolize the FXAT with your application code, then your GUI will start to stutter and become unresponsive.  This can happen because you've done one of two things:
+
+1. Run long, complicated operations that take more than a few milliseconds on the FXAT.
+1. Run operations that block (like accessing a web service) on the FXAT.
+
+You need to do these things on a "background" thread.  
 
 The operation that gets your application up and running and on the screen through the `Application.start()` method also starts up the FXAT and gets your code running on it. Knowing how to get your code to run on or off the FXAT is an important part of JavaFX programming.  The articles on this page will help you get started.
 
@@ -73,3 +64,5 @@ The operation that gets your application up and running and on the screen throug
 {% include feature_row id="feature_row_intro" type="left" %}
 
 {% include feature_row id="feature_row_task_progress" type="left" %}
+
+{% include feature_row id="feature_row_list_progress" type="left" %}

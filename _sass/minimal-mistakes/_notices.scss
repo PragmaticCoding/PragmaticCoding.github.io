@@ -107,3 +107,7 @@
 .notice--kotlin {
   @include notice($kotlin-color);
 }
+
+.notice_question--primary {
+  @include notice($success-color);
+}

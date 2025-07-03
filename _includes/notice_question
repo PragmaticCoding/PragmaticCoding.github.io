@@ -1,0 +1,6 @@
+<div class="notice_question--{{ include.type }}">
+ <img src="/assets/logos/BRAIN_Question.png" alt="{{ include.type }}" style="float:left;margin-right: 10px" >
+ <p style="overflow:auto; float:none">
+   {{ include.content }}
+ </p>
+</div>
