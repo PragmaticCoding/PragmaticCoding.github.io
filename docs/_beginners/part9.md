@@ -87,7 +87,7 @@ I feel that this would be a mistake.  As it stands, the Model is *the* central d
 
 Alternatively, you could move the binding code into the Controller.  The Controller already knows about methods in the Interactor, so it could call `Interactor.isDataValid()` without creating onerous new dependencies between the Controller and the Interactor.  Additionally, if I was to implement a `ChangeListener` on some field in the Model, I'd probably implement it in the Controller.  Setting up a binding is just a small step from that.
 
-I feel that there's a benefit to having both the binding code and the business logic that supports it in the same class.  Why spread it around and make it harder to keep track of?  Additionally, I feel that the Interactor isn't really supposed to be agnostic towards the GUI environment.  This *is* a JavaFX construct, and it can be acknowledged inside the Interactor without any real practical implications. 
+I feel that there's a benefit to having both the binding code and the business logic that supports it in the same class.  Why spread it around and make it harder to keep track of?  Additionally, I feel that the Interactor isn't really supposed to be agnostic towards the GUI environment.  This *is* a JavaFX construct, and it can be acknowledged inside the Interactor without any real practical implications.
 
 # Adding the Validation to the View
 
@@ -117,7 +117,7 @@ But we cannot directly set a `Property` that's bound.  We'll get a runtime error
 
 # Now it Works
 
-That's it, and it was pretty painless too.
+That's it, and it was pretty painless, too.
 
 You can see how we've established the business rule in the Interactor, connected it to the View via the Model, and the View uses it without having any knowledge about how it works.  
 

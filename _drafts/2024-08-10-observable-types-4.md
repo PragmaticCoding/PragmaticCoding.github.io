@@ -1,31 +1,56 @@
 ---
 title:  "Guide To the Observable Classes - Part IV"
-date:   2024-08-03 12:00:00 -0500
+date:   2025-07-09 12:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
 permalink: /javafx/elements/observable-classes-custom
-ScreenSnap1: /assets/elements/ListObservables1.png
-ScreenSnap2: /assets/elements/ListObservables2.png
-ScreenSnap3: /assets/elements/ListObservables3.png
-ScreenSnap4: /assets/elements/ListObservables4.png
+ScreenSnap0: /assets/elements/CustomProperty0.png
+ScreenSnap1: /assets/elements/CustomProperty1.png
+ScreenSnap2: /assets/elements/CustomProperty2.png
+ScreenSnap3: /assets/elements/CustomProperty3.png
+ScreenSnap4: /assets/elements/CustomProperty4.png
+ScreenSnap5: /assets/elements/CustomProperty5.png
+ScreenSnap6: /assets/elements/CustomProperty6.png
+ScreenSnap7: /assets/elements/CustomProperty7.png
+ScreenSnap8: /assets/elements/CustomProperty8.png
+ScreenSnap9: /assets/elements/CustomProperty9.png
 Diagram: /assets/elements/ListProperties.png
 part1: /javafx/elements/observable-classes-generics
 part2: /javafx/elements/observable-classes-typed
+part3: /javafx/elements/observable-classes-lists
+JavaDocs : https://openjfx.io/javadoc/23/javafx.base/javafx/beans/value/ObservableListValue.html
 
-excerpt: A look at the Observable classes that wrap ObservableList
+excerpt: A look at how to create custom Propery classes.
 ---
 
 # Introduction
 
-In [Part 1]({{page.part1}}) of this series, we looked at the `Observable` classes designed to wrap aribitrary `Object` values, and in [Part II]({{page.part2}}) we looked at the typed `Observable` classes.  In this article we are going to look at the `Observables` designed to hold `ObservableLists`.
+In [Part 1]({{page.part1}}) of this series, we looked at the `Observable` classes designed to wrap aribitrary `Object` values, and in [Part II]({{page.part2}}) we looked at the typed `Observable` classes.  In [Part III]({{page.part3}}) we took a deep dive into the `Observables` designed to hold `Lists`, and the `Properties` designed to hold `ObservableLists`.
 
-This is a subject that always confused me.  Aren't `ObserableLists` already `Observable`?  And doesn't `ObseravbleList` already implement the `Obseravble` interface?  So why wrap an `ObservableList` inside an `Observable` wrapper?
+This last item always confused me.  Aren't `ObserableLists` already `Observable`?  And doesn't `ObseravbleList` already implement the `Obseravble` interface?  So why wrap an `ObservableList` inside an `Observable` wrapper?
 
 The whole thing, at first glance, seems very circular.  We have an `Observable` that wraps an `ObservableList` and supports these same methods as `ObservableList`.  What's the point?
 
-The truth is, you've probably already used a `Property` that wraps an `ObseravbleList` if you have ever used `TableView`.  That's because the `items` field in `TableView` is an `ObjectProperty<ObservableList<S>>`.  But it's highly unlikely that you've ever used this as a `Property`, meaning that you've probably never put a `Listener` on it or bound it to or from anything.
+The "point" it turns out is very cool.  You end up with a `Property` that behaves like a `Property` but also behaves like the `ObservableList` it contains.  Now, if you generalize this:  
 
-We should have a closer look at what this does.
+You have a `Property` that behaves like a `Property` but also behaves exactly like the object it contains.
+
+# Is this a Big Deal?
+
+If you think about it, most of the other "typed" `Properties` do this to some degree.  `IntegerProperty` has methods for adding and subtracting, and `StringProperty` can do things like concatenation. But not quite.  For instance, you can't do this:
+
+``` kotlin
+val someIntegerProperty = firstIntegerProperty + secondIntegerProperty
+```
+but you can do the `Binding`:
+
+``` kotlin
+val someIntegerObservable = firstIntegerProperty.add(secondIntegerProperty)
+```
+
+The only `Observable` class that actually works like it's backing type is `ObseravbleList`.  It wraps a `List` of some sort, and any operation that you can do to a `List`, you can do to its enclosing `ObservableList`.  
+
+I think it's undeniable that being able to `add()`, `setAll()` or `remove()` directly from an `ObservableList`, without having to reach in to the backing `List` object is worthwhile.
 
 # Why Do This?
 
@@ -33,7 +58,384 @@ I really, really like the idea of getting the "plumbing" out of your layout code
 
 If you have a really big project, maybe multiple applications in the same domain, that are using some standard elements as part of a Presentation Model, then it's possible that creating some custom `Properties` for them is a worthwhile exercise.  That way that you move the common plumbing that you'd otherwise be repeating over and over in your layout code (and violating DRY) into an encapsulated area inside your custom `Property`.
 
-# An Example - A "Customer" Object
+What we are going to look at first, is the idea wrapping a POJO inside a `Property` that then acts just like that POJO that it wraps.
+
+# Wrapping a Plain Java Object
+
+This first case that we will look at is analagous to `ObservableList` in that it will just wrap an object that doesn't have any observable characteristics of its own.  
+
+Just like `ObservableList`, that wraps an `Interface` we'll follow the same pattern.  To illustrate this, we'll take a fairly common example that a lot of business applications have: a "customer" object:
+
+``` kotlin
+interface Customer {
+    fun getAccount(): String?
+    fun setAccount(p0: String)
+
+    fun getFName(): String?
+    fun setFName(p0: String)
+
+    fun getLName(): String?
+    fun setLName(p0: String)
+
+    fun getAge(): Int
+    fun setAge(p0: Int)
+
+    fun fullName(): String
+}
+```
+Here's our POJO implementation, `CustomerImpl`:
+
+``` kotlin
+class CustomerImpl : Customer {
+
+    private var account: String? = null
+    private var fName: String? = null
+    private var lName: String? = null
+    private var age: Int = 0
+
+    override fun getAccount(): String? = account
+
+    override fun setAccount(p0: String) {
+        account = p0
+    }
+
+    override fun getFName(): String? = fName
+
+    override fun setFName(p0: String) {
+        fName = p0
+    }
+
+    override fun getLName(): String? = lName
+
+    override fun setLName(p0: String) {
+        lName = p0
+    }
+
+    override fun getAge(): Int = age
+
+    override fun setAge(p0: Int) {
+        age = p0
+    }
+
+    override fun fullName(): String = "$fName $lName"
+}
+```
+Now we can think about creating a `CustomerProperty` that both contains a `Customer` as an `Observable` and implements `Customer` itself.  We'll follow the same pattern that `SimpleObjectProperty` uses by implementing `getBean()` and `getName()` and supplying the constructors to initialize them:
+
+``` kotlin
+class CustomerProperty(
+    private val bean: Any?,
+    private val name: String,
+    initialValue: Customer? = null
+) : ObjectPropertyBase<Customer>(), Customer {
+
+    override fun getName() = name
+    override fun getBean() = bean
+
+    constructor() : this(null, "", null)
+    constructor(initialValue: Customer) : this(null, "", initialValue)
+
+    val fred: ListProperty<String> = SimpleListProperty(FXCollections.observableArrayList())
+
+    init {
+        initialValue?.let { super.setValue(it) }
+    }
+
+    override fun getAccount(): String? = value?.getAccount()
+
+    override fun setAccount(p0: String) {
+        value?.setAccount(p0)
+    }
+
+    override fun getFName(): String? = value?.getFName()
+
+    override fun setFName(p0: String) {
+        value?.setFName(p0)
+    }
+
+    override fun getLName(): String? = value?.getLName()
+
+    override fun setLName(p0: String) {
+        value?.setLName(p0)
+    }
+
+    override fun getAge(): Int = value?.getAge() ?: 0
+
+    override fun setAge(p0: Int) {
+        value?.setAge(p0)
+    }
+
+    override fun fullName(): String = value?.let { "${it.getFName()} ${it.getLName()}" } ?: ""
+}
+```
+All the rest of the `Property` stuff inherits from `ObjectPropertyBase` and we don't need to worry about it.  We provide implementation methods for all of the getters and setters from `CustomerInterface` that simply delegate to the enclosed `Customer` value.  We deal with a `null` in the `value` field by just returning `null` for the getters that support it, and a "0" in the age getter.  For the setters, we only attempt to delegate if the `value` in the `Property` is not `null`.  In real life, you'd probably want to handle that better.
+
+Now we have a `Property` that wraps a `CustomerInterface` value and implements `CustomerInterface` itself, delegating to the enclosed value.  
+
+We can use it like this:
+
+``` kotlin
+class CustomPropertyExample0() : Application() {
+    val customer = CustomerProperty(CustomerImpl().apply {
+        setFName("Fred")
+        setLName("Brown")
+        setAge(3)
+    })
+
+    override fun start(stage: Stage) {
+        stage.scene = Scene(createContent(customer))
+        stage.show()
+    }
+
+    private fun createContent(customerProperty: CustomerProperty): Region = BorderPane().apply {
+        center = VBox(10.0).apply {
+            children += Label().apply {
+                textProperty().bind(customerProperty.map { "First Name: ${it.getFName()}" })
+            }
+            children += Label().apply {
+                textProperty().bind(customerProperty.map { "Last Name: ${it.getLName()}" })
+            }
+            children += Label().apply {
+                textProperty().bind(customerProperty.map { "Age: ${it.getAge()}" })
+            }
+            children += Button("Increment Age").apply {
+                setOnAction { evt -> customerProperty.setAge(customerProperty.getAge() + 1) }
+            }
+        }
+        padWith(20.0)
+    }
+}
+
+fun main() {
+    Application.launch(CustomPropertyExample0::class.java)
+}
+```
+Here we use `CustomerProperty` in two ways.  In the `Button` action, we use it just like an implementation of `Customer` to increment the age.  In the "Age" `Label` we treat it like a `Property` and use `Property.map{}` to bind it to the `Label`.  However, inside the `map{}` we treat it like `Customer` again.
+
+This is what it looks like:
+
+![Screen Snap]({{page.ScreenSnap0}})
+
+But there is a problem!  If you click on the `Button`, nothing happens.
+
+That's because we haven't changed the value in the `Property`, we changed the value of one of the fields *inside* the `Property`.  One small change will fix this, in `CustomerProperty.setAge()`:
+
+``` kotlin
+override fun setAge(p0: Int) {
+    value?.setAge(p0)
+    fireValueChangedEvent()
+}
+```
+That one call to `fireValueChangedEvent()` will cause the `Property` to invalidate.  Then the `Label`, which is bound to the `Property` will re-evaluate and call the `Property.map{}` again.  Now it looks like this after the `Button` has been clicked a few times:
+
+![Screen Snap]({{page.ScreenSnap1}})
+
+This is pretty cool.  We've effectively changed a `POJO` object into something internally observable by forcing it to invalidate via the setters implemented in the `Property` implementation.  
+
+## What About the Backing Object?
+
+One caveat with the approach is that you won't trigger invalidation if you directly invoke the setters of the backing object.  Let's make a tiny change to how the `Button` works:
+
+``` kotlin
+children += Button("Increment Age").apply {
+    setOnAction { evt -> customerProperty.value.setAge(customerProperty.getAge() + 1) }
+}
+```
+Instead of treating `customerProperty` like `Customer` and calling `Customer.setAge()`, we are calling `customerProperty.value.setAge()`.  This calls `CustomerImpl.setAge()`.
+
+The same thing would happen if you had a reference to that `CustomerImpl` and called one of its setters directly.  You won't see that change until your `CustomerProperty` invalidates.  
+
+This isn't really anything new.  You wouldn't expect this...
+
+``` kotlin
+var someInteger = 5
+val someIntProperty = SimpleIntegerProperty(someInteger)
+someInteger = 20
+```
+...to change the value in `someIntProperty` to 20.  It just gets a bit more complicated when you are thinking about composed objects as `Property` values.
+
+This is also the way that `ObservableList` works.  If you hang on to a reference to the backing `List` and update it directly, then you won't trigger `Listeners` on the `ObservableList`.
+
+But you can change the value in the `Property` itself.  Let's try this:
+
+``` kotlin
+class CustomPropertyExample1() : Application() {
+    val customer1 = CustomerImpl().apply {
+        setFName("Fred")
+        setLName("Brown")
+        setAge(3)
+    }
+    val customer2 = CustomerImpl().apply {
+        setFName("George")
+        setLName("Smith")
+        setAge(15)
+    }
+    val customer = CustomerProperty(customer1)
+
+    override fun start(stage: Stage) {
+        stage.scene = Scene(createContent(customer))
+        stage.show()
+    }
+
+    private fun createContent(customerProperty: CustomerProperty): Region = BorderPane().apply {
+        center = VBox(10.0).apply {
+            children += Label().apply {
+                textProperty().bind(customerProperty.map { "First Name: ${it.getFName()}" })
+            }
+            children += Label().apply {
+                textProperty().bind(customerProperty.map { "Last Name: ${it.getLName()}" })
+            }
+            children += Label().apply {
+                textProperty().bind(customerProperty.map { "Age: ${it.getAge()}" })
+            }
+            children += Button("Increment Age").apply {
+                setOnAction { evt -> customerProperty.setAge(customerProperty.getAge() + 1) }
+            }
+            children += Button("Customer 2").apply {
+                setOnAction { evt -> customerProperty.value = customer2 }
+            }
+            children += Button("Customer 1").apply {
+                setOnAction { evt -> customerProperty.value = customer1 }
+            }
+        }
+        padWith(20.0)
+    }
+}
+
+fun main() {
+    Application.launch(CustomPropertyExample1::class.java)
+}
+```
+We now have two `CustomerImpl`, "Fred" and "George" with different ages.  Two more `Buttons` have been added, each of which swaps the value in our `CustomerProperty` to one of either "Fred" or "George".  Now it look like this when started up:
+
+![Screen Snap]({{page.ScreenSnap2}})
+
+When we click the "Increment Age" `Button` a few times:
+
+![Screen Snap]({{page.ScreenSnap3}})
+
+And then click "Customer 2":
+
+![Screen Snap]({{page.ScreenSnap4}})
+
+Then some more "Increment Age":
+
+![Screen Snap]({{page.ScreenSnap5}})
+
+Let's take one more look at what you can do:
+
+``` kotlin
+class CustomPropertyExample3() : Application() {
+    val customer1 = CustomerImpl().apply {
+        setFName("Fred")
+        setLName("Brown")
+        setAge(3)
+    }
+    val customer2 = CustomerImpl().apply {
+        setFName("George")
+        setLName("Smith")
+        setAge(15)
+    }
+    val customer = CustomerProperty(customer1)
+    val custList: ObservableList<Customer> = FXCollections.observableArrayList(listOf(customer1, customer2))
+
+    override fun start(stage: Stage) {
+        stage.scene = Scene(createContent(customer))
+        stage.show()
+    }
+
+    private fun createContent(customerProperty: CustomerProperty): Region = BorderPane().apply {
+        center = VBox(10.0).apply {
+            children += Label().apply {
+                textProperty().bind(customerProperty.map { "First Name: ${it.getFName()}" })
+            }
+            children += Label().apply {
+                textProperty().bind(customerProperty.map { "Last Name: ${it.getLName()}" })
+            }
+            children += Label().apply {
+                textProperty().bind(customerProperty.map { "Age: ${it.getAge()}" })
+            }
+            children += Button("Increment Age").apply {
+                setOnAction { evt -> customerProperty.setAge(customerProperty.getAge() + 1) }
+            }
+        }
+        right = ListView<Customer>().apply {
+            items = custList
+            customer.bind(this.selectionModel.selectedItemProperty())
+        }
+
+        padWith(20.0)
+    }
+}
+
+fun main() {
+    Application.launch(CustomPropertyExample3::class.java)
+}
+```
+Here, I've added an `ObservableList<Customer>` and populated it with `customer1` and `customer2`.  Then I've added a `ListView` to the layout and set its `items` property to that `ObservableList<Customer>`.  Finally, I've bound our `CustomerProperty` to the `selectedItemProperty` of the `ListView`.  
+
+Let's see what it looks like:
+
+![Screen Snap]({{page.ScreenSnap6}})
+
+Then, after clicking on one of the items in the `ListView`
+
+![Screen Snap]({{page.ScreenSnap7}})
+
+And then clicking on the `Button` a few times:
+
+![Screen Snap]({{page.ScreenSnap8}})
+
+One thing to keep in mind is that even though the `ListView` returns a `ReadOnlyObjectProperty` as its `selectedItemProperty`, that doesn't make the `value` held in the `CustomerProperty` immutable.  As you can see in the last screen snap, the age of Fred has been incremented a few times to 8.
+
+Also note that the `selectedItemProperty` is `ReadOnlyObjectProperty<Customer>` and `CustomerProperty` extends `ObjectPropertyBase<Customer>` which means that the binding is type compatible.  However, you could not call `ListView.selectionModel.selectedItemProperty().setAge(20)` because `ReadOnlyObjectProperty<Customer>` doesn't implement `Customer`.  It just wraps `Customer` as a value in an `Observable`.
+
+
+{% include notice_question type="primary" content = "What if we wanted to implement Customer in an ObservableValue instead of a Property?<br><br>" %}
+
+# Creating a Hierachy
+
+We should go back and look at the hierarchy tree for `ObservableList` again, because it can help:
+
+![Diagram]({{page.Diagram}})
+
+For us, the most important element is `ObservableListValue`.  This is were we integrate `ObservableList` to `ObservableValue<ObservableList>`.  If we look at this in the [JavaDocs]({{page.JavaDocs}}), we find this:
+
+>All Superinterfaces:
+>
+>    Collection<E>, Iterable<E>, List<E>, Observable, ObservableList<E>, ObservableObjectValue<ObservableList<E>>, ObservableValue<ObservableList<E>>, SequencedCollection<E>
+
+Look at that third item.  `List`!  And the fifth item.  `ObservableList`.
+
+But this is just an `Interface`.  It doesn't implement any of the methods from these other classes, just forces some subclass to do so.  
+
+It turns out that the class that does much of the implementation is `ListExpression`.  If we look at the source for `ListExpression.add()`, this is what we see:
+
+``` java
+public boolean add(E element) {
+    return getNonNull().add(element);
+}
+   .
+   .
+   .
+private ObservableList<E> getNonNull() {
+   ObservableList<E> list = get();
+   return list == null ? FXCollections.emptyObservableList() : list;
+}
+```
+This is just a delegate to the backing `List`, with a provision to avoid having to deal a `null` backing `List`.
+
+Clearly this is where we need to insert our top level classes:  `ObservableCustomerValue` and `CustomerExpression`.  So let's go to it:
+
+``` kotlin
+
+
+```
+
+
+
+# More
+
 
 To illustrate this, we'll take a fairly common example that a lot of business applications have: a "customer" object.  We're interested here, not in the domain object, but the Presentation Model, meaning an object that is composed of `Observable` type fields.
 

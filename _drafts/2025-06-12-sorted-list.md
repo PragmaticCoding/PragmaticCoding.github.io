@@ -320,7 +320,7 @@ This is very similar to the first example.  We now have a `SortedList` with a `C
 
 A `Comparator` takes two values and returns either `1`, `0` or `-1` depending on whether or not the first value was greater than, equal to, or less than the second value.  In this case we are using `Int.compare()` as the `Comparator`.  
 
-Also in this example the values are randomly created between 1 and 20.  This is a little more interesting to look at.  
+Also, in this example the values are randomly created between 1 and 20.  This is a little more interesting to look at.  
 
 When running, it looks like this:
 
@@ -356,4 +356,11 @@ and after...
 
 ![Screen Snap 4]({{page.ScreenSnap4}})
 
-# 
+# Predicate and Comparator as Properties
+
+If you've looked at the JavaDocs for `SortedList` and `FilteredList` you might have noticed that the `Comparator` and the `Predicate` are implemented as `Properties`.  
+
+This is interesting because it means that you can put `Listeners` on them, and detect when they have changed.  You can also put `Bindings` on them.  This is especially interesting for a number of reasons:
+
+1. You can have your filtering/sorting logic split out from the implementation of your `ObservableLists`.
+1. You can have several `ObservableLists` connected together in their filtering/sorting criteria.
