@@ -1,6 +1,6 @@
 ---
 title:  "Reactive Programming in JavaFX"
-date:   2025-07-10 12:00:00 -0500
+date:   2025-07-16 12:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
 permalink: /javafx/elements/reactive-javafx
