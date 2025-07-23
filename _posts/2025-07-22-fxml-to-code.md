@@ -1,6 +1,6 @@
 ---
-title:  "Converting FXML to Kotlin"
-date:   2025-01-08 12:00:00 -0500
+title:  "Converting FXML to Code"
+date:   2025-07-22 12:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
 permalink: /javafx/elements/fxml-to-code
@@ -17,7 +17,7 @@ Diagram: /assets/elements/ListProperties.png
 mvci: /javafx/mvci/
 FxmlOrNot: /javafx/fxml-or-not
 
-excerpt: Taking a look at an example of how an FXML and FXML Controller would look if converted to a coded layout.
+excerpt: I've talked a lot about how coded layouts are better than FXML.  In this article we take a fairly large FXML based layout which is part of a larger project, convert it to code, and implement a framework using a Reactive design.  Is the final result better than FXML?  See for yourself.
 ---
 
 # Introduction
