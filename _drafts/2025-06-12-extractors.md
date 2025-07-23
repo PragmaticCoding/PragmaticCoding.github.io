@@ -1,6 +1,6 @@
 ---
 title:  "ObservableLists: Extractors"
-date:   2025-06-12 12:00:00 -0500
+date:   2025-07-16 12:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
 permalink: /javafx/elements/extractors
@@ -29,13 +29,19 @@ excerpt: ObservableList extractors allow you to track changes to elements inside
 
 # Introduction
 
+`ObservableLists` (and `ObservableSets`, and `ObservableMaps`, for that matter), are designed to invalidate and trigger `Listeners` when items are add or removed from them.  Screen elements like `ListView`, `TableView` and the pop-ups in `ComboBox` will automatically update when the `ObservableLists` that back them are updated.
+
+But what about those cases where your `ObservableList` is made of up composed objects?  Is it possible to detect that an `ObservableList` has changed when one of the fields inside an item has changed?
+
+That's what "extractors" are for.  They allow you to detect changes to `Property` fields inside the items in your list, and to trigger `Listeners` on the `ObservableList` as a result.
+
 # The Basics
 
 The JavaDocs for extractors is pretty thin.
 
-The first thing that you'll notice if you check out the entry for [ObservableList]({{page.JavaDocOL}}) is that there are no constructors for `ObservableList` because it's an `Interface`.  None of the "All know Implementing Classes" section look promising either.
+The first thing that you'll notice if you check out the entry for [ObservableList]({{page.JavaDocOL}}) is that there are no constructors for `ObservableList` because it's an `Interface`.  None of the "All Known Implementing Classes" section look promising either.
 
-Typically, you'll either get an `ObservableList` because it's already part of a `Node` class like `ListView`, `TableView` or `ComboBox`.  But if you want to create one yourself, you'll need to use `FXCollections`.  
+Typically, you'll get an `ObservableList` because it's already part of a `Node` class like `ListView`, `TableView` or `ComboBox`.  But if you want to create one yourself, you'll need to use `FXCollections`.  
 
 If you go to the JavaDocs for [FXCollections]({{page.JavaDocFXC}}) you'll see that there are lots and lots of ways to create different kinds of `ObservableLists`, some of which specify extractors.  Let's look at the details for `observableArrayList(Callback<E,Observable[]> extractor)`:
 
@@ -111,8 +117,8 @@ private fun createContent(): Region = BorderPane().apply {
 }
 
 class ExampleData(initialValue: Int) {
-val value1: IntegerProperty = SimpleIntegerProperty(initialValue)
-val value2: IntegerProperty = SimpleIntegerProperty(initialValue)
+    val value1: IntegerProperty = SimpleIntegerProperty(initialValue)
+    val value2: IntegerProperty = SimpleIntegerProperty(initialValue)
 }
 
 
@@ -386,7 +392,7 @@ Other than that, the extract isn't ever run against an item.
 
 If, in our example, we had made `initialValue` a var, and provided some way to change it after the items were in the list, there would be no change to `InvalidationListeners` added by the `ObservableList`, because they were already established.  So, you could end up with a system where the apparent behaviour of the extractor doesn't match the current state of the data.
 
-The worse case scenario is that if the item is removed from the `ObservableLit`, then some of the `InvalidationListeners` might not be removed because the extractor behaviour wasn't the same as when the item was added to the `ObservableList`.  That could give some weird results.
+The worse case scenario is that if the item is removed from the `ObservableList`, then some of the `InvalidationListeners` might not be removed because the extractor behaviour wasn't the same as when the item was added to the `ObservableList`.  That could give some weird results.
 
 # Extractors in TableView Items
 

@@ -15,13 +15,14 @@ ScreenSnap4: /assets/images/TrinityScreenShot4.png
 
 Diagram: /assets/elements/ListProperties.png
 mvci: /javafx/mvci/
+FxmlOrNot: /javafx/fxml-or-not
 
 excerpt: Taking a look at an example of how an FXML and FXML Controller would look if converted to a coded layout.
 ---
 
 # Introduction
 
-Recently, I posted an article titled, "Should You Use FXML?".  In that article, I stated that I felt that well written and organized code would always be easier to maintain than any corresponding FXML/FXML Controller would be.  I did not emphasize this, as the article was intended to be a discussion about the merits and costs of using FXML more than an "is this better than this?", exploration.  
+Recently, I posted an article titled, [Should You Use FXML?]({{page.FxmlOrNot}}).  In that article, I stated that I felt that well written and organized code would always be easier to maintain than any corresponding FXML/FXML Controller would be.  I did not emphasize this, as the article was intended to be a discussion about the merits and costs of using FXML more than as a "is this better than this?", exploration.  
 
 In the article, I included a sample of a large (462 line) FXML file that I grabbed somewhat randomly from GitHub.  Some readers expressed the opinion that the FXML was "bad", and that they write better FXML by hand.  Some expressed concern that I had cherry-picked bad FXML to use as an example, while others seemed upset at the idea of randomly picking FXML as an example.
 
@@ -31,7 +32,7 @@ It didn't matter because I understand that the way that I write layout code is a
 
 But I couldn't say that.  Who would believe me?  What makes me think my coding is so much better?
 
-This article is my attempt to explain my position.  I'm going to take that example FXML and its FXML Controller code (and other stuff it turns out it needs to work), and re-write it as Kotlin code.  
+This article is my attempt to explain my position.  I'm going to take that example FXML and its FXML Controller code (and other stuff it turns out it needs to work), and re-write it as purely coded layout in Kotlin.  
 
 My hope is that you can look at the original FXML and code, and then look at my version, and you will see the potential for writing your layouts by hand.  
 
@@ -45,12 +46,11 @@ Improving the Layout
 
 : I was torn about this at first.  Eventually, I decided that there might be aspects of layout design that are adversely affected by using SceneBuilder to create the FXML file.  It might be obvious, when hand-coding, that the same look and feel can be achieved through a better design.  I have chosen to implement these improvements as these are generally problems that wouldn't arise coding the layout by hand.
 
-This shows that the impact of hand-coding goes beyond being simply a matter of clarity and maintainability, but also affects the application design.
-{: .notice--primary}
+{% include notice type="primary" content = "This shows that the impact of hand-coding goes beyond being simply a matter of clarity and maintainability, but also affects the application design." %}
 
 Implementing a Framework
 
-: The orginal design, like many designs, has too much functionality in the FXML Controller.  This is probably through the misplaced belief that the FXML Controller acts as an MVC Controller.  In order to understand how a hand-coded layout is better in this respect, a MVCI framework has been applied.  This results in the creation of a Presentation Model, and moving all of the application logic into the Interactor.
+: The orginal design, like most FXML implementations, has too much functionality in the FXML Controller.  This is probably through the misplaced belief that the FXML Controller acts as an MVC Controller.  In order to understand how a hand-coded layout is better in this respect, a MVCI framework has been applied.  This results in the creation of a Presentation Model, and moving all of the application logic found in the FXML Controller into the Interactor.
 
 Changing to a Reactive Design
 
@@ -70,13 +70,13 @@ I also freely admit that I worked with the WidgetsFX project open, and that I ad
 
 Styling
 
-: I've chosen to move any styling in the FXML or the FXML Controller into an external style sheet.  Then I'm not going to create that style sheet because...why bother.  The result is that the screens in my project don't look like the originals, but that's not the point.
+: I've chosen to move any styling in the FXML or the FXML Controller into an external style sheet.  Then I'm not going to create that style sheet because...why bother.  The result is that the screens in my project, while having an identical effective layout, don't look like the originals...but that's not the point.
 
 ## Kotlin
 
-I'm writing this all in Kotlin for two reasons.  Firstly, I find Java painful and unsatisfying to code with now, after several years of writing mostly Kotlin.  Secondly, Kotlin just makes it so much easier to write clear, easy to understand layout code.  
+I'm writing this all in Kotlin for two reasons.  Firstly, I find Java painful and unsatisfying to code with after several years of writing mostly Kotlin.  Secondly, Kotlin just makes it so much easier to write clear, easy to understand layout code.  
 
-I think that, even if you don't full understand the syntax, the Kotlin code is easy enough to understand for most Java programmers.  Take a look at this:
+I think that, even if you don't fully understand the syntax, the Kotlin code is easy enough to understand for most Java programmers.  Take a look at this:
 
 ``` kotlin
 VBox(10.0).apply {
@@ -107,7 +107,7 @@ You can find this project on GitHub [here]({{page.trinity}}).
 
 I was concerned that the project might be deleted or change beyond recognition over time, so I placed a snapshot of the FXML file, the FXML Controller and a few supporting files in this [article]({{page.snapshot}}).  I'm not going to include all the code in this article itself, because it's just going to be too big.
 
-When the program is running, the screen looks like this, although this version from the read.me page appears to be out of date and doesn't match what the code does:
+When the program is running, the screen looks like this, although this version from the read.me page appears to be out of date and doesn't quite match what the code does:
 
 ![Trinity Screenshot]({{page.ScreenSnap0}})
 
@@ -136,7 +136,9 @@ Why does this matter?  If the contention is that FXML is clear and easy to read,
 
 ## The Design is Difficult to Understand
 
-It's monolithic.  462 lines of FXML, and you need to scan all of it to understand that it's basically just 4 `Tabs` in a `TabPane`.  The `GridPanes` were a particular chore, as the components were not organized in the FXML file at all, just jumbled up willy-nilly and difficult to locate.  All in all, I spent more time trying to understand the FXML and FXML Controller than I did writing my own version.
+It's monolithic.  462 lines of FXML, and you need to scan all of it to understand that it's basically just 4 `Tabs` in a `TabPane`.  The `GridPanes` were a particular chore, as the components were not organized in the FXML file at all, just jumbled up willy-nilly and difficult to locate.  
+
+{% include notice type="primary" content = "All in all, I spent more time trying to understand the FXML and FXML Controller than I did writing my own version." %}
 
 ## "Bad" FXML Doesn't Appear Be More Verbose
 
@@ -146,7 +148,7 @@ The inescapable truth seems to be that if you are going to create a layout of th
 
 ## Dealing With FileChooser
 
-In most of my programming, I don't use `FileChooser` much at all.  So I had to grapple with the question of "Where does it go in the MVCI structure?".  It can be argued that `FileChooser` is a GUI element, and therefore belongs to the View, and that's were I initially placed it.  But then I ended up with references to `File` objects, and that caused me to look closer at this approach.
+In most of my programming, I don't use `FileChooser` much at all, but this project and this screen do.  So I had to grapple with the question of "Where does it go in the MVCI structure?".  It can be argued that `FileChooser` is a GUI element, and therefore belongs to the View, and that's were I initially placed it.  But then I ended up with references to `File` objects, and that caused me to look closer at this approach.
 
 First off, `File` is most distinctly **not** a front end class.  It seemed worrying to have this data type handled by the GUI code.  
 
@@ -154,7 +156,7 @@ Secondly, the `File` had to be passed back to the Interactor somehow, because it
 
 Now, what happens if the storage is changed from JSON files to a database?  Or the application is changed to facilitate sharing designs between different users by email?  Would that mean that you would have to change the View in order to make this change?  
 
-For sure, that `FileChooser` would need to change.  Maybe it becomes a `Dialog` that allows for load and save to a database, or to select an email with attachments (or to send an email).  But there's no reason you should have to change the View for that.  
+For sure, that `FileChooser` would need to change.  Maybe it becomes a `Dialog` that allows for load and save to a database, or to select an email with attachments (or to send an email).  But there's no reason that you should have to change the View for that.  
 
 In the end, I moved the `FileChooser` calls into the Controller, which is where I think they really belong.  It's now integrated with the thread handling and invocation of Interactor methods.  The `File` object is no longer tramp data passing from the View through the Controller to the Interactor.  
 
@@ -168,7 +170,7 @@ Don't try this at home.
 
 Needless to say, I'm not sure if these `RadioButtons` do or do not do anything - and that should be immediately apparent from reading the code.  I've connected these `RadioButtons` to some elements in the Model that are clearly named as some kind of "dummy" value.  
 
-It may be that I grabbed the code in the middle of development and it just wasn't yet complete.  There was a new release of this project shortly before I published this article.  On the other hand, this may just be something that somehow got lost and forgotten in the hundreds of lines of code here.
+It may be that I grabbed the code in the middle of development and it just wasn't yet complete.  There were several new releases of this project between writing and publishing this article.  On the other hand, this may just be something that somehow got lost and forgotten in the hundreds of lines of code here.
 
 
 ## Connecting to the Rest of the Application
@@ -246,14 +248,14 @@ On the surface, this seems like a reasonable approach:  The programmers needed a
 
 1. Delivery is **not** guaranteed.  There's nothing to say that some screen element couldn't filter an `Event` before it gets to its intended target.  This might be hard to debug. Essentially, the `Event` system is global and couples everything that uses it.
 
-1. It's not clear who the recipient is.  To find out how this `Event` is handled, you'll have to search through the entire application to see which classes  have an `EventHandler` for the `ManifoldEvent.DISTANCE_CONNECTOR_WIDTH` subtype.
+1. It's not clear who the recipient is.  `Events` are, by definition, broadcast entities.  To find out how this `Event` is handled, you'll have to search through the entire application to see which classes  have an `EventHandler` for the `ManifoldEvent.DISTANCE_CONNECTOR_WIDTH` subtype.
 
 
 Personally, I think that `Events` and `EventHandlers` are best used for very localized things.  This would mean adding an `EventHandler` onto the `Button` that generates the `Event` (like a click `ActionEvent`).  Using the JavaFX `Event` system as a general communication bus feels like a "code smell" to me.
 
 ### The ListViews
 
-This is the only part of the design which is objectively "wrong".  
+This is the only part of the design which is objectively "wrong" from a technical JavaFX respect.  
 
 There are two classes for each `ListView`, let's look at the one for manifolds.  We have the class `ManifoldListItem` which extends `VBox`, and the class `Manifold` which we should probably consider to be a "Domain Object".  Every `ManifoldListItem` contains a reference to a `Manifold`.
 
@@ -355,7 +357,9 @@ Everything in here is boilerplate and every time you implement this you would ne
 
 ### The Large Number of Action Handlers
 
-There's a lot of `Buttons` in this screen, and all of them trigger some kind of action within the application logic.  How to provide action handlers for all of these to the View?
+There's a lot of `Buttons` in this screen, and all of them trigger some kind of action within the application logic.  
+
+{% include notice_question type="primary" content = "How do we provide all these action handlers to the View?<br><br>" %}
 
 The first thing to understand is that the Reactive nature of the new design means that all of the data that might be relevant to any action is already represented in the Model and is always fully up to date.  
 
@@ -483,7 +487,7 @@ In some cases, it looks cleaner if the dot notation is used instead.  This allow
 
 I've tried to avoid naming the builders with positional names whenever possible.  However, I really don't know what this application does, so it was hard to guess at good names for some builders.  I gave up with the builder for the layout in `BorderPane.top` in the "Hull" `Tab`, and I just called it `hullTop()`.
 
-I find that `GridPanes` are always clumsy to deal with, no matter what, and the row/column locations never jump out at you when scanning the code.  However, you can orginize the code to make it easier to find things.  I tried this with the "UMAP" `GridPane`:
+I find that `GridPanes` are always clumsy to deal with, no matter what, and the row/column locations never jump out at you when scanning the code.  However, you can organize the code to make it easier to find things.  I tried this with the "UMAP" `GridPane`:
 
 ``` kotlin
 private fun umapGridPane() = GridPane().apply {
@@ -522,7 +526,7 @@ One further thing, which I think contributes greatly to the "easier to understan
 
 # The New Code
 
-Here's the completed redesign.
+Oh, wow!  That's a lot of discussion and preamble, and not a lot of coding.  Let's take a look at the completed redesign.
 
 ## The ViewBuilder
 
@@ -759,7 +763,9 @@ class FromFxmlViewBuilder(
     }
 }
 ```
-One of the first things you should notice is that except for the container classes, none of the `Nodes` are instantiated directly using their constructors.  All of them are instantiated via builder methods of some sort, and those builders are generic enough that they are included in `WidgetsFX`.  This points out one of the biggest problems with the standard JavaFX library - a lack of constructors that allow a parameter for value binding.  
+One of the first things you should notice is that except for the container classes, none of the `Nodes` are instantiated directly using their constructors.  All of them are instantiated via builder methods of some sort, and those builders are generic enough that they are included in `WidgetsFX`.  
+
+{% include notice type="primary" content = "This points out one of the biggest problems with the standard JavaFX library - a lack of constructors that allow a parameter for value binding." %}
 
 For those layout classes, I've used three standard techniques for populating them:  
 
@@ -767,11 +773,11 @@ For those layout classes, I've used three standard techniques for populating the
 1.  Using `getChildren().add()` via `children += ` inside `.apply{}`.
 1.  Using the extension function `Pane.addChild()`
 
-In practice, I found that `Pane.addChild()` outside of `apply{}` was no better than just including the children as constructor parameters.  It's also no clear if `Pane.addChild()` is any clearer than `children += ` inside of an `apply{}` block.  
+In practice, I found that `Pane.addChild()` outside of `apply{}` was no better than just including the children as constructor parameters.  It's also not clear if `Pane.addChild()` is any clearer than `children += ` inside of an `apply{}` block.  
 
-There are a fair number of `GridPanes` in this layout.  `GridPane` is fine when there is a strict need for keeping columns and rows locked together in some fashion, but that is rarely the case in this layout.  Particularly in the UMAP `GridPane`, where the `Labels` and `Controls` are stacked in successive rows, with the `Spinner` inputs in one column and the `Slider` inputs in another column.  Is there really any need to keep the elements aligned by row?
+There are a fair number of `GridPanes` in this layout.  `GridPane` is fine when there is a strict need to keep columns and rows locked together in some fashion, but that is rarely the case in this layout.  Particularly in the UMAP `GridPane`, where the `Labels` and `Controls` are stacked in successive rows, with the `Spinner` inputs in one column and the `Slider` inputs in another column.  Is there really any need to keep the elements aligned by row?
 
-While I don't think I would use a `GridPane` in this case (two `VBoxes` in an `HBox` would be simpler), I did create the extension functions `GridPane.stackedSlider`, and `GridPane.stackedIntSpinner` to get the repeated
+While I don't think I would use a `GridPane` in this case (two `VBoxes` in an `HBox` would be simpler), I did create the extension functions `GridPane.stackedSlider`, and `GridPane.stackedIntSpinner` to get the repeated elements out of the `GridPane` configuration.
 
 For the `infix` decorator functions, I've used them as `infix` when only one or two functions were called, and they would fit onto a single line.  When more functions were called, it was more clear to use the regular notation and stack them one per line in the code.  
 
@@ -1172,20 +1178,23 @@ These would ordinarily be defined in some other part of the application which is
 
 # Conclusion
 
+I'm not going to pretend that I understand what this project does, but my impression is that it involves really complicated and sophisticated analysis of some kind of AI processing.  But when you look at this screen it's really just a bunch of `Controls` and `Buttons` and `Lists` that manipulate some data and trigger some actions.  
+
+The original design leaks the complexity of the entire application into what should be a simple screen.  You cannot change a data value without knowing how that will impact the rest of the application.
+
+I need to stress that the code that I've published here runs as a stand-alone application.  It doesn't connect to anything, but it works and can be integrated into the rest of the application simply by providing the shared data and functions in the Controller constructor.  
+
 Clearly, a lot more was done here than just replace the FXML with code, although it's fairly clear that the layout code is much simpler than the FXML plus FXML Controller from the original.  
 
 ## The Layout
 
-I deliberately put this project aside for a couple of weeks so that I could come back to get a more objective sense of how easy it is to read and understand the 230 lines of layout code.  
+I deliberately put this project aside for a while so that I could come back to get a more objective sense of how easy it is to read and understand the 230 lines of layout code.  
 
 One thing that was immediately clear to me when I came back to it was that none of these `Tabs` have anything to do with each other except that they cohabit in the same `TabPane`.  As such, they could all be defined in their own builders, and each one would, therefore, be a little bit easier to understand since they wouldn't be encumbered with the code from the other `Tabs`.
 
 Furthermore, each of these `Tabs` could have their own, independent, MVCI structure associated with them.  There could be a "master" MVCI structure associated with the `TabPane` itself, and its Controller could handle instantiation of all of the other MVCI structures.  This would make each of the 4 separate MVCI constructs extremely simple and easy to understand.
 
-Even if a `Button` on one `Tab` required the external function it invoked to use data from another `Tab` this wouldn't matter because the `Button` actions aren't transferring any data - that's already handled by the shared data elements.
-{: .notice--primary}
-
-That aside,
+{% include notice type="primary" content = "Even if a Button on one Tab required the external function it invoked to use data from another Tab this wouldn't matter because the Button actions aren't transferring any data - that's already handled by the shared data elements." %}
 
 ## Using a Framework
 
@@ -1193,7 +1202,7 @@ I simply cannot imagine building anything like this without implementing a frame
 
 One of the things that became glaringly apparent after the conversion was that this screen, aside from some file handling, doesn't actually *do* anything itself.  You can see this just from looking at the Interactor.  It doesn't have much code that actually does anything.  It just dispatches actions off to some other part of the application.  
 
-Certainly, if you had written the application, or if you were very familiar the entire application, you'd *know* that this screen didn't actually do anything.  But this is absolutely not clear from a casual glance at the original code.  
+Certainly, if you had written the application, or if you were very familiar with the entire application, you'd *know* that this screen didn't actually do anything.  But this is absolutely **not** clear from a casual glance at the original code.  
 
 ## Reactive vs Imperative Design
 
@@ -1207,7 +1216,11 @@ Coupling in this new design is extremely controlled, and easy to understand.
 
 The Model is the main source of coupling, but it also isolates as well.  There's no way for anything outside of the View to know if a `Boolean` value in the Model is presented to the user via a `RadioButton`, a `ToggleButton`, a `CheckBox` or some custom `Control`.  But, no matter how it's handled in the View, the Interactor can always simply deal with the `Boolean` value that it is bound to.
 
-In a similar manner, the `SharedElements` is the main source of
+In a similar manner, the `SharedElements` is the main source of both coupling and isolation between this screen and the rest of the application.
+
+{% include notice type="primary" content = "Coupling is usually the single biggest source of unecessary complexity in any application.  Controlling coupling is the best way to improve code quality." %}
+
+I simply cannot stress this too much.  Virtually every good (or "clean") coding technique, is designed to control and eliminate coupling as much possible.  Looking at this "Trinity" project, excessive coupling is everywhere and it makes everything much more complicated than it needs to be.  I've tried to limit coupling as much as possible in my version, and I think it is reflected in the lack of complexity.
 
 ## The Kotlin
 
