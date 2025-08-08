@@ -94,6 +94,15 @@ feature_row_listeners_bindings_events:
     url: "/javafx/elements/events_and_listeners"
     btn_label: "Read the Article"
     btn_class: "btn--primary"
+
+feature_row_observable_lists:
+  - image_path: /assets/logos/LittleBrain.jpg
+    alt: "Observable Lists"
+    title: "Observable Lists"
+    excerpt: "ObservableLists are a vital concept in JavaFX.  They run TableView, ListView, the Pop-ups in ComboBox and all of the children of most layout classes are stored in ObservableLists.  "
+    url: "/javafx/elements/observable_lists"
+    btn_label: "Read the Articles"
+    btn_class: "btn--primary"
 ---
 
 # JavaFX Observables, Bindings and Listeners
@@ -108,8 +117,9 @@ Observables, Bindings and Listeners are the key elements supplied by the JavaFX 
 
 {% include feature_row id="feature_row_action_properties" type="left" %}
 
-
 {% include feature_row id="feature_row_new_methods" type="left" %}
+
+{% include feature_row id="feature_row_observable_lists" type="left" %}
 
 
 

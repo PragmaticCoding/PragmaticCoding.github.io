@@ -1,6 +1,6 @@
 ---
 title:  "ObservableLists: Extractors"
-date:   2025-07-16 12:00:00 -0500
+date:   2025-08-05 12:00:00 -0500
 categories: javafx
 logo: /assets/logos/JavaFXLogo.png
 permalink: /javafx/elements/extractors
@@ -16,6 +16,9 @@ ScreenSnap7: /assets/elements/Extractors7.png
 ScreenSnap8: /assets/elements/Extractors8.png
 ScreenSnap9: /assets/elements/Extractors9.png
 ScreenSnap10: /assets/elements/Extractors10.png
+ScreenSnap11: /assets/elements/Extractors11.png
+ScreenSnap12: /assets/elements/Extractors12.png
+ScreenSnap13: /assets/elements/Extractors13.png
 
 Diagram: /assets/elements/ListProperties.png
 OLArticle: /javafx/elements/observable-classes-lists
@@ -31,7 +34,7 @@ excerpt: ObservableList extractors allow you to track changes to elements inside
 
 `ObservableLists` (and `ObservableSets`, and `ObservableMaps`, for that matter), are designed to invalidate and trigger `Listeners` when items are add or removed from them.  Screen elements like `ListView`, `TableView` and the pop-ups in `ComboBox` will automatically update when the `ObservableLists` that back them are updated.
 
-But what about those cases where your `ObservableList` is made of up composed objects?  Is it possible to detect that an `ObservableList` has changed when one of the fields inside an item has changed?
+But what about those cases where your `ObservableLists` are made of up composed objects?  Is it possible to detect that an `ObservableList` has changed when one of the fields inside an item has changed?
 
 That's what "extractors" are for.  They allow you to detect changes to `Property` fields inside the items in your list, and to trigger `Listeners` on the `ObservableList` as a result.
 
@@ -41,11 +44,11 @@ The JavaDocs for extractors is pretty thin.
 
 The first thing that you'll notice if you check out the entry for [ObservableList]({{page.JavaDocOL}}) is that there are no constructors for `ObservableList` because it's an `Interface`.  None of the "All Known Implementing Classes" section look promising either.
 
-Typically, you'll get an `ObservableList` because it's already part of a `Node` class like `ListView`, `TableView` or `ComboBox`.  But if you want to create one yourself, you'll need to use `FXCollections`.  
+Typically, you'll get an `ObservableList` because it's already part of a `Node` class like `ListView`, `TableView` or `ComboBox`.  But if you want to create one yourself, you'll need to use the static library class, `FXCollections`.  
 
 If you go to the JavaDocs for [FXCollections]({{page.JavaDocFXC}}) you'll see that there are lots and lots of ways to create different kinds of `ObservableLists`, some of which specify extractors.  Let's look at the details for `observableArrayList(Callback<E,Observable[]> extractor)`:
 
->public static <E> ObservableList<E> observableArrayList(Callback<E,Observable[]> extractor)
+>**public static \<E\> ObservableList\<E\> observableArrayList(Callback<E,Observable[]> extractor)**
 >
 Creates a new empty ObservableList that is backed by an array list and listens to changes in observables of its items.
 >
@@ -61,7 +64,7 @@ A `Callback` is just a `Function`, meaning that it accepts one value and then re
 
 In this case, the `Callback` accepts something of type `E`.  What is `E`? Well, `ObservableList` itself is generic, and `E` in this case refers to the type of elements that comprise our `ObservableList`.  This means that the `Callback` is just going to accept a single element of our `ObservableList`, whatever that happens to be.
 
-The output from our `Callback` is going to be an array of `Observable`.  `Observable` is the top level `Interface` that all of the `Properties` and observable classes implement.  It only specifies three methods, `addListener()`, `removeListener()` and `subscribe()`.  That last one, `subscribe()` is new, and `ObservableList` extractors pre-dates it.  So we don't need to worry about it here.
+The output from our `Callback` is going to be an `array` of `Observable`.  `Observable` is the top level `Interface` that all of the `Properties` and observable classes implement.  It only specifies three methods, `addListener()`, `removeListener()` and `subscribe()`.  That last one, `subscribe()` is new, and `ObservableList` extractors pre-dates it.  So we don't need to worry about it here.
 
 What this tells us is that at some point, deep inside the `ObservableList` code, JavaFX is going to add a `Listener` to every `Observable` that we return for every item in our `ObservableList`.
 
@@ -75,7 +78,7 @@ We can use some of that same code here, to see how extractors translate to the `
 
 {% include notice_kotlin %}
 
-First off, we'll look at the code without an extractor, and see what it does...
+To start, we'll look at the code without an extractor, and see what it does...
 
 ``` kotlin
 private val obList: ObservableList<ExampleData> = FXCollections.observableArrayList()
@@ -136,7 +139,7 @@ At the bottom is a `Button`.  When this `Button` is clicked three things happen:
 1. `obList[2].value2` is incremented.
 1. A list of all of the values in `value2` is added to `messages`
 
-We also have an `InvalidationListener` (through `subscribe()`) on `obList` that just adds "Invalited" to `messages`.  And we add "Data Loaded" to `messages` when all of the setup is done.
+We also have an `InvalidationListener` (through `subscribe()`) on `obList` that just adds "Invalidated" to `messages`.  And we add "Data Loaded" to `messages` when all of the setup is done.
 
 And all of this looks like this:
 
@@ -492,6 +495,128 @@ The first `Label` now has the correct total, as expected, and we see that the `O
 We can determine from this that adding an extractor to an `ObservableList` used in a `TableView` doesn't hurt the performance of the `TableView`, but it doesn't help it either.
 
 Of course this is only true **if** you compose your `TableView` items from `Properties` and other `ObservableValues`.  
+
+# Extractors in ListView Items
+
+So now we know that `TableView` works fine without extractors, but what about `ListView`?
+
+We'll go back to our example, and change the layout so that it shows a `ListView` instead of a `TableView`:
+
+``` kotlin
+private fun createContent(): Region = BorderPane().apply {
+    top = HBox(
+        10.0,
+        Label().apply { textProperty().bind(totBinding.asString()) },
+        Label().apply { textProperty().bind(obList[2].value2.asString()) })
+    center = TextArea().apply {
+        textProperty().bind(messages)
+    }
+    left = ListView<ExampleData>().apply {
+        items = obList
+        cellFactory = Callback { _ ->
+            object : ListCell<ExampleData>() {
+                val label1 = Label()
+                val label2 = Label()
+                val layout = VBox(2.0).apply {
+                    children += HBox(10.0, Label("Value 1:"), label1)
+                    children += HBox(10.0, Label("Value 2:"), label2)
+                    padding = Insets(8.0)
+                }
+
+                override fun updateItem(newItem: ExampleData?, isEmpty: Boolean) {
+                    super.updateItem(newItem, isEmpty)
+                    graphic = null
+                    text = null
+                    newItem?.let {
+                        if (!isEmpty) {
+                            label1.text = newItem.value1.value.toString()
+                            label2.text = newItem.value2.value.toString()
+                            graphic = layout
+                        }
+                    }
+                }
+            }
+        }
+    }
+    bottom = Button("Increment Item 2").apply {
+        setOnAction {
+            messages.value += "Button 1 Clicked\n"
+            with(obList[2]) { value1.value = value1.value + 1 }
+            messages.value += obList.map { it.value1.value }.joinToString() + "\n"
+        }
+    }
+    padding = Insets(20.0)
+}
+```
+Here we have a custom `ListCell` layout that contains a `VBox` holding two `HBoxes`.  Each `HBox` has two `Labels`, one is just a title, and the other is loaded with either `ExampleData.value1.value` or `ExampleData.value2.value`.  No `Bindings` are used, so there's no reliance inside the `ListCell` on the `Property` nature of `value1` or `value2`.
+
+The `updateItem()` method does the usual stuff, and loads `value1` and `value2` into their respective `Labels`.
+
+The only other change to this code from the `TableView` version was to change the `Button` action to update `ExampleData.value1` instead of `ExampleData.value2`.  The `ObservableList` still has an extractor that returns `value2`, so this change essentially disables the extractor for this example.
+
+This is what it looks like when it is run and the `Button` is clicked a few times:
+
+![Screen Snap]({{page.ScreenSnap11}})
+
+You can see that the values displayed in the `ListView` do not change at all.  You can see in the `TextArea` that the `Button` has been clicked several times, yet the `ObservableList` never invalidated, but that `value1` did increment each time.
+
+If we change the extractor to return `value1` instead of `value2`, this is what it looks like:
+
+![Screen Snap]({{page.ScreenSnap12}})
+
+Now you can see that the `ListView` values are correct, and that the `Button` click causes the `ObservableList` to invalidate.
+
+## Is This a Good Approach?
+
+This approach has the advantage that you can implement a very naive design for the `ListCell`, without having to worry about binding and unbinding from a changing `itemProperty()`.  This is pretty much exactly the same approach to `ListCell` design that you'll see as the copypasta example in virtually every online tutorial about `ListView`.  It's simple, and it's easy, and it's what everybody knows.
+
+However, it effectively splits the logic involved in keeping the `ListCell` up to date between two places, the `ListCell` itself, and the extractor.
+
+{% include notice type="primary" content = 'Always ask yourself this question: "How much code will a maintenance programmer need to look at to fix a bug with this feature?"' %}
+
+In this case, you cannot really understand how the `ListCell` works without looking at the instantiation of `ObservableList` to see that it has an extractor.  That's very likely to be in another class altogether.
+
+Some time back, before JavaFX 19, achieving this entirely within the `ListCell` would have been a bit tedious.  The `Labels` would need to be bound to fields inside a value that itself was changing.  This would have required unbinding and the rebinding the `Labels` each time the value in the `ListCell` was changed.
+
+But JavaFX 19 introduced `ObservableValue.flatmap()`, and now we can skip all the unbinding and rebinding.  
+
+Here's the `ListCell` implemented that way:
+
+``` kotlin
+cellFactory = Callback { _ ->
+    object : ListCell<ExampleData>() {
+        val label1 = Label().apply {
+            textProperty().bind(itemProperty().flatMap { item -> item.value1.asString() })
+        }
+        val label2 = Label().apply {
+            textProperty().bind(itemProperty().flatMap { item -> item.value2.asString() })
+        }
+        val layout = VBox(2.0).apply {
+            children += HBox(10.0, Label("Value 1:"), label1)
+            children += HBox(10.0, Label("Value 2:"), label2)
+            padding = Insets(8.0)
+        }
+
+        init {
+            graphicProperty().bind(
+                Bindings.createObjectBinding<Region>(
+                    { if (item != null) layout else null },
+                    itemProperty()
+                )
+            )
+        }
+    }
+}
+```
+The `Labels` are bound to fields in `itemProperty()` through `flatMap()`.  Now, if the value in the field changes, or the `itemProperty()` itself changes, the binding will handle it automatically.  By also creating a `Binding` to control whether or not the `graphic` displays in the `init{}` block, we can now do away with `updateItem()` entirely.  Everything is simply dependent on `itemProperty()`.
+
+In order to test this, I removed the extractor from the `ObservableList`.  The result looks like this:
+
+![Screen Snap]({{page.ScreenSnap13}})
+
+You can see that the items in the `ListView` are still correct, and the messages show the `Button` clicks that do **not** trigger an "Invalidated" message from the `Listener`.
+
+Obviously, this requires a somewhat deeper understanding of the `ListCell` mechanics.  Most beginners aren't even aware that `item` exists in the `ListCell` as on `ObjectProperty`, and they assume that the only way to deal with a changing `item` is through `updateItem()`.  
 
 # What About Performance?
 
