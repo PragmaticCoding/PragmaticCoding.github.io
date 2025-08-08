@@ -202,6 +202,9 @@ override fun start(stage: Stage) {
                 if (change.wasAdded()) {
                     messages.value += "List item was added\n"
                 }
+                if (change.wasUpdated()) {
+                   messages.value += "List item ${change.from} was updated\n"
+                }
             }
         }
     })
@@ -218,9 +221,9 @@ Again, we'll run the code and click on the `Button` four times:
 
 ![Screen Capture 4]({{page.ScreenSnap4}})
 
-Here, we can see that the `ListChangeListener` fires as each item is added to the `ObservableList`, but then it doesn't fire again.
+Here, we can see that the `ListChangeListener` fires as each item is added to the `ObservableList`, but then it fires with an "update" `Change` when the `Button` is clicked.  It also reports which element was updated in `Change.from`.
 
-From this, we can safely assume that a `ListChangeListener` is never going to detect a change made to a field specified in an extractor.
+From this, we can safely assume that a `ListChangeListener` is going to detect a change made to a field specified in an extractor. 
 
 # Will a ListProperty Work?
 
