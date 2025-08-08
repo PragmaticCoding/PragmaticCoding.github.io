@@ -217,13 +217,13 @@ override fun start(stage: Stage) {
 ```
 `ListChangeListener` accepts a value of `ListChangeListener.Change`, which itself is an iterable construct and may contain several different changes to the `ObservableList` that happened at the same time.  These changes can be that an item (or range of items) were removed, added or permutated (which means they were replaced).  We need code that will look at all of the types of changes to see what is happening.
 
-Again, we'll run the code and click on the `Button` four times:
+Again, we'll run the code and click on the `Button` a few times:
 
 ![Screen Capture 4]({{page.ScreenSnap4}})
 
 Here, we can see that the `ListChangeListener` fires as each item is added to the `ObservableList`, but then it fires with an "update" `Change` when the `Button` is clicked.  It also reports which element was updated in `Change.from`.
 
-From this, we can safely assume that a `ListChangeListener` is going to detect a change made to a field specified in an extractor. 
+From this, we can safely assume that a `ListChangeListener` is going to detect a change made to a field specified in an extractor.
 
 # Will a ListProperty Work?
 
