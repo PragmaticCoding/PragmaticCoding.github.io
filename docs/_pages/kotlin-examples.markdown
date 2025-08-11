@@ -23,6 +23,7 @@ Throughout many articles on this website, especially the later ones, you'll find
 
 So, why use Kotlin in the example code?
 
+
 Kotlin is very much like Java but way less clumsy.  There are features in Kotlin that fix issues with Java that you didn't realize were issues with Java until you see them fixed in Kotlin.  
 
 One of the things about Kotlin that makes it attractive for use in my articles is that it clears away a lot of the bloat that comes from JavaFX boilerplate.  This lets me write very simple code that's pared down to bare minimum needed to demonstrate what I'm talking about.  I think this makes it more effective for example code snippets in the articles.
