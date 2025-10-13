@@ -133,10 +133,10 @@ Layout
 : Layout goes in the View.  This includes creating binding between the Model and the properties of the `Nodes` in the layout.
 
 Event Handlers
-: Events are GUI elements, and their handlers go in the View.  When EventHandlers need to perform actions that involve something other than the layout, they invoke "Action Handlers" provided by the Controller.
+: Events are GUI elements, and their handlers go in the View.  When EventHandlers need to perform actions that involve something other than the layout, they invoke "Action Performers" provided by the Controller.
 
 Action Performers
-: Action Performers are functional elements that perform some kind of action.  These are defined in the Controller.  If an Action Handler is needed by the View so that it can invoke it from an `EventHandler`, then it will be passed to the View via a constructor parameter.
+: Action Performers are functional elements that perform some kind of action.  These are defined in the Controller.  If an Action Performer is needed by the View so that it can invoke it from an `EventHandler`, then it will be passed to the View via a constructor parameter.
 
 Threading
 : In JavaFX, threading is generally implemented using something like `Task`.  Creation and configuration of `Task` objects and running them in background `Threads` is handled in the Controller.
