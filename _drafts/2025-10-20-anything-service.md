@@ -178,3 +178,28 @@ Oct 23 18:35:01 Blog CRON[14284]: pam_unix(cron:session): session closed for use
 This has a lot of useful information.  We get a brief description of the service, something about "loaded", and whether or not it's actually running and how long it has been running for.  It also tells us where to get the documentation, and the id of its running process.  At the bottom, we get to see the last `journal` entries for this service in the system logs.  
 
 ### systemd Configuration Files
+
+Let's keep looking at the data from `cron.service`.  You'll notice in the "Loaded" line, it has a reference to `/usr/lib/systemd/system/cron.service`.  Let's take a look at that:
+
+```
+[Unit]
+Description=Regular background program processing daemon
+Documentation=man:cron(8)
+After=remote-fs.target nss-user-lookup.target
+
+[Service]
+EnvironmentFile=-/etc/default/cron
+ExecStart=/usr/sbin/cron -f -P $EXTRA_OPTS
+IgnoreSIGPIPE=false
+KillMode=process
+Restart=on-failure
+SyslogFacility=cron
+
+[Install]
+WantedBy=multi-user.target
+```
+Some of the lines here are easy to understand.  "Description" is obvious, especially since we can see that the text on the right hand side of the "=" appears in the output of the `status` command.  The same goes for "Documentation".
+
+"Restart" is interesting.  It's value of "on-failure" is probably very close to the concept of "respawn" in `/etc/inittab`.
+
+"ExecStart" looks like the command to start the service.  But where does it get `$EXTRA_OPTS`?  That looks like an environment variable, so let's look at "EnvironmentFile":
