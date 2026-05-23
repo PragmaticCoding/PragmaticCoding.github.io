@@ -51,6 +51,13 @@ master:
     - title: Examples
       url: /examples/intro
 
+  - title: Homelabs/Self-Hosting
+    children:
+    - title: Infrastructure
+      url: /homelab/infrastructure
+    - title: Projects
+      url: /homelab/projects
+
   - title: About
     children:
       - title: Pragmatic Coding

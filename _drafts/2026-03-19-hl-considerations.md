@@ -12,9 +12,9 @@ M910Q_Specs: /assets/homelab/ThinkCentre_M910_Tiny_Spec.PDF
 M710Q_Specs: /assets/homelab/ThinkCentre_M710_Tiny_Spec.PDF
 Stack1k: /assets/homelab/ThinkCentre_M710_Tiny_Spec.PD
 Stack1: /assets/homelab/M910Q-Front-Back.png
-10Base2-1: /assets/homelab/10Base2-1.jpeg
-10Base2-2: /assets/homelab/10Base2-2.png
-10Base2-3: /assets/homelab/10Base2-3.jpeg
+10Base2_1: /assets/homelab/10Base2-1.jpeg
+10Base2_2: /assets/homelab/10Base2-2.png
+10Base2_3: /assets/homelab/10Base2-3.jpeg
 
 
 
@@ -27,7 +27,7 @@ InstallationLink: https://pve.proxmox.com/pve-docs/chapter-pve-installation.html
 JavaDocOL: https://openjfx.io/javadoc/23/javafx.base/javafx/collections/ObservableList.html
 JavaDocFXC: https://openjfx.io/javadoc/23/javafx.base/javafx/collections/FXCollections.html
 
-excerpt: 'Some things you should know before you get into self-hosting.  Maybe answer the question "Is this for me?"'
+excerpt: 'Some things you should know before you get into self-hosting.  '
 ---
 
 # Introduction
@@ -60,17 +60,17 @@ If you have less experience than me with these technologies, then you'll probabl
 
 Back in the day, long before Cat5, we had the wonderment known as 10Base-2 cabling:
 
-![10Base-2]({{page.10Base2-2}})  
+![10Base-2]({{page.10Base2_2}})  
 
 I was having trouble finding good pictures of these things, but you can see here how they connect.  You could attach a cable to each side of the top of the "T", like this:
 
-![10Base-2]({{page.10Base2-3}})  
+![10Base-2]({{page.10Base2_3}})  
 
 This meant that you could create long chains of devices connected together.
 
 Some of the devices that we used back then didn't have 10Base-T connectors (called "BNC"), but had these gazillion-pin connectors so you needed to get a transceiver for them called an MAU:
 
-![10Base-2]({{page.10Base2-1}})  
+![10Base-2]({{page.10Base2_1}})  
 
 This was extra awesome, because now you had two points of failure, and not just one.  And, as you can see, it stuck out 10cm from the back of the device, making it prone to getting knocked about.
 

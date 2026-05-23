@@ -1,6 +1,6 @@
 ---
 layout: single
-title: Homelab: Why Listen to Me?
+title: "Homelab: Why Listen to Me?"
 toc: true
 toc_label: "Contents"
 toc_icon: "brain"

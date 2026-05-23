@@ -165,6 +165,7 @@ include:
   - _cybertanks
   - _widgetsfx
   - _examples
+  - _homelab
   - widgetsfx-docs
 exclude:
   - "*.sublime-project"
@@ -225,7 +226,7 @@ kramdown:
 sass:
   sass_dir: _sass
   style: compressed # https://sass-lang.com/documentation/file.SASS_REFERENCE.html#output_style
-  quiet_deps: true  
+  quiet_deps: true
 
 
 # Outputting
@@ -359,6 +360,27 @@ defaults:
         overlay_image: /assets/images/brain.jpg
         overlay_filter: 0.4
 
+  - scope:
+      path: docs/_homelab
+      type: pages
+    values:
+      title: Homelab
+      layout: single
+      author_profile: false
+      read_time: true
+      comments: # true
+      share: true
+      related: true
+      toc: true
+      toc_label: "Contents"
+      toc_icon: "brain"
+      toc_sticky: true
+      sidebar:
+        title: "Homelab"
+        nav: "master"
+      header:
+        overlay_image: /assets/images/brain.jpg
+        overlay_filter: 0.4
 
 
   - scope:
