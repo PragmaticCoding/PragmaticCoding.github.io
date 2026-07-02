@@ -1,6 +1,6 @@
 ---
 title:  "Managing DNS Services"
-date:   2026-06-10 12:00:00 -0500
+date:   2026-06-23 12:00:00 -0500
 categories: homelab
 logo: /assets/logos/JavaFXLogo.png
 permalink: /homelab/dns-concepts
@@ -10,6 +10,7 @@ New_Zone: /assets/homelab/NewZone.png
 Forwarders: /assets/homelab/dns_forwarding.png
 Add_A: /assets/homelab/Add_A.png
 Conditional: /assets/homelab/Conditional.png
+ScreenShot1: /assets/homelab/Technitium.png
 
 
 excerpt: "Everything you need to know about DNS if you are self-hosting.  How to use Technitium to host a private DNS server in your homelab."
@@ -17,7 +18,7 @@ excerpt: "Everything you need to know about DNS if you are self-hosting.  How to
 
 # Introduction
 
-Domain Name Servers (DNS Servers) are one of the cornerstones of the Internet, and of your own sef-hosted infrastructure.  In this article we are going to look at what DNS servers do, how they work and integrate with each other, and how to host your own private DNS server for your homelab.
+Domain Name Servers (DNS Servers) are one of the cornerstones of both the Internet, and your own self-hosted infrastructure.  In this article we are going to look at what DNS servers do, how they work and integrate with each other, and how to host your own private DNS server for your homelab.
 
 # The Absolute Basics - Addresses and Names
 
@@ -29,15 +30,17 @@ The problem with IP addresses is that are clumsy and hard to remember.  They are
 
 Finally they don't have a hierachical structure that maps nicely to the real world relationships behind how the Internet is organized.
 
-To overcome these issues, we use names to refer to devices on the Internet instead.  Everybody is walking around with a whole bunch of these device names in their heads.  Furthermore, the names are structured in a hierachical manner that lines up nicely with the way that the Interet is actually organized.  
+To overcome these issues, we use names to refer to devices on the Internet instead, and everybody is walking around with a whole bunch of these device names in their heads.  Furthermore, the names are structured in a hierachical manner that lines up nicely with the way that the Interet is actually organized.  This structure also makes them easier to remember.
 
-Internet names are divided up into sections separated by `.` characters.  They go from most specific on the left, to least specific on the right.  Let's look at a typical sort of name: `server.dmz.organization.com`, and see how it is organized.  At the far left is the specific machine, `server`.  It is located inside the domain `.dmz.organization.com`.  Next along is `.dmz` which is a domain, but it is a subdomain of `.organization.com`.
+Internet names are divided up into sections separated by `.` characters.  They go from most specific on the left, to least specific on the right.  Let's look at a typical sort of name: `server.dmz.organization.com`, and see how it is organized.
+
+At the far left is the specific machine, `server`.  It is located inside the domain `.dmz.organization.com`.  Next along is `.dmz` which is a domain, but it is a subdomain of `.organization.com`.
 
 If we keep going to the right, we get to `.organization`, which is a subdomain of `.com`.  And, of course, we have `.com` which is what is referred to as a "top level domain".  You can think of this as three domains: `.dmz.organization.com`, `.organization.com` and `.com`.  Of course, both `.dmz.organization.com`, and `.organization.com` are both subdomains of the domains to the right.  
 
 Each domain has absolute control over its own contents.  This means that whatever body owns/controls the `.com` domain is the only body allowed to add or remove anything to/from it.  In order for `.organization.com` to exist, the owner of `.com` had to add it.
 
-The subdomain `.dmz.organization.com` looks like an administrative division inside of the `.organization.com` domain.  It's highly likely that the owner of `.organization.com` created it for the use of `.organization.com`, and not as a separately administered subdomain.  This is quite normal, and any owner of a domain can freely add whatever subdomains to their domain that they want, for whatever purposes.  
+In this example, the subdomain `.dmz.organization.com` looks like it's simply an administrative division inside of the `.organization.com` domain.  It's highly likely that the owner of `.organization.com` created it for the use of `.organization.com`, and not as a separately administered subdomain.  This is quite normal, and any owner of a domain can freely add whatever subdomains to their domain that they want, for whatever purposes.  
 
 # Domain Name Servers
 
@@ -53,11 +56,11 @@ The answer is very simple.  Each parent domain has to have a an entry in its DNS
 
 This means that your browser has to go and query the `.com` domain to find out the location of the DNS server for `.organization.com`.  Then it has to query *that* DNS server for the address for `server.dmz.organization.com`.  It might be that `.dmz.organization.com` has its own DNS server, in which case the query have to continue at that server.  
 
-At least that's the naive view of how it works.  In reality, your browser makes a single request to its local name server, and the rest of the work is done by it.  Your browser isn't aware of how the name is resolved, just that it happens.  
+At least that's the naive view of how it works.  In reality, your browser makes a single request to its own local name server and the rest of the work is done by that.  Your browser isn't aware of how the name is resolved, just that it happens.  
 
 When the DNS servers talk to each other, the process iterates over and over.  Your local DNS server will answer the request if it has the information, otherwise it passes the request on to *its* upstream DNS server, which then goes through the same process.  Eventually, some name server will query `.com` for the DNS server of `organization.com` and it will give the answer.  At that point the process rolls itself back up, each name server passing back the answer until it eventually gets back to your browser.  
 
-[Caveat: This is a good way to conceptialize how DNS servers communicate, meaning that it provides a working model that explains the behaviours that you see and the things that you need to do in order to properly configure a DNS server.  Under the hood, this may not match up with how modern DNS servers acutally go about resolving doing what they do.]
+[Caveat: This is a good way to conceptialize how DNS servers communicate, meaning that it provides a working model that explains the behaviours that you see and the things that you need to do in order to properly configure a DNS server.  Under the hood, this may not match up with how modern DNS servers actually go about doing what they do.]
 
 There was a critical component in this description: "DNS server will answer the request if it has the information".  How can it have the answer if it isn't the DNS server for the domain specified?
 
@@ -94,7 +97,7 @@ All records in a zone file have at least these three elements:
 1. Name
 1. Value
 
-Generally, DNS lookups are done by specifying the type and and the name.  It is possible, even common, to do searches for just name, and accept any type of records that are returned.  It's also possible to do searches for just type, for instance if you are looking for MX records to find the email servers for a domain.
+Generally, DNS lookups are done by specifying the type and and the name.  It is possible, even common, to do searches for just a name, and accept any type of records that are returned.  It's also possible to do searches for just type, for instance if you are looking for MX records to find the email servers for a domain.
 
 What kind of entries might you find in a zone file?
 
@@ -126,9 +129,11 @@ PTR - Pointer
 
 : `PTR` records are a bit like `CNAME` records, but they won't cause DNS lookups to carry on looking up the new value.  You are going to see these used in "reverse lookups" more often than not.  A reverse lookup uses DNS to locate the name of an entry from its IP address.  Most DNS server software will facilitate the creation of reverse lookup zones for this purpose.
 
+You may encounter other types (there are lots more), but for a homelab these are the ones you're most likely to care about.
+
 # Managing Your Own DNS Server
 
-Unless you want to remember a bunch of IP addresses - which means you're never going to be able to expose your services to the non-technical people in your family - you're going to need your own DNS.  At a minimum, you need to be able to assign names to the servers in your network.  
+Unless you want to remember a bunch of IP addresses - which means you're never going to be able to expose your services to the non-technical people in your family - you're going to need your own name server.  At a minimum, you need to be able to assign names to the servers in your network.  
 
 You have choices.  If you are running on OPNSense firewall, you can use one of the services it hosts to run your DNS.  Or you can spin up a container in Proxmox and run one of the popular DNS servers.
 
@@ -140,7 +145,19 @@ That's what I'm going to talk about here.
 
 ## Installing Technitium
 
-I installed Technitium from the Promox Community Scripts.  
+I installed Technitium from the Promox Community Scripts, and I think that's the probably the easiest way to get it up and running.
+
+The Script page is [here](https://community-scripts.org/scripts/technitiumdns).  If you go there, you'll see that the script creates an LXC guest, and defaults to using a single CPU core with 512MB of RAM.  It's fairly light-weight, as you would expect.
+
+In the "INSTALL" section, there's a `bash` command that will download the script and run it for you.  You copy that command (there's a little copy icon right at the end of the command), and then paste it into the shell of your Promox node.  It will then walk you through a series of questions that will determine how the LXC is configured.  
+
+The first question asked by the scripts is whether you want to just use the "Default" or "Advanced" installation (at least those are the first two options).  I always pick the "Advanced" because there are a couple of networking options that I want to customize, and I don't remember seeing them the very first time I ever installed anything using "Default".  I also pick the "Verbose" output so that I can at least see that progress is still happening as the install runs, and I'm not sitting there staring at an unchanging screen wondering if it has got stuck or not.  Other than that, I usually just accept all of the default values as they come up.
+
+When it's done, it will tell you the address and port to log into the DNS Server's administrative GUI.  Plug that into your browser and, after you've logged in, you'll see a screen that looks like this:
+
+![ScreenShot 1]({{page.ScreenShot1}})
+
+The "Menu" is actually just the tabs across the top of the page.  
 
 ## Upstream Lookups
 
@@ -158,7 +175,7 @@ The "Save" button is at the bottom of the page.  Now you can move on to creating
 
 ## Creating a Zone
 
-Before we get into this, I strongly recommend that you keep your domain flat, with a single zone.  Unless you're running some kind of complex organization with mulitple sub-units that need to independently assign names without worrying about collisions with names in other sub-units, you'll just be making your life more complicated than you need to.
+Before we get into this, I strongly recommend that you keep your domain flat with a single zone.  Unless you're running some kind of complex organization with mulitple sub-units that need to independently assign names without worrying about collisions with names in other sub-units, you'll just be making your life more complicated than you need to if you start adding subdomains and zones.
 
 So stick to one zone, and come up with a naming scheme that avoids collisions in that one zone.  
 
@@ -197,7 +214,7 @@ Names need to be memorable
 
 Names need to be specific
 
-: It's probably not obvious now, but you are going to find that you have **servers** and you have **services**.  While each service is hosted by a server, they are not the same thing.  When you start out naming things in your network, you are probably going to be defining servers, not services.  So name your servers as servers.  
+: It's probably not obvious now, but you are going to find that you have **servers** and you have **services**.  While each service is hosted by a server, they are not the same thing.  And sometimes you'll have several services hosted by the same server.  When you start out naming things in your network, you are probably going to be defining servers, not services.  So name your servers as servers.  
 
 Names need to follow a scheme
 
@@ -213,7 +230,7 @@ Names need to be consistent
 
 Names can be hard to change
 
-: Just try and change a name after you've used it on 4 people's phone apps, referenced it for an API call on 3 different servers, and imbedded it into your smart TV.  Eventually you'll have to do this, and then you'll wish you listened to me.  Try to get your naming scheme figured out at the beginning, so you're changing names over and over.
+: Just try and change a name after you've used it on 4 people's phone apps, referenced it for an API call on 3 different servers, and imbedded it into your smart TV.  Eventually you'll have to do this, and then you'll wish you listened to me.  Try to get your naming scheme figured out at the beginning, so you're not changing names over and over.
 
 You'll have to trust me.  These things are important.  Also, remember that you can use `CNAME` entries if you want shortcut names for particular servers or services.  You can also use them to help transition through changes to your naming scheme.
 
@@ -225,7 +242,7 @@ When you need this, you need this.  And it costs almost nothing.
 
 If you've got 5 names that all point to the same address, then you'll only want to check off these two boxes when you create what you would consider to be the "primary" name for that address.  
 
-I find it useful to put in comments.  At least explain what the name is in plain English.  Is it a server or a service?  Also, if it's a service and it has a particular port that you need to use to access it, I'd put it in the comments.  It saves having to look through you browser history, or checking the GitHub pages for the project to find how to access the service.  
+I find it useful to put something in comments.  At least explain what the name is in plain English.  Is it a server or a service?  Also, if it's a service and it has a particular port that you need to use to access it, I'd put it in the comments.  It saves having to look through you browser history, or checking the GitHub pages for the project to find how to access the service.  
 
 That's click "Save".  Rinse and repeat for all of the other names you want to create in your network.
 
@@ -279,6 +296,8 @@ Obviously, all of your traffic goes out through your ISP to the Internet, and th
 
 Technitium makes it trivial to encrypt your DNS queries via DNS-over-TLS, so just do it.  The one caveat is that not all upstream DNS servers support DNS-over-TLS.  However, CloudFlare, Google and Quad9 all support it, so this shouldn't be an issue.  
 
+Also, remember that there's no point encrypting DNS queries to your ISP's DNS servers since they can always see what's going on at the DNS server end.  
+
 To turn it on, go back to this screen:
 
 ![Forwarders]({{page.Forwarders}})
@@ -286,3 +305,7 @@ To turn it on, go back to this screen:
 And click on "DNS-over-TLS".  Make sure that the forwarders that you have selected support this protocol.  
 
 # Conclusion
+
+Although DNS servers are the backbone of so much of the Internet, and they can do some really, really complicated stuff, setting up your own DNS server for you homelab is fairly easy.  
+
+Realistically speaking, this should probably be the first server that you set up on your homelab.  For one, it's very straight-forward and just works.  This makes it a good learning experience and will introduce you to a lot of homelab concepts.  On top of that, you're going to want to start using names right away, so you'll need a DNS server to do that.  
