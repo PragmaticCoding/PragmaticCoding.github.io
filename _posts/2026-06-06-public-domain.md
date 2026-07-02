@@ -1,6 +1,6 @@
 ---
 title:  "You Need a Public Domain"
-date:   2026-06-10 12:00:00 -0500
+date:   2026-06-24 12:00:00 -0500
 categories: homelab
 logo: /assets/logos/JavaFXLogo.png
 permalink: /homelab/public-domain
@@ -37,7 +37,7 @@ Who you pick is up to you.  It literally doesn't matter which one you pick, but 
 
 Personally, I use GoDaddy.  This is mostly because I was involved in a commercial operation many years ago that required me to set up an account with them.  I still have the account, and it was easy just to use it.  I'm not sure that registrations with GoDaddy are the cheapest, but they'll probably be around for a while.  
 
-Depending on the domain name, and the top level domain that you register with, you can expect to pay from $15 to $30 a year for a domain.
+Depending on the domain name, and the top level domain that you register with, you can expect to pay from $15 to $30 a year for a domain for your self-hosting.
 
 ## Domain Name Services
 
@@ -45,7 +45,7 @@ The important thing to remember about this is that all of that registration stuf
 
 The one thing that every public domain must have is a DNS server that can service public requests for information about the domain.  For the most part, the registrar of the parent domain that holds your domain will have some level of DNS services for your domain, although that may just redirect to the agent through which you registered the domain.
 
-Generally speaking, information about your domain is stored is something called a "Zone File".  A "zone" is usually just a domain.  The kind of information held in a zone file would be the addresses of the DNS servers that it uses, the addresses of the email servers that it uses and address of web servers, or application servers that it controls.
+Generally speaking, information about your domain is stored in something called a "Zone File".  A "zone" is usually just a domain.  The kind of information held in a zone file would be the addresses of the DNS servers that it uses, the addresses of the email servers that it uses and address of web servers, or application servers that it controls.
 
 This is where the public part becomes very important.  Anything that you put into your zone file can be seen by **anyone** in the internet.  This is important for things like email handling, because you want email servers anywhere in the world to know where to connect to deliver email to your domain.
 
@@ -179,7 +179,7 @@ Item (1) is problematic.  Many of the servers for which you'll want to issue cer
 
 Item (2) is trivial if you have a public domain.  
 
-And remember, certificates expire.  And proper certificates expire every few months.  So this is something that you want to set up and then forget about.  You're not going to want to set up some whole in your firewall so that certificates can be re-issued at any random time.
+And remember, certificates expire.  And proper certificates expire every few months.  So this is something that you want to set up and then forget about.  You're not going to want to set up some hole in your firewall so that certificates can be re-issued at any random time.
 
 # Dynamic Domain Name System
 
